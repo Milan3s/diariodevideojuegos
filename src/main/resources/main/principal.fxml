@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="759.0" prefWidth="1305.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PrincipalController">
+    
+    <!-- Aquí incluimos el sidebar en el lado izquierdo -->
+    <left>
+        <fx:include source="sidebar.fxml" />
+    </left>
+   <center>
+      <AnchorPane fx:id="contenidoCentral" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+
+</BorderPane>

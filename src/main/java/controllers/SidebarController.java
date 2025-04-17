@@ -3,10 +3,15 @@ package controllers;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import main.App;
 
+/**
+ *
+ * @author Milanes
+ */
 public class SidebarController {
 
     @FXML
@@ -26,8 +31,19 @@ public class SidebarController {
 
     @FXML
     private void accion_inicio(ActionEvent event) {
-       
+        try {
+            // CARGAS contenido_inicio.fxml en lugar de principal.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/contenido_inicio.fxml"));
+            Parent contenido = loader.load();
+
+            // Lo insertas en el panel central del principal
+            PrincipalController.getInstance().setContenido(contenido);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     private void accion_juegos(ActionEvent event) {
@@ -48,4 +64,5 @@ public class SidebarController {
     @FXML
     private void accion_logros(ActionEvent event) {
     }
+
 }

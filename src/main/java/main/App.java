@@ -17,7 +17,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("sidebar"));
+        // Cargar la escena principal
+        scene = new Scene(loadFXML("principal")); // Añadimos la ruta relativa correcta
         stage.setScene(scene);
         stage.show();
     }
@@ -26,8 +27,16 @@ public class App extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
+    // Método para cargar el archivo FXML
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        // Usamos la ruta correcta en el directorio resources
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/main/" + fxml + ".fxml"));
+        
+        // Verificar si el archivo FXML existe
+        if (fxmlLoader.getLocation() == null) {
+            throw new IOException("FXML archivo no encontrado: " + fxml);
+        }
+        
         return fxmlLoader.load();
     }
 
