@@ -80,3 +80,38 @@
 #seguidores-card .card-icon {
     -fx-fill: #e67e22; /* Naranja para seguidores */
 }
+
+.sidebar-btn {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-cursor: hand;
+}
+
+/* Texto dentro del botón */
+.sidebar-btn Text {
+    -fx-fill: black;
+}
+
+/* Iconos dentro del botón */
+.sidebar-btn .font-awesome-icon-view {
+    -fx-fill: black;
+}
+
+/* Hover: invertir colores */
+.sidebar-btn:hover {
+    -fx-background-color: black;
+}
+
+/* Hover para texto */
+.sidebar-btn:hover Text {
+    -fx-fill: white;
+}
+
+/* Hover para icono */
+.sidebar-btn:hover .font-awesome-icon-view {
+    -fx-fill: white;
+}
+

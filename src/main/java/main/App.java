@@ -1,5 +1,6 @@
 package main;
 
+import config.Logger; // Asegúrate de que la clase Logger esté en el paquete correcto
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,14 +18,25 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Cargar la escena principal
-        scene = new Scene(loadFXML("principal")); // Añadimos la ruta relativa correcta
-        stage.setScene(scene);
-        stage.show();
+        try {
+            // Cargar la escena principal
+            scene = new Scene(loadFXML("principal")); // Añadimos la ruta relativa correcta
+            stage.setScene(scene);
+            stage.show();
+            Logger.info("Aplicación iniciada con éxito.");
+        } catch (IOException e) {
+            Logger.error("Error al iniciar la aplicación: " + e.getMessage());
+        }
     }
 
     static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+        try {
+            scene.setRoot(loadFXML(fxml));
+            Logger.info("Pantalla cambiada a: " + fxml);
+        } catch (IOException e) {
+            Logger.error("Error al cargar el archivo FXML: " + fxml + " - " + e.getMessage());
+            throw e; // Rethrow para que se maneje adecuadamente en la aplicación.
+        }
     }
 
     // Método para cargar el archivo FXML
@@ -34,13 +46,16 @@ public class App extends Application {
         
         // Verificar si el archivo FXML existe
         if (fxmlLoader.getLocation() == null) {
+            Logger.error("FXML archivo no encontrado: " + fxml);
             throw new IOException("FXML archivo no encontrado: " + fxml);
         }
         
+        Logger.info("Archivo FXML cargado correctamente: " + fxml);
         return fxmlLoader.load();
     }
 
     public static void main(String[] args) {
+        Logger.info("Aplicación iniciada.");
         launch();
     }
 
