@@ -9,6 +9,13 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    <!-- Sección de Repositorios -->
+    <repositories>
+        <repository>
+            <id>jensd-repo</id>
+            <url>https://repo.jensd.de/maven/</url> <!-- Repositorio para FontAwesomeFX -->
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -19,6 +26,11 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>13</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-fontawesome</artifactId>
+            <version>4.7.0-9.1.2</version> <!-- Puedes cambiar la versión si es necesario -->
         </dependency>
     </dependencies>
     <build>
