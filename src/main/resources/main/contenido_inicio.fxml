@@ -14,7 +14,7 @@
 <AnchorPane prefHeight="890.0" prefWidth="1593.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoInicioController">
     
     <!-- Título encima del Grid -->
-    <Text id="summary-title" fx:id="tituloResumen" styleClass="titulo-resumen" text="Resumen del Diario" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" />
+    <Text id="summary-title" fx:id="tituloResumen" layoutX="14.0" layoutY="44.0" styleClass="titulo-resumen" text="Resumen del Diario" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="1322.802734375" AnchorPane.topAnchor="13.78515625" />
 
     <!-- GridPane con el contenido -->
     <GridPane id="gridResumen" alignment="CENTER" layoutY="76.0" prefHeight="776.0" prefWidth="1562.0" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="76.0">

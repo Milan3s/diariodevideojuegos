@@ -3,6 +3,7 @@ module main {
     requires javafx.fxml;
     requires de.jensd.fx.glyphs.fontawesome;
     requires java.base;
+    requires java.sql;
 
     opens main to javafx.fxml;
     opens controllers to javafx.fxml; // Abre el paquete controllers a javafx.fxml

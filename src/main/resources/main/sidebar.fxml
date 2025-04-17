@@ -34,6 +34,24 @@
                   </HBox>
                </graphic>
             </Button>
+            <Button fx:id="btnEventos" onAction="#accion_eventos" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn">
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" spacing="10">
+                     <children>
+                        <FontAwesomeIconView glyphName="CALENDAR" size="18" styleClass="font-awesome-icon-view">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </FontAwesomeIconView>
+                        <Text text="Eventos">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+               </graphic>
+            </Button>
 
             <!-- BOTÓN JUEGOS -->
             <Button fx:id="btnJuegos" onAction="#accion_juegos" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn">
@@ -100,7 +118,7 @@
             </Button>
 
                         <!-- BOTÓN AJUSTES -->
-            <Button fx:id="btnAjustes" onAction="#accion_ajustes" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn">
+            <Button fx:id="btnCerrar" onAction="#accion_cerrar" prefHeight="40.0" prefWidth="200.0" styleClass="sidebar-btn">
                <graphic>
                   <HBox alignment="CENTER_LEFT" spacing="10">
                      <children>

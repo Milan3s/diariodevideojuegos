@@ -52,6 +52,10 @@ public class Logger {
         }
     }
 
+    private static String format(String level, String msg) {
+        return String.format("[%s] %s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), msg);
+    }
+
     public static void info(String msg) {
         String log = format("INFO", msg);
         System.out.println(AnsiColors.CYAN + AnsiColors.INFO_ICON + " " + log + AnsiColors.RESET);
@@ -70,7 +74,9 @@ public class Logger {
         writeToFile("[ERROR] " + msg);
     }
 
-    private static String format(String level, String msg) {
-        return String.format("[%s] %s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), msg);
+    public static void success(String msg) {
+        String log = format("SUCCESS", msg);
+        System.out.println(AnsiColors.GREEN + AnsiColors.OK_ICON + " " + log + AnsiColors.RESET);
+        writeToFile("[SUCCESS] " + msg);
     }
 }
