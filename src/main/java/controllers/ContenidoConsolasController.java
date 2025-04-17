@@ -16,10 +16,16 @@ import javafx.scene.text.Text;
 import models.Consola;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class ContenidoConsolasController implements Initializable {
 
@@ -34,23 +40,40 @@ public class ContenidoConsolasController implements Initializable {
     @FXML
     private Text lbl_total_consolas;
 
-    @FXML private Label lbl_anio;
-    @FXML private Label lbl_fabricante;
-    @FXML private Label lbl_generacion;
-    @FXML private Label lbl_region;
-    @FXML private Label lbl_tipo;
-    @FXML private Label lbl_procesador;
-    @FXML private Label lbl_memoria;
-    @FXML private Label lbl_almacenamiento;
-    @FXML private Label lbl_fecha_lanzamiento;
+    @FXML
+    private Label lbl_anio;
+    @FXML
+    private Label lbl_fabricante;
+    @FXML
+    private Label lbl_generacion;
+    @FXML
+    private Label lbl_region;
+    @FXML
+    private Label lbl_tipo;
+    @FXML
+    private Label lbl_procesador;
+    @FXML
+    private Label lbl_memoria;
+    @FXML
+    private Label lbl_almacenamiento;
+    @FXML
+    private Label lbl_fecha_lanzamiento;
 
-    @FXML private AnchorPane root_contenido_consolas;
-    @FXML private ImageView imagen_consola;
+    @FXML
+    private ImageView imagen_consola;
 
     private final ObservableList<Consola> todasLasConsolas = FXCollections.observableArrayList();
     private static final int CONSOLAS_POR_PAGINA = 20;
     private int paginaActual = 0;
     private int totalPaginas = 1;
+    @FXML
+    private Button btn_editar;
+    @FXML
+    private Button btn_eliminar;
+    @FXML
+    private AnchorPane root_contenido_consolas;
+    @FXML
+    private Button btn_agregar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -177,4 +200,71 @@ public class ContenidoConsolasController implements Initializable {
             mostrarPagina(paginaActual);
         }
     }
+
+    @FXML
+    private void accion_agregar(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioConsolas.fxml"));
+            Parent root = loader.load();
+
+            // Crear nueva ventana (modal)
+            Stage stage = new Stage();
+            stage.setTitle("Formulario de Consolas");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // Hace que sea modal
+            stage.setResizable(false);
+            stage.showAndWait(); // Espera a que se cierre para volver
+
+            Logger.info("Ventana modal 'FormularioConsolas.fxml' abierta correctamente");
+
+        } catch (IOException e) {
+            Logger.error("Error al abrir el formulario como ventana modal: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void accion_editar(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioConsolas.fxml"));
+            Parent root = loader.load();
+
+            // Crear nueva ventana (modal)
+            Stage stage = new Stage();
+            stage.setTitle("Formulario de Consolas");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // Hace que sea modal
+            stage.setResizable(false);
+            stage.showAndWait(); // Espera a que se cierre para volver
+
+            Logger.info("Ventana modal 'FormularioConsolas.fxml' abierta correctamente");
+
+        } catch (IOException e) {
+            Logger.error("Error al abrir el formulario como ventana modal: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void accion_eliminar(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioConsolas.fxml"));
+            Parent root = loader.load();
+
+            // Crear nueva ventana (modal)
+            Stage stage = new Stage();
+            stage.setTitle("Formulario de Consolas");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // Hace que sea modal
+            stage.setResizable(false);
+            stage.showAndWait(); // Espera a que se cierre para volver
+
+            Logger.info("Ventana modal 'FormularioConsolas.fxml' abierta correctamente");
+
+        } catch (IOException e) {
+            Logger.error("Error al abrir el formulario como ventana modal: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }

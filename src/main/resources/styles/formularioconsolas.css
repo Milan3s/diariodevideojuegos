@@ -1,0 +1,62 @@
+/* Fondo del formulario */
+.anchor-pane {
+    -fx-background-color: white;
+    -fx-border-color: #b8860b; /* borde dorado */
+    -fx-border-width: 3;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+/* Etiquetas alineadas */
+.label {
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+/* Campos de texto y ComboBox */
+.text-field,
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: black;
+    -fx-padding: 6 10;
+    -fx-font-size: 13px;
+}
+
+/* Título principal */
+.text {
+    -fx-fill: black;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+/* Botones */
+.boton-accion {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 14;
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 1);
+    -fx-content-display: LEFT;
+    -fx-graphic-text-gap: 6px;
+}
+
+/* Hover botón */
+.boton-accion:hover {
+    -fx-background-color: #f2f2f2;
+}
+
+/* Iconos FontAwesome */
+.icono-boton {
+    -fx-fill: black;
+    -fx-font-size: 15px;
+}

@@ -128,3 +128,27 @@
     -fx-font-size: 15px;
     
 }
+
+
+.boton-accion {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+    -fx-text-fill: #000;
+    -fx-padding: 8 14;
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0.1, 0, 2);
+}
+
+.boton-accion:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.icono-boton {
+    -fx-fill: #555;
+    -fx-font-size: 16px;
+}

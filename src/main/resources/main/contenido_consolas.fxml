@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -14,11 +15,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="root_contenido_consolas" fx:id="root_contenido_consolas" prefHeight="890.0" prefWidth="1593.0" styleClass="contenedor-principal" stylesheets="@../styles/consolas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoConsolasController">
+<AnchorPane id="root_contenido_consolas" fx:id="root_contenido_consolas" prefHeight="890.0" prefWidth="1593.0" styleClass="contenedor-principal" 
+            stylesheets="@../styles/consolas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controllers.ContenidoConsolasController">
 
     <children>
         <Text id="titulo" layoutX="14.0" layoutY="44.0" styleClass="titulo-principal" text="Consolas Reales">
-            <font><Font size="28" /></font>
+            <font>
+                <Font size="28" />
+            </font>
         </Text>
 
         <VBox id="contenedor_listado" layoutX="54.0" layoutY="238.0" prefHeight="540.0" prefWidth="334.0" spacing="10.0" styleClass="contenedor-listado">
@@ -37,17 +42,23 @@
             </children>
         </VBox>
 
-        <Text id="subtitulo_listado" layoutX="54.0" layoutY="222.0" styleClass="subtitulo" text="Listado" wrappingWidth="72.0">
-            <font><Font name="System Italic" size="21.0" /></font>
+        <Text id="subtitulo_listado" layoutX="56.0" layoutY="223.0" styleClass="titulo-info" text="Listado" wrappingWidth="111.0">
+            <font>
+                <Font name="System Italic" size="21.0" />
+            </font>
         </Text>
 
         <AnchorPane id="panel_informacion" layoutX="409.0" layoutY="240.0" prefHeight="540.0" prefWidth="1100.0" styleClass="panel-informacion">
             <children>
                 <Text id="texto_total_consolas" layoutX="13.0" layoutY="53.0" styleClass="etiqueta-info" text="Total de consolas:" wrappingWidth="165.0">
-                    <font><Font name="System Italic" size="21.0" /></font>
+                    <font>
+                        <Font name="System Italic" size="21.0" />
+                    </font>
                 </Text>
                 <Text id="lbl_total_consolas" fx:id="lbl_total_consolas" layoutX="178.0" layoutY="54.0" styleClass="valor-info" wrappingWidth="165.0">
-                    <font><Font name="System Italic" size="21.0" /></font>
+                    <font>
+                        <Font name="System Italic" size="21.0" />
+                    </font>
                 </Text>
 
                 <GridPane hgap="10" layoutX="20.0" layoutY="85.0" prefHeight="343.0" prefWidth="426.0" vgap="12">
@@ -105,7 +116,40 @@
         </AnchorPane>
 
         <Text id="titulo_informacion" layoutX="409.0" layoutY="224.0" styleClass="titulo-info" text="Información" wrappingWidth="650.0">
-            <font><Font size="24.0" /></font>
+            <font>
+                <Font size="24.0" />
+            </font>
         </Text>
+        <HBox layoutX="409.0" layoutY="126.0" spacing="15.0" styleClass="hbox_acciones">
+            <children>
+
+                <Button fx:id="btn_agregar" onAction="#accion_agregar" styleClass="boton-accion">
+                    <graphic>
+                        <de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView glyphName="PLUS" styleClass="icono-boton" />
+                    </graphic>
+                    <text>Añadir</text>
+                </Button>
+
+                <Button fx:id="btn_editar" onAction="#accion_editar" styleClass="boton-accion">
+                    <graphic>
+                        <de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView glyphName="PENCIL" styleClass="icono-boton" />
+                    </graphic>
+                    <text>Editar</text>
+                </Button>
+
+                <Button fx:id="btn_eliminar" onAction="#accion_eliminar" styleClass="boton-accion">
+                    <graphic>
+                        <de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView glyphName="TRASH" styleClass="icono-boton" />
+                    </graphic>
+                    <text>Eliminar</text>
+                </Button>
+            </children>
+        </HBox>
+          <Text layoutX="409.0" layoutY="110.0" text="Acciones">
+              <font>
+                  <Font name="System Italic" size="21.0" />
+              </font>
+          </Text>
+
     </children>
 </AnchorPane>
