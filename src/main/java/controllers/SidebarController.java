@@ -13,9 +13,39 @@ public class SidebarController {
     private Pane panel_principal;
     @FXML
     private Button btnIInicio;
+    @FXML
+    private Button btnJuegos;
+    @FXML
+    private Button btnConsolas;
+    @FXML
+    private Button btnModeradores;
+    @FXML
+    private Button btnAjustes;
+    @FXML
+    private Button btnLogros;
 
     @FXML
     private void accion_inicio(ActionEvent event) {
        
+    }
+
+    @FXML
+    private void accion_juegos(ActionEvent event) {
+    }
+
+    @FXML
+    private void accion_consolas(ActionEvent event) {
+    }
+
+    @FXML
+    private void accion_moderadores(ActionEvent event) {
+    }
+
+    @FXML
+    private void accion_ajustes(ActionEvent event) {
+    }
+
+    @FXML
+    private void accion_logros(ActionEvent event) {
     }
 }

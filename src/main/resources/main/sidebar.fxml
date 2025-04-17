@@ -17,28 +17,138 @@
          </font>
       </Text>
       <VBox layoutY="104.0" prefHeight="612.0" prefWidth="361.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button fx:id="btnIInicio" mnemonicParsing="false" onAction="#accion_inicio" prefHeight="40.0" prefWidth="150.0">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <graphic>
-                        <HBox alignment="CENTER" prefHeight="42.0" prefWidth="151.0" spacing="10">
-                           <children>
-                              <FontAwesomeIconView glyphName="HOME" size="20" />
-                              <Text text="Inicio">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font></Text>
-                           </children>
-                        </HBox>
-                     </graphic>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
+         <!-- Botón de Inicio -->
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="btnIInicio" mnemonicParsing="false" onAction="#accion_inicio" prefHeight="40.0" prefWidth="150.0">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+                  <graphic>
+                     <HBox alignment="CENTER" prefHeight="42.0" prefWidth="151.0" spacing="10">
+                        <children>
+                           <FontAwesomeIconView glyphName="HOME" size="20" />
+                           <Text text="Inicio">
+                              <font>
+                                 <Font size="17.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                  </graphic>
+               </Button>
+            </children>
+         </HBox>
+         <!-- Botón de Juegos -->
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="btnJuegos" mnemonicParsing="false" onAction="#accion_juegos" prefHeight="40.0" prefWidth="150.0">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+                  <graphic>
+                     <HBox alignment="CENTER" prefHeight="42.0" prefWidth="151.0" spacing="10">
+                        <children>
+                           <FontAwesomeIconView glyphName="GAMEPAD" size="20" />
+                           <Text text="Juegos">
+                              <font>
+                                 <Font size="17.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                  </graphic>
+               </Button>
+            </children>
+         </HBox>
+         <!-- Botón de Consolas -->
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="btnConsolas" mnemonicParsing="false" onAction="#accion_consolas" prefHeight="40.0" prefWidth="150.0">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+                  <graphic>
+                     <HBox alignment="CENTER" prefHeight="42.0" prefWidth="151.0" spacing="10">
+                        <children>
+                           <FontAwesomeIconView glyphName="GAME_CONSOLE" size="20" />
+                           <Text text="Consolas">
+                              <font>
+                                 <Font size="17.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                  </graphic>
+               </Button>
+            </children>
+         </HBox>
+         <!-- Botón de Moderadores -->
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="btnModeradores" mnemonicParsing="false" onAction="#accion_moderadores" prefHeight="40.0" prefWidth="150.0">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+                  <graphic>
+                     <HBox alignment="CENTER" prefHeight="42.0" prefWidth="151.0" spacing="10">
+                        <children>
+                           <FontAwesomeIconView glyphName="USER" size="20" />
+                           <Text text="Moderadores">
+                              <font>
+                                 <Font size="17.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                  </graphic>
+               </Button>
+            </children>
+         </HBox>
+         <!-- Botón de Ajustes -->
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="btnAjustes" mnemonicParsing="false" onAction="#accion_ajustes" prefHeight="40.0" prefWidth="150.0">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+                  <graphic>
+                     <HBox alignment="CENTER" prefHeight="42.0" prefWidth="151.0" spacing="10">
+                        <children>
+                           <FontAwesomeIconView glyphName="COG" size="20" />
+                           <Text text="Ajustes">
+                              <font>
+                                 <Font size="17.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                  </graphic>
+               </Button>
+            </children>
+         </HBox>
+         <!-- Botón de Logros -->
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Button fx:id="btnLogros" mnemonicParsing="false" onAction="#accion_logros" prefHeight="40.0" prefWidth="150.0">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+                  <graphic>
+                     <HBox alignment="CENTER" prefHeight="42.0" prefWidth="151.0" spacing="10">
+                        <children>
+                           <FontAwesomeIconView glyphName="TROPHY" size="20" />
+                           <Text text="Logros">
+                              <font>
+                                 <Font size="17.0" />
+                              </font>
+                           </Text>
+                        </children>
+                     </HBox>
+                  </graphic>
+               </Button>
+            </children>
+         </HBox>
       </VBox>
    </children>
 </Pane>
