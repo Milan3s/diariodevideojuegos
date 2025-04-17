@@ -45,7 +45,18 @@ public class InstalacionController implements Initializable {
                 // Crear tablas
                 String sqlConsolas = "CREATE TABLE IF NOT EXISTS consolas ("
                         + "id_consolas INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "nombre TEXT NOT NULL);";
+                        + "nombre TEXT NOT NULL,"
+                        + "anio INTEGER,"
+                        + "fabricante TEXT,"
+                        + "generacion TEXT," // Ej: 'Cuarta generación'
+                        + "region TEXT," // Ej: 'NTSC', 'PAL', 'JAP'
+                        + "tipo TEXT," // Ej: 'Consola de sobremesa', 'Portátil'
+                        + "procesador TEXT," // Ej: 'MIPS R4000', 'Motorola 68000'
+                        + "memoria TEXT," // Ej: '2MB RAM', '512KB'
+                        + "almacenamiento TEXT," // Ej: 'Cartucho', 'CD-ROM', 'Disquete'
+                        + "fecha_lanzamiento TEXT," // Opcional como texto por simplicidad (puedes usar formato YYYY-MM-DD)
+                        + "imagen_de_la_consola TEXT" // imagen de la consola                        
+                        + ");";
 
                 String sqlEstados = "CREATE TABLE IF NOT EXISTS estados ("
                         + "id_estados INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -155,4 +166,4 @@ public class InstalacionController implements Initializable {
     @FXML
     private void accion_sms_servidor(MouseEvent event) {
     }
-} 
+}

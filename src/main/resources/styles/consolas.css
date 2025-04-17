@@ -1,0 +1,130 @@
+/* ============================================
+   DISEÑO GENERAL
+============================================ */
+.root {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* ============================================
+   TÍTULOS
+============================================ */
+.titulo-principal, .titulo-info {
+    -fx-fill: #000000;
+    -fx-font-size: 26px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+}
+
+.subtitulo {
+    -fx-font-size: 20px;
+    -fx-font-style: italic;
+    -fx-text-fill: #222222;
+}
+
+.etiqueta-info {
+    -fx-fill: #444444;
+    -fx-font-style: italic;
+}
+
+.valor-info {
+    -fx-fill: #000000;
+}
+
+/* ============================================
+   CONTENEDORES
+============================================ */
+.contenedor-principal {
+    -fx-padding: 20px;
+}
+
+.panel-informacion {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #f5e8c8;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.15, 0, 2);
+    -fx-padding: 20px;
+}
+
+.contenedor-listado {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0.1, 0, 1);
+    -fx-padding: 15px;
+}
+
+/* ============================================
+   BUSCADOR
+============================================ */
+.campo-busqueda {
+    -fx-background-color: #f9f9f9;
+    -fx-text-fill: #000000;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #888888;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.03), 3, 0.1, 0, 1);
+}
+
+.campo-busqueda:focused {
+    -fx-border-color: #999999;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 6, 0.2, 0, 1);
+}
+
+/* ============================================
+   LISTA
+============================================ */
+.listado-consolas {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* ============================================
+   PAGINADO
+============================================ */
+.barra-de-paginado {
+    -fx-padding: 5;
+}
+
+.boton-paginado {
+    -fx-background-color: transparent;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 5 12;
+    -fx-cursor: hand;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.boton-paginado:hover {
+    -fx-background-color: #eeeeee;
+}
+
+.numeracion-pagina {
+    -fx-font-size: 14px;
+    -fx-text-fill: #000000;
+}
+
+/* ============================================
+   INFORMACIÓN DETALLADA
+============================================ */
+.campo-label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.campo-valor {
+    -fx-text-fill: #111111;
+    -fx-font-size: 15px;
+    
+}

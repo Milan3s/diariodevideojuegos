@@ -1,15 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="890.0" prefWidth="1593.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoConsolasController">
-   <children>
-      <Text layoutX="14.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Consolas">
-         <font>
-            <Font size="28" />
-         </font>
-      </Text>
-   </children>
+<AnchorPane id="root_contenido_consolas" fx:id="root_contenido_consolas" prefHeight="890.0" prefWidth="1593.0" styleClass="contenedor-principal" stylesheets="@../styles/consolas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoConsolasController">
+
+    <children>
+        <Text id="titulo" layoutX="14.0" layoutY="44.0" styleClass="titulo-principal" text="Consolas Reales">
+            <font><Font size="28" /></font>
+        </Text>
+
+        <VBox id="contenedor_listado" layoutX="54.0" layoutY="238.0" prefHeight="540.0" prefWidth="334.0" spacing="10.0" styleClass="contenedor-listado">
+            <children>
+                <TextField id="campo_busqueda" fx:id="btn_buscar_consolas" onAction="#accion_buscar_consolas" prefHeight="46.0" prefWidth="337.0" promptText="Buscar consola..." styleClass="campo-busqueda" />
+                <ListView id="listado_consolas" fx:id="list_view_consolas" prefHeight="428.0" prefWidth="337.0" styleClass="listado-consolas" VBox.vgrow="ALWAYS" />
+                <HBox id="barra_paginado" alignment="CENTER" prefHeight="34.0" prefWidth="347.0" spacing="10.0" styleClass="barra-de-paginado">
+                    <children>
+                        <Button id="btn_primera" onAction="#accion_primeraPagina" styleClass="boton-paginado" text="⏮" />
+                        <Button id="btn_anterior" onAction="#accion_paginaAnterior" styleClass="boton-paginado" text="◀" />
+                        <Label id="numeracion_paginas" fx:id="lbl_paginado" styleClass="numeracion-pagina" text="Página 1 de 1" />
+                        <Button id="btn_siguiente" onAction="#accion_paginaSiguiente" styleClass="boton-paginado" text="▶" />
+                        <Button id="btn_ultima" onAction="#accion_ultimaPagina" styleClass="boton-paginado" text="⏭" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
+        <Text id="subtitulo_listado" layoutX="54.0" layoutY="222.0" styleClass="subtitulo" text="Listado" wrappingWidth="72.0">
+            <font><Font name="System Italic" size="21.0" /></font>
+        </Text>
+
+        <AnchorPane id="panel_informacion" layoutX="409.0" layoutY="240.0" prefHeight="540.0" prefWidth="1100.0" styleClass="panel-informacion">
+            <children>
+                <Text id="texto_total_consolas" layoutX="13.0" layoutY="53.0" styleClass="etiqueta-info" text="Total de consolas:" wrappingWidth="165.0">
+                    <font><Font name="System Italic" size="21.0" /></font>
+                </Text>
+                <Text id="lbl_total_consolas" fx:id="lbl_total_consolas" layoutX="178.0" layoutY="54.0" styleClass="valor-info" wrappingWidth="165.0">
+                    <font><Font name="System Italic" size="21.0" /></font>
+                </Text>
+
+                <GridPane hgap="10" layoutX="20.0" layoutY="85.0" prefHeight="343.0" prefWidth="426.0" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" minWidth="140" />
+                        <ColumnConstraints halignment="LEFT" minWidth="250" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                        <RowConstraints minHeight="24" />
+                    </rowConstraints>
+
+                    <Label styleClass="campo-label" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label fx:id="lbl_nombre_consola" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <Label styleClass="campo-label" text="Año de lanzamiento:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Label fx:id="lbl_anio" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                    <Label styleClass="campo-label" text="Fabricante:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <Label fx:id="lbl_fabricante" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                    <Label styleClass="campo-label" text="Generación:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <Label fx:id="lbl_generacion" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                    <Label styleClass="campo-label" text="Región:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <Label fx:id="lbl_region" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                    <Label styleClass="campo-label" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <Label fx:id="lbl_tipo" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                    <Label styleClass="campo-label" text="Procesador:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <Label fx:id="lbl_procesador" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                    <Label styleClass="campo-label" text="Memoria:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                    <Label fx:id="lbl_memoria" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+                    <Label styleClass="campo-label" text="Almacenamiento:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                    <Label fx:id="lbl_almacenamiento" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+                    <Label styleClass="campo-label" text="Fecha de lanzamiento:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                    <Label fx:id="lbl_fecha_lanzamiento" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                </GridPane>
+
+                <!-- Imagen de la consola -->
+                <ImageView fx:id="imagen_consola" fitHeight="383.0" fitWidth="426.0" layoutX="519.0" layoutY="68.0" preserveRatio="true" styleClass="imagen-consola" />
+            </children>
+        </AnchorPane>
+
+        <Text id="titulo_informacion" layoutX="409.0" layoutY="224.0" styleClass="titulo-info" text="Información" wrappingWidth="650.0">
+            <font><Font size="24.0" /></font>
+        </Text>
+    </children>
 </AnchorPane>
