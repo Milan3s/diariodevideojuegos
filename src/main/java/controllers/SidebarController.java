@@ -44,6 +44,13 @@ public class SidebarController {
         }
     }
 
+    public void marcarBotonActivo(Button botonActivo) {
+        // Reinicia estilos de todos los botones si lo deseas
+        btnIInicio.setStyle(""); // limpio todos
+
+        // Aplica estilo de activo
+        botonActivo.setStyle("-fx-background-color: #cce5ff;"); // ejemplo azul claro
+    }
 
     @FXML
     private void accion_juegos(ActionEvent event) {

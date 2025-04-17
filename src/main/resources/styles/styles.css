@@ -1,0 +1,82 @@
+/* Estilos generales */
+#gridResumen {
+    -fx-padding: 20px;
+    -fx-hgap: 20px; /* Separación horizontal entre tarjetas */
+    -fx-vgap: 20px; /* Separación vertical entre tarjetas */   
+}
+
+/* Título del resumen */
+.titulo-resumen {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-fill: #2c3e50; /* Color oscuro para el título */
+    -fx-margin-bottom: 20px;
+}
+
+/* Estilo de las cards */
+.card {
+    -fx-border-color: #d1d1d1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    -fx-background-color: #ffffff; /* Fondo blanco para las tarjetas */
+    -fx-background-radius: 15px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0.5, 0, 2); /* Sombra suave */
+    -fx-min-width: 250px;
+    -fx-min-height: 200px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+}
+
+/* Hover effect para las cards */
+.card:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-scale-x: 1.02; /* Ligeramente más grande al pasar el mouse */
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 15, 0.5, 0, 3);
+}
+
+/* Títulos dentro de las tarjetas */
+.card-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: #34495e; /* Color oscuro para los títulos */
+}
+
+/* Descripción dentro de las tarjetas */
+.card-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d; /* Color gris para el texto */
+    -fx-text-alignment: center;
+}
+
+/* Ajustes de estilo a los iconos */
+.card-icon {
+    -fx-fill: #3498db; /* Color azul para los iconos */
+}
+
+/* Estilo específico para cada tarjeta (si quieres personalizar colores) */
+#logros-card .card-icon {
+    -fx-fill: #e74c3c; /* Rojo para logros */
+}
+
+#juegos-card .card-icon {
+    -fx-fill: #2ecc71; /* Verde para juegos */
+}
+
+#consolas-card .card-icon {
+    -fx-fill: #f1c40f; /* Amarillo para consolas */
+}
+
+#moderadores-card .card-icon {
+    -fx-fill: #9b59b6; /* Púrpura para moderadores */
+}
+
+#juegos-recientes-card .card-icon {
+    -fx-fill: #1abc9c; /* Turquesa para juegos recientes */
+}
+
+#seguidores-card .card-icon {
+    -fx-fill: #e67e22; /* Naranja para seguidores */
+}

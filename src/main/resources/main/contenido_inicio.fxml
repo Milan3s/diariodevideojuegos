@@ -1,8 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoInicioController">
-    <Text layoutX="50" layoutY="50" text="Bienvenido a Diario de Videojuegos" />
+<AnchorPane prefHeight="890.0" prefWidth="1593.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoInicioController">
+    
+    <!-- Título encima del Grid -->
+    <Text id="summary-title" fx:id="tituloResumen" styleClass="titulo-resumen" text="Resumen del Diario" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" />
+
+    <!-- GridPane con el contenido -->
+    <GridPane id="gridResumen" alignment="CENTER" layoutY="76.0" prefHeight="776.0" prefWidth="1562.0" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="76.0">
+        
+       
+    <!-- Card 5: Juegos recientes -->
+        <HBox id="juegos-recientes-card" alignment="CENTER" prefHeight="334.0" prefWidth="200.0" spacing="10" styleClass="card" GridPane.rowIndex="2">
+            <children>
+                <VBox alignment="CENTER" spacing="5">
+                    <FontAwesomeIconView glyphName="GAMEPAD" size="40" styleClass="card-icon" />
+                    <Text styleClass="card-title" text="Juegos en curso" />
+                    <Label styleClass="card-text" text="Usuario1, Usuario2, Usuario3" />
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Card 6: Seguidores -->
+        <HBox id="seguidores-card" alignment="CENTER" prefHeight="334.0" prefWidth="200.0" spacing="10" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+                <VBox alignment="CENTER" spacing="5">
+                    <FontAwesomeIconView glyphName="USER_PLUS" size="40" styleClass="card-icon" />
+                    <Text styleClass="card-title" text="Seguidores" />
+                    <Label styleClass="card-text" text="120 seguidores" />
+                </VBox>
+            </children>
+        </HBox>
+
+
+        <!-- Card 1: Logros -->
+        <HBox id="logros-card" alignment="CENTER" prefHeight="334.0" prefWidth="200.0" spacing="10" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <children>
+                <VBox alignment="CENTER" spacing="5">
+                    <FontAwesomeIconView glyphName="TROPHY" size="40" styleClass="card-icon" />
+                    <Text styleClass="card-title" text="Logros Alcanzados" />
+                    <Label styleClass="card-text" text="15">
+                  <font>
+                     <Font size="19.0" />
+                  </font></Label>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Card 2: Juegos -->
+        <HBox id="juegos-card" alignment="CENTER" prefHeight="334.0" prefWidth="200.0" spacing="10" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <children>
+                <VBox alignment="CENTER" spacing="5">
+                    <FontAwesomeIconView glyphName="CHECK" size="40" styleClass="card-icon" />
+                    <Text styleClass="card-title" text="Juegos Disponibles" />
+                    <Label styleClass="card-text" text="28" />
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Card 3: Consolas -->
+        <HBox id="consolas-card" alignment="CENTER" prefHeight="334.0" prefWidth="200.0" spacing="10" styleClass="card" GridPane.rowIndex="1">
+            <children>
+                <VBox alignment="CENTER" spacing="5">
+                    <FontAwesomeIconView glyphName="DESKTOP" size="40" styleClass="card-icon" wrappingWidth="42.85714340209961" />
+                    <Text styleClass="card-title" text="Consolas" wrappingWidth="83.076171875" />
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label styleClass="card-text" text="Nintendo 64" />
+                        <Label styleClass="card-text" text="PlayStation 4" />
+                        <Label styleClass="card-text" text="Xbox One" />
+                    </VBox>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Card 4: Moderadores -->
+        <HBox id="moderadores-card" alignment="CENTER" prefHeight="334.0" prefWidth="200.0" spacing="10" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <children>
+                <VBox alignment="CENTER" spacing="5">
+                    <FontAwesomeIconView glyphName="USER" size="40" styleClass="card-icon" />
+                    <Text styleClass="card-title" text="Moderadores" />
+               <VBox alignment="CENTER" spacing="5">
+                  <children>
+                     <Label styleClass="card-text" text="Usuario 1" />
+                     <Label styleClass="card-text" text="Usuario 2" />
+                     <Label styleClass="card-text" text="Usuario 3" />
+                     <Label styleClass="card-text" text="Usuario 4" />
+                  </children>
+               </VBox>
+                </VBox>
+            </children>
+        </HBox>
+
+       
+        
+        <!-- Columnas del Grid -->
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="200.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="200.0" />
+        </columnConstraints>
+        
+        <!-- Filas del Grid -->
+        <rowConstraints>
+            <RowConstraints minHeight="200.0" valignment="CENTER" vgrow="ALWAYS" />
+            <RowConstraints minHeight="200.0" valignment="CENTER" vgrow="ALWAYS" />
+            <RowConstraints minHeight="200.0" valignment="CENTER" vgrow="ALWAYS" />
+        </rowConstraints>
+    </GridPane>
 </AnchorPane>
