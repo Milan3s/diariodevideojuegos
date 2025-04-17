@@ -20,7 +20,8 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         try {
             // Cargar la escena principal
-            scene = new Scene(loadFXML("principal")); // Añadimos la ruta relativa correcta
+            scene = new Scene(loadFXML("instalacion")); // pantalla de instalación
+            //scene = new Scene(loadFXML("principal")); // pantalla para la aplicación principal
             stage.setScene(scene);
             stage.show();
             Logger.info("Aplicación iniciada con éxito.");

@@ -1,0 +1,19 @@
+.titulo-instalacion {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+.btn-instalacion {
+    -fx-padding: 10px 20px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-text-fill: #000000;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.btn-instalacion:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: #ffffff;
+}
