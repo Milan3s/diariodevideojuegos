@@ -78,7 +78,7 @@ public class ContenidoConsolasController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Logger.info("Inicializando ContenidoConsolasController");
-        list_view_consolas.setOnMouseClicked(event -> mostrarInfoConsolaSeleccionada());
+        list_view_consolas.setOnMouseClicked(event -> mostrarInfoConsolaSeleccionada());        
         cargarConsolas();
     }
 
@@ -122,16 +122,16 @@ public class ContenidoConsolasController implements Initializable {
     private void mostrarInfoConsolaSeleccionada() {
         Consola c = list_view_consolas.getSelectionModel().getSelectedItem();
         if (c != null) {
-            lbl_nombre_consola.setText(c.getNombre());
+            lbl_nombre_consola.setText(c.getNombre() != null ? c.getNombre() : "");
             lbl_anio.setText(c.getAnio() != null ? String.valueOf(c.getAnio()) : "");
-            lbl_fabricante.setText(c.getFabricante());
-            lbl_generacion.setText(c.getGeneracion());
-            lbl_region.setText(c.getRegion());
-            lbl_tipo.setText(c.getTipo());
-            lbl_procesador.setText(c.getProcesador());
-            lbl_memoria.setText(c.getMemoria());
-            lbl_almacenamiento.setText(c.getAlmacenamiento());
-            lbl_fecha_lanzamiento.setText(c.getFechaLanzamiento());
+            lbl_fabricante.setText(c.getFabricante() != null ? c.getFabricante() : "");
+            lbl_generacion.setText(c.getGeneracion() != null ? c.getGeneracion() : "");
+            lbl_region.setText(c.getRegion() != null ? c.getRegion() : "");
+            lbl_tipo.setText(c.getTipo() != null ? c.getTipo() : "");
+            lbl_procesador.setText(c.getProcesador() != null ? c.getProcesador() : "");
+            lbl_memoria.setText(c.getMemoria() != null ? c.getMemoria() : "");
+            lbl_almacenamiento.setText(c.getAlmacenamiento() != null ? c.getAlmacenamiento() : "");
+            lbl_fecha_lanzamiento.setText(c.getFechaLanzamiento() != null ? c.getFechaLanzamiento() : "");
 
             cargarImagenConsola(c.getImagen());
         } else {

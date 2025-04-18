@@ -4,7 +4,7 @@ public class Consola {
 
     private int id;
     private String nombre;
-    private Integer anio;
+    private String anio; // <-- cambiado de Integer a String
     private String fabricante;
     private String generacion;
     private String region;
@@ -15,9 +15,9 @@ public class Consola {
     private String fechaLanzamiento;
     private String imagen; // nombre del archivo de imagen
 
-    public Consola(int id, String nombre, Integer anio, String fabricante, String generacion,
-            String region, String tipo, String procesador, String memoria,
-            String almacenamiento, String fechaLanzamiento, String imagen) {
+    public Consola(int id, String nombre, String anio, String fabricante, String generacion,
+                   String region, String tipo, String procesador, String memoria,
+                   String almacenamiento, String fechaLanzamiento, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.anio = anio;
@@ -40,7 +40,7 @@ public class Consola {
         return nombre;
     }
 
-    public Integer getAnio() {
+    public String getAnio() { // <-- cambiado a String
         return anio;
     }
 
@@ -86,6 +86,6 @@ public class Consola {
 
     @Override
     public String toString() {
-        return nombre;
+        return nombre != null ? nombre : "(Sin nombre)";
     }
 }

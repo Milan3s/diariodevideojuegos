@@ -12,9 +12,7 @@ public class ConsolaDAO {
 
     public static List<Consola> obtenerTodasLasConsolas() {
         List<Consola> consolas = new ArrayList<>();
-        String sql = "SELECT id_consolas, nombre, anio, fabricante, generacion, region, tipo, " +
-                     "procesador, memoria, almacenamiento, fecha_lanzamiento, imagen_de_la_consola " +
-                     "FROM consolas ORDER BY nombre ASC;";
+        String sql = "SELECT * FROM consolas ORDER BY nombre ASC;";
 
         try (Connection conn = Database.connect();
              Statement stmt = conn.createStatement();
@@ -22,18 +20,18 @@ public class ConsolaDAO {
 
             while (rs.next()) {
                 Consola consola = new Consola(
-                        rs.getInt("id_consolas"),
-                        rs.getString("nombre"),
-                        rs.getObject("anio", Integer.class),
-                        rs.getString("fabricante"),
-                        rs.getString("generacion"),
-                        rs.getString("region"),
-                        rs.getString("tipo"),
-                        rs.getString("procesador"),
-                        rs.getString("memoria"),
-                        rs.getString("almacenamiento"),
-                        rs.getString("fecha_lanzamiento"),
-                        rs.getString("imagen_de_la_consola")
+                    rs.getInt("id_consolas"),
+                    rs.getString("nombre"),
+                    rs.getString("anio"),
+                    rs.getString("fabricante"),
+                    rs.getString("generacion"),
+                    rs.getString("region"),
+                    rs.getString("tipo"),
+                    rs.getString("procesador"),
+                    rs.getString("memoria"),
+                    rs.getString("almacenamiento"),
+                    rs.getString("fecha_lanzamiento"),
+                    rs.getString("imagen_de_la_consola")
                 );
                 consolas.add(consola);
             }
@@ -49,9 +47,7 @@ public class ConsolaDAO {
 
     public static List<Consola> buscarPorNombre(String nombre) {
         List<Consola> resultado = new ArrayList<>();
-        String sql = "SELECT id_consolas, nombre, anio, fabricante, generacion, region, tipo, " +
-                     "procesador, memoria, almacenamiento, fecha_lanzamiento, imagen_de_la_consola " +
-                     "FROM consolas WHERE nombre LIKE ? ORDER BY nombre ASC;";
+        String sql = "SELECT * FROM consolas WHERE nombre LIKE ? ORDER BY nombre ASC;";
 
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -61,18 +57,18 @@ public class ConsolaDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Consola consola = new Consola(
-                            rs.getInt("id_consolas"),
-                            rs.getString("nombre"),
-                            rs.getObject("anio", Integer.class),
-                            rs.getString("fabricante"),
-                            rs.getString("generacion"),
-                            rs.getString("region"),
-                            rs.getString("tipo"),
-                            rs.getString("procesador"),
-                            rs.getString("memoria"),
-                            rs.getString("almacenamiento"),
-                            rs.getString("fecha_lanzamiento"),
-                            rs.getString("imagen_de_la_consola")
+                        rs.getInt("id_consolas"),
+                        rs.getString("nombre"),
+                        rs.getString("anio"),
+                        rs.getString("fabricante"),
+                        rs.getString("generacion"),
+                        rs.getString("region"),
+                        rs.getString("tipo"),
+                        rs.getString("procesador"),
+                        rs.getString("memoria"),
+                        rs.getString("almacenamiento"),
+                        rs.getString("fecha_lanzamiento"),
+                        rs.getString("imagen_de_la_consola")
                     );
                     resultado.add(consola);
                 }
