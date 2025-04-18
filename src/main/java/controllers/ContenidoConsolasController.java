@@ -78,7 +78,7 @@ public class ContenidoConsolasController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Logger.info("Inicializando ContenidoConsolasController");
-        list_view_consolas.setOnMouseClicked(event -> mostrarInfoConsolaSeleccionada());        
+        list_view_consolas.setOnMouseClicked(event -> mostrarInfoConsolaSeleccionada());
         cargarConsolas();
     }
 
@@ -207,64 +207,112 @@ public class ContenidoConsolasController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioConsolas.fxml"));
             Parent root = loader.load();
 
-            // Crear nueva ventana (modal)
             Stage stage = new Stage();
             stage.setTitle("Formulario de Consolas");
             stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL); // Hace que sea modal
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-            stage.showAndWait(); // Espera a que se cierre para volver
+            stage.showAndWait(); // Esperamos a que se cierre
 
-            Logger.info("Ventana modal 'FormularioConsolas.fxml' abierta correctamente");
+            // ✅ Volver a cargar las consolas después de cerrar
+            cargarConsolas();
 
         } catch (IOException e) {
-            Logger.error("Error al abrir el formulario como ventana modal: " + e.getMessage());
+            Logger.error("Error al abrir el formulario de agregar: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     @FXML
     private void accion_editar(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioConsolas.fxml"));
-            Parent root = loader.load();
+        Consola seleccionada = list_view_consolas.getSelectionModel().getSelectedItem();
 
-            // Crear nueva ventana (modal)
-            Stage stage = new Stage();
-            stage.setTitle("Formulario de Consolas");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL); // Hace que sea modal
-            stage.setResizable(false);
-            stage.showAndWait(); // Espera a que se cierre para volver
+        if (seleccionada != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioConsolas.fxml"));
+                Parent root = loader.load();
 
-            Logger.info("Ventana modal 'FormularioConsolas.fxml' abierta correctamente");
+                FormularioConsolasController controller = loader.getController();
+                controller.setConsolaAEditar(seleccionada);
 
-        } catch (IOException e) {
-            Logger.error("Error al abrir el formulario como ventana modal: " + e.getMessage());
-            e.printStackTrace();
+                Stage stage = new Stage();
+                stage.setTitle("Editar Consola");
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);
+                stage.showAndWait(); // Esperamos a que se cierre
+
+                // ✅ Volver a cargar las consolas después de cerrar
+                cargarConsolas();
+
+                // ✅ Buscar la consola nuevamente en la lista por ID
+                Consola consolaActualizada = todasLasConsolas.stream()
+                        .filter(c -> c.getId() == seleccionada.getId())
+                        .findFirst()
+                        .orElse(null);
+
+                if (consolaActualizada != null) {
+                    list_view_consolas.getSelectionModel().select(consolaActualizada);
+                    mostrarInfoConsolaSeleccionada(); // 👈 vuelve a cargar la info (incluye imagen)
+                }
+
+            } catch (IOException e) {
+                Logger.error("Error al abrir el formulario de edición: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Edición no válida");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, selecciona una consola de la lista para editar.");
+            alert.showAndWait();
         }
     }
 
     @FXML
     private void accion_eliminar(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioConsolas.fxml"));
-            Parent root = loader.load();
+        Consola seleccionada = list_view_consolas.getSelectionModel().getSelectedItem();
 
-            // Crear nueva ventana (modal)
-            Stage stage = new Stage();
-            stage.setTitle("Formulario de Consolas");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL); // Hace que sea modal
-            stage.setResizable(false);
-            stage.showAndWait(); // Espera a que se cierre para volver
-
-            Logger.info("Ventana modal 'FormularioConsolas.fxml' abierta correctamente");
-
-        } catch (IOException e) {
-            Logger.error("Error al abrir el formulario como ventana modal: " + e.getMessage());
-            e.printStackTrace();
+        if (seleccionada == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Eliminar consola");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, selecciona una consola de la lista para eliminar.");
+            alert.showAndWait();
+            return;
         }
+
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmar eliminación");
+        confirmacion.setHeaderText(null);
+        confirmacion.setContentText("¿Estás seguro de que deseas eliminar la consola '" + seleccionada.getNombre() + "'?");
+
+        confirmacion.showAndWait().ifPresent(respuesta -> {
+            if (respuesta == ButtonType.OK) {
+                boolean eliminada = ConsolaDAO.eliminarConsola(seleccionada.getId());
+
+                if (eliminada) {
+                    Logger.info("Consola eliminada correctamente.");
+                    mostrarAlerta("Consola eliminada correctamente.");
+                    cargarConsolas(); // Refrescar la lista
+                    limpiarInfo();    // Limpiar detalles
+                } else {
+                    mostrarAlerta("No se pudo eliminar la consola.");
+                }
+            }
+        });
+    }
+
+    private void mostrarAlerta(String mensaje) {
+        mostrarAlerta(mensaje, Alert.AlertType.INFORMATION);
+    }
+
+    private void mostrarAlerta(String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle("Mensaje");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
 }

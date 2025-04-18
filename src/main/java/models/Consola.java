@@ -4,7 +4,7 @@ public class Consola {
 
     private int id;
     private String nombre;
-    private String anio; // <-- cambiado de Integer a String
+    private String anio;
     private String fabricante;
     private String generacion;
     private String region;
@@ -13,7 +13,7 @@ public class Consola {
     private String memoria;
     private String almacenamiento;
     private String fechaLanzamiento;
-    private String imagen; // nombre del archivo de imagen
+    private String imagen;
 
     public Consola(int id, String nombre, String anio, String fabricante, String generacion,
                    String region, String tipo, String procesador, String memoria,
@@ -32,6 +32,7 @@ public class Consola {
         this.imagen = imagen;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -40,7 +41,7 @@ public class Consola {
         return nombre;
     }
 
-    public String getAnio() { // <-- cambiado a String
+    public String getAnio() {
         return anio;
     }
 
@@ -78,6 +79,51 @@ public class Consola {
 
     public String getImagen() {
         return imagen;
+    }
+
+    // Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setAnio(String anio) {
+        this.anio = anio;
+    }
+
+    public void setFabricante(String fabricante) {
+        this.fabricante = fabricante;
+    }
+
+    public void setGeneracion(String generacion) {
+        this.generacion = generacion;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setProcesador(String procesador) {
+        this.procesador = procesador;
+    }
+
+    public void setMemoria(String memoria) {
+        this.memoria = memoria;
+    }
+
+    public void setAlmacenamiento(String almacenamiento) {
+        this.almacenamiento = almacenamiento;
+    }
+
+    public void setFechaLanzamiento(String fechaLanzamiento) {
+        this.fechaLanzamiento = fechaLanzamiento;
     }
 
     public void setImagen(String imagen) {
