@@ -1,15 +1,177 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="890.0" prefWidth="1593.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoJuegosController">
-   <children>
-      <Text layoutX="14.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Juegos" wrappingWidth="158.13671875">
-         <font>
-            <Font size="28" />
-         </font>
-      </Text>
-   </children>
+<AnchorPane fx:id="root_contenido_juegos" prefHeight="890.0" prefWidth="1593.0" styleClass="contenedor-principal" stylesheets="@../styles/consolas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ContenidoJuegosController">
+
+    <children>
+        <!-- Título principal -->
+        <Text layoutX="14.0" layoutY="44.0" styleClass="titulo-principal" text="Juegos">
+            <font>
+                <Font size="28" />
+            </font>
+        </Text>
+
+        <!-- Subtítulo -->
+        <Text layoutX="56.0" layoutY="223.0" styleClass="titulo-info" text="Listado">
+            <font>
+                <Font name="System Italic" size="21.0" />
+            </font>
+        </Text>
+
+        <!-- Listado -->
+        <VBox layoutX="54.0" layoutY="238.0" prefHeight="540.0" prefWidth="334.0" spacing="10.0" styleClass="contenedor-listado">
+            <children>
+                <!-- Campo de búsqueda -->
+                <TextField fx:id="campo_busqueda_juegos" onAction="#accion_buscar_juegos" prefHeight="46.0" prefWidth="337.0" promptText="Buscar juego..." styleClass="campo-busqueda" />
+
+                <!-- Filtro por Consolas -->
+                <HBox spacing="10.0">
+                    <children>
+                        <Label text="Filtrar por Consola:" />
+                        <ComboBox fx:id="combo_consolas" prefWidth="237.0" promptText="Seleccionar Consola..." styleClass="campo-busqueda">
+                            <!-- Las consolas se llenarán dinámicamente -->
+                        </ComboBox>
+                    </children>
+                </HBox>
+
+                <!-- Filtro por Estado -->
+                <HBox spacing="10.0">
+                    <children>
+                        <Label text="Filtrar por Estado:" />
+                        <ComboBox fx:id="combo_estados" prefWidth="237.0" promptText="Seleccionar Estado..." styleClass="campo-busqueda">
+                            <!-- Los estados se llenarán dinámicamente -->
+                        </ComboBox>
+                    </children>
+                </HBox>
+
+                <!-- ListView para mostrar los juegos -->
+                <ListView fx:id="list_view_juegos" prefHeight="428.0" prefWidth="337.0" styleClass="listado-consolas" VBox.vgrow="ALWAYS" />
+
+                <!-- Barra de paginado -->
+                <HBox alignment="CENTER" prefHeight="34.0" prefWidth="347.0" spacing="10.0" styleClass="barra-de-paginado">
+                    <children>
+                        <Button onAction="#accion_primeraPagina" styleClass="boton-paginado" text="⏮" />
+                        <Button onAction="#accion_paginaAnterior" styleClass="boton-paginado" text="◀" />
+                        <Label fx:id="lbl_paginado_juegos" styleClass="numeracion-pagina" text="Página 1 de 1" />
+                        <Button onAction="#accion_paginaSiguiente" styleClass="boton-paginado" text="▶" />
+                        <Button onAction="#accion_ultimaPagina" styleClass="boton-paginado" text="⏭" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
+        <!-- Acciones -->
+        <HBox layoutX="409.0" layoutY="126.0" spacing="15.0" styleClass="hbox_acciones">
+            <children>
+                <Button fx:id="btn_agregar_juego" onAction="#accion_agregar" styleClass="boton-accion">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="PLUS" styleClass="icono-boton" />
+                    </graphic>
+                    <text>Añadir</text>
+                </Button>
+
+                <Button fx:id="btn_editar_juego" onAction="#accion_editar" styleClass="boton-accion">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="PENCIL" styleClass="icono-boton" />
+                    </graphic>
+                    <text>Editar</text>
+                </Button>
+
+                <Button fx:id="btn_eliminar_juego" onAction="#accion_eliminar" styleClass="boton-accion">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="TRASH" styleClass="icono-boton" />
+                    </graphic>
+                    <text>Eliminar</text>
+                </Button>
+            </children>
+        </HBox>
+
+        <Text layoutX="409.0" layoutY="110.0" text="Acciones">
+            <font>
+                <Font name="System Italic" size="21.0" />
+            </font>
+        </Text>
+
+        <!-- Subtítulo Información -->
+        <Text layoutX="409.0" layoutY="224.0" styleClass="titulo-info" text="Información">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Text>
+
+        <!-- Panel de información -->
+        <AnchorPane fx:id="panel_informacion_juego" layoutX="409.0" layoutY="240.0" prefHeight="540.0" prefWidth="1100.0" styleClass="panel-informacion">
+            <children>
+                <Text layoutX="13.0" layoutY="53.0" styleClass="etiqueta-info" text="Total de juegos:">
+                    <font>
+                        <Font name="System Italic" size="21.0" />
+                    </font>
+                </Text>
+                <Text fx:id="lbl_total_juegos" layoutX="178.0" layoutY="54.0" styleClass="valor-info" />
+
+                <GridPane hgap="10" layoutX="20.0" layoutY="85.0" prefHeight="343.0" prefWidth="426.0" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" minWidth="140" />
+                        <ColumnConstraints halignment="LEFT" minWidth="250" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="24.0" />
+                        <RowConstraints minHeight="24.0" />
+                        <RowConstraints minHeight="24.0" />
+                        <RowConstraints minHeight="24.0" />
+                        <RowConstraints minHeight="24.0" />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                    </rowConstraints>
+
+                    <Label styleClass="campo-label" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label fx:id="lbl_nombre_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <Label styleClass="campo-label" text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Label fx:id="lbl_anio_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                    <Label styleClass="campo-label" text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <Label fx:id="lbl_estado_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                    <Label styleClass="campo-label" text="Consola:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <Label fx:id="lbl_consola_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                    <Label styleClass="campo-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <Label fx:id="lbl_descripcion_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                    <Label styleClass="campo-label" text="Fecha de Inicio:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <Label fx:id="lbl_fecha_inicio_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                    <Label styleClass="campo-label" text="Fecha de Fin:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <Label fx:id="lbl_fecha_fin_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                    <Label styleClass="campo-label" text="Intentos:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                    <Label fx:id="lbl_intentos_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+                    <Label styleClass="campo-label" text="Créditos:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                    <Label fx:id="lbl_creditos_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+                    <Label styleClass="campo-label" text="Puntuación:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                    <Label fx:id="lbl_puntuacion_juego" styleClass="campo-valor" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                </GridPane>
+            </children>
+        </AnchorPane>
+    </children>
 </AnchorPane>

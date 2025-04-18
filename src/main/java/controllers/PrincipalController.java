@@ -38,7 +38,8 @@ public class PrincipalController {
         // Al cargar principal.fxml, muestra directamente el contenido de "Inicio"
         try {
             //FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/contenido_inicio.fxml"));
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/contenido_consolas.fxml"));
+            //FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/contenido_consolas.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/contenido_juegos.fxml"));
             Parent contenido = loader.load();
             setContenido(contenido);
         } catch (IOException e) {
