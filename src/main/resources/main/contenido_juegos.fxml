@@ -33,7 +33,7 @@
         </Text>
 
         <!-- Listado -->
-        <VBox layoutX="54.0" layoutY="238.0" prefHeight="540.0" prefWidth="334.0" spacing="10.0" styleClass="contenedor-listado">
+        <VBox layoutX="54.0" layoutY="238.0" prefHeight="540.0" prefWidth="396.0" spacing="10.0" styleClass="contenedor-listado">
             <children>
                 <!-- Campo de búsqueda -->
                 <TextField fx:id="campo_busqueda_juegos" onAction="#accion_buscar_juegos" prefHeight="46.0" prefWidth="337.0" promptText="Buscar juego..." styleClass="campo-busqueda" />
@@ -41,7 +41,7 @@
                 <!-- Filtro por Consolas -->
                 <HBox spacing="10.0">
                     <children>
-                        <Label text="Filtrar por Consola:" />
+                        <Label prefHeight="52.0" prefWidth="170.0" text="Filtrar por Consola:" />
                         <ComboBox fx:id="combo_consolas" prefWidth="237.0" promptText="Seleccionar Consola..." styleClass="campo-busqueda">
                             <!-- Las consolas se llenarán dinámicamente -->
                         </ComboBox>
@@ -51,7 +51,7 @@
                 <!-- Filtro por Estado -->
                 <HBox spacing="10.0">
                     <children>
-                        <Label text="Filtrar por Estado:" />
+                        <Label prefHeight="59.0" prefWidth="168.0" text="Filtrar por Estado:" />
                         <ComboBox fx:id="combo_estados" prefWidth="237.0" promptText="Seleccionar Estado..." styleClass="campo-busqueda">
                             <!-- Los estados se llenarán dinámicamente -->
                         </ComboBox>
@@ -75,7 +75,7 @@
         </VBox>
 
         <!-- Acciones -->
-        <HBox layoutX="409.0" layoutY="126.0" spacing="15.0" styleClass="hbox_acciones">
+        <HBox layoutX="481.0" layoutY="132.0" spacing="15.0" styleClass="hbox_acciones">
             <children>
                 <Button fx:id="btn_agregar_juego" onAction="#accion_agregar" styleClass="boton-accion">
                     <graphic>
@@ -100,21 +100,21 @@
             </children>
         </HBox>
 
-        <Text layoutX="409.0" layoutY="110.0" text="Acciones">
+        <Text layoutX="481.0" layoutY="116.0" text="Acciones">
             <font>
                 <Font name="System Italic" size="21.0" />
             </font>
         </Text>
 
         <!-- Subtítulo Información -->
-        <Text layoutX="409.0" layoutY="224.0" styleClass="titulo-info" text="Información">
+        <Text layoutX="481.0" layoutY="222.0" styleClass="titulo-info" text="Información">
             <font>
                 <Font size="24.0" />
             </font>
         </Text>
 
         <!-- Panel de información -->
-        <AnchorPane fx:id="panel_informacion_juego" layoutX="409.0" layoutY="240.0" prefHeight="540.0" prefWidth="1100.0" styleClass="panel-informacion">
+        <AnchorPane fx:id="panel_informacion_juego" layoutX="482.0" layoutY="240.0" prefHeight="540.0" prefWidth="1027.0" styleClass="panel-informacion">
             <children>
                 <Text layoutX="13.0" layoutY="53.0" styleClass="etiqueta-info" text="Total de juegos:">
                     <font>
