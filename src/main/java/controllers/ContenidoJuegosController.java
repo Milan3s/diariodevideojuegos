@@ -16,27 +16,48 @@ import java.util.ResourceBundle;
 
 public class ContenidoJuegosController implements Initializable {
 
-    @FXML private AnchorPane root_contenido_juegos;
-    @FXML private TextField campo_busqueda_juegos;
-    @FXML private ListView<Juego> list_view_juegos;
-    @FXML private Label lbl_paginado_juegos;
-    @FXML private Button btn_agregar_juego;
-    @FXML private Button btn_editar_juego;
-    @FXML private Button btn_eliminar_juego;
-    @FXML private AnchorPane panel_informacion_juego;
-    @FXML private Text lbl_total_juegos;
-    @FXML private Label lbl_nombre_juego;
-    @FXML private Label lbl_anio_juego;
-    @FXML private Label lbl_estado_juego;
-    @FXML private Label lbl_consola_juego;
-    @FXML private ComboBox<String> combo_consolas;
-    @FXML private ComboBox<String> combo_estados;
-    @FXML private Label lbl_descripcion_juego;
-    @FXML private Label lbl_fecha_inicio_juego;
-    @FXML private Label lbl_fecha_fin_juego;
-    @FXML private Label lbl_intentos_juego;
-    @FXML private Label lbl_creditos_juego;
-    @FXML private Label lbl_puntuacion_juego;
+    @FXML
+    private AnchorPane root_contenido_juegos;
+    @FXML
+    private TextField campo_busqueda_juegos;
+    @FXML
+    private ListView<Juego> list_view_juegos;
+    @FXML
+    private Label lbl_paginado_juegos;
+    @FXML
+    private Button btn_agregar_juego;
+    @FXML
+    private Button btn_editar_juego;
+    @FXML
+    private Button btn_eliminar_juego;
+    @FXML
+    private AnchorPane panel_informacion_juego;
+    @FXML
+    private Text lbl_total_juegos;
+    @FXML
+    private Label lbl_nombre_juego;
+    @FXML
+    private Label lbl_anio_juego;
+    @FXML
+    private Label lbl_estado_juego;
+    @FXML
+    private Label lbl_consola_juego;
+    @FXML
+    private ComboBox<String> combo_consolas;
+    @FXML
+    private ComboBox<String> combo_estados;
+    @FXML
+    private Label lbl_descripcion_juego;
+    @FXML
+    private Label lbl_fecha_inicio_juego;
+    @FXML
+    private Label lbl_fecha_fin_juego;
+    @FXML
+    private Label lbl_intentos_juego;
+    @FXML
+    private Label lbl_creditos_juego;
+    @FXML
+    private Label lbl_puntuacion_juego;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -72,12 +93,35 @@ public class ContenidoJuegosController implements Initializable {
         lbl_puntuacion_juego.setText(juego.getPuntuacion() > 0 ? String.valueOf(juego.getPuntuacion()) : "-");
     }
 
-    @FXML private void accion_buscar_juegos() {}
-    @FXML private void accion_primeraPagina() {}
-    @FXML private void accion_paginaAnterior() {}
-    @FXML private void accion_paginaSiguiente() {}
-    @FXML private void accion_ultimaPagina() {}
-    @FXML private void accion_agregar() {}
-    @FXML private void accion_editar() {}
-    @FXML private void accion_eliminar() {}
+    @FXML
+    private void accion_buscar_juegos() {
+    }
+
+    @FXML
+    private void accion_primeraPagina() {
+    }
+
+    @FXML
+    private void accion_paginaAnterior() {
+    }
+
+    @FXML
+    private void accion_paginaSiguiente() {
+    }
+
+    @FXML
+    private void accion_ultimaPagina() {
+    }
+
+    @FXML
+    private void accion_agregar() {
+    }
+
+    @FXML
+    private void accion_editar() {
+    }
+
+    @FXML
+    private void accion_eliminar() {
+    }
 }
