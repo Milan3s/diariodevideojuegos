@@ -18,8 +18,6 @@ import javafx.scene.layout.AnchorPane;
 public class FormularioJuegosController implements Initializable {
 
     @FXML
-    private AnchorPane root_formulario_juegos;
-    @FXML
     private TextField txt_nombre;
     @FXML
     private TextField txt_anio;
@@ -40,8 +38,6 @@ public class FormularioJuegosController implements Initializable {
     @FXML
     private TextField txt_puntuacion;
     @FXML
-    private Button btn_cambiar_imagen;
-    @FXML
     private Button btn_guardar;
     @FXML
     private Button btn_cancelar;
@@ -54,16 +50,10 @@ public class FormularioJuegosController implements Initializable {
         // TODO
     }    
 
-    @FXML
-    private void accion_cambiar_imagen(ActionEvent event) {
-    }
 
     @FXML
-    private void accion_guardar(ActionEvent event) {
+    private void btnActionCancelar(ActionEvent event) {
     }
 
-    @FXML
-    private void accion_cancelar(ActionEvent event) {
-    }
     
 }

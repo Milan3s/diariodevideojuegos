@@ -1,89 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="root_formulario_juegos" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormularioJuegosController">
-    <children>
-        <!-- Título -->
-        <Text layoutX="30.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Formulario para Juegos" textAlignment="CENTER" underline="true" wrappingWidth="640.0">
-            <font>
-                <Font name="System Bold Italic" size="21.0"/>
-            </font>
-        </Text>
+<BorderPane prefHeight="649.0" prefWidth="998.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormularioJuegosController">
 
-        <!-- Formulario organizado en GridPane -->
-        <GridPane hgap="15" layoutX="50.0" layoutY="100.0" prefHeight="380.0" prefWidth="600.0" vgap="12">
-            <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" minWidth="120.0"/>
-                <ColumnConstraints halignment="LEFT" minWidth="250.0"/>
-                <ColumnConstraints halignment="RIGHT" minWidth="120.0"/>
-                <ColumnConstraints halignment="LEFT" minWidth="250.0"/>
-            </columnConstraints>
+    <center>
+        <AnchorPane prefHeight="669.0" prefWidth="1047.0" stylesheets="@../styles/juegos.css" BorderPane.alignment="CENTER">
 
-            <rowConstraints>
-                <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="30"/>
-                <RowConstraints minHeight="30"/>
-            </rowConstraints>
+            <!-- Título centrado arriba -->
+            <Text layoutX="365.0" layoutY="55.0" styleClass="titulo-formulario" text="Formulario para Juegos">
+                <font>
+                    <Font size="26.0" />
+                </font>
+            </Text>
 
-            <!-- Nombre -->
-            <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="txt_nombre" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <!-- Formulario organizado en dos columnas -->
+            <HBox layoutX="50.0" layoutY="140.0" spacing="50.0">
+                <children>
 
-            <!-- Año -->
-            <Label text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="txt_anio" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <!-- Columna izquierda -->
+                    <GridPane hgap="10" prefHeight="390.0" prefWidth="468.0" styleClass="form-grid" vgap="15">
+                        <padding>
+                            <Insets bottom="10" left="10" right="10" top="10" />
+                        </padding>
 
-            <!-- Consola -->
-            <Label text="Consola:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <ComboBox fx:id="combo_consolas" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Seleccionar Consola"/>
+                        <Label styleClass="label-form" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="txt_nombre" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <!-- Estado -->
-            <Label text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <ComboBox fx:id="combo_estados" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Seleccionar Estado"/>
+                        <Label styleClass="label-form" text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="txt_anio" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-            <!-- Descripción -->
-            <Label text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <TextField fx:id="txt_descripcion" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label styleClass="label-form" text="Consola:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="combo_consolas" prefHeight="59.0" prefWidth="307.0" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <!-- Fecha Inicio -->
-            <Label text="Fecha Inicio:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <TextField fx:id="txt_fecha_inicio" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <Label styleClass="label-form" text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="combo_estados" prefHeight="59.0" prefWidth="305.0" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-            <!-- Fecha Fin -->
-            <Label text="Fecha Fin:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-            <TextField fx:id="txt_fecha_fin" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <Label styleClass="label-form" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <TextField fx:id="txt_descripcion" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-            <!-- Intentos -->
-            <Label text="Intentos:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-            <TextField fx:id="txt_intentos" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                        <Label styleClass="label-form" text="Fecha Inicio:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <TextField fx:id="txt_fecha_inicio" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-            <!-- Créditos -->
-            <Label text="Créditos:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-            <TextField fx:id="txt_creditos" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                        <Label styleClass="label-form" text="Fecha Fin:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                        <TextField fx:id="txt_fecha_fin" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-            <!-- Puntuación -->
-            <Label text="Puntuación:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-            <TextField fx:id="txt_puntuacion" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
-        </GridPane>
-        
-        <Button fx:id="btn_cambiar_imagen" layoutX="400.0" layoutY="370.0" onAction="#accion_cambiar_imagen" prefHeight="40.0" prefWidth="180.0" text="Cambiar Imagen"/>
+                        <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" minWidth="120.0" />
+                            <ColumnConstraints halignment="LEFT" minWidth="250.0" />
+                        </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
 
-        <Button fx:id="btn_guardar" layoutX="250.0" layoutY="430.0" onAction="#accion_guardar" prefHeight="40.0" prefWidth="200.0" text="Guardar"/>
-        <Button fx:id="btn_cancelar" layoutX="460.0" layoutY="430.0" onAction="#accion_cancelar" prefHeight="40.0" prefWidth="180.0" text="Cancelar"/>
-    </children>
-</AnchorPane>
+                    <!-- Columna derecha -->
+                    <GridPane hgap="10" prefHeight="390.0" prefWidth="343.0" styleClass="form-grid" vgap="15">
+                        <padding>
+                            <Insets bottom="10" left="10" right="10" top="10" />
+                        </padding>
+
+                        <Label styleClass="label-form" text="Intentos:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="txt_intentos" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <Label styleClass="label-form" text="Créditos:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="txt_creditos" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label styleClass="label-form" text="Puntuación:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="txt_puntuacion" styleClass="input-form" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" minWidth="120.0" />
+                            <ColumnConstraints halignment="LEFT" minWidth="250.0" />
+                        </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+
+                </children>
+            </HBox>
+
+            <!-- Botones abajo centrados -->
+            <HBox layoutX="387.0" layoutY="572.0" spacing="20.0">
+                <children>
+                    <Button fx:id="btn_guardar" prefHeight="35" prefWidth="120" styleClass="boton-accion" text="Guardar" />
+                    <Button fx:id="btn_cancelar" onAction="#btnActionCancelar" prefHeight="35" prefWidth="120" styleClass="boton-accion" text="Cancelar" />
+                </children>
+            </HBox>
+
+        </AnchorPane>
+    </center>
+</BorderPane>

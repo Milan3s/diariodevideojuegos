@@ -3,6 +3,7 @@ package controllers;
 import dao.JuegoDAO;
 import models.Juego;
 import config.Logger;
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +14,10 @@ import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class ContenidoJuegosController implements Initializable {
 
@@ -115,10 +120,36 @@ public class ContenidoJuegosController implements Initializable {
 
     @FXML
     private void accion_agregar() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioJuegos.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Agregar Juego");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            Logger.error("Error al abrir el formulario de juegos (Agregar): " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void accion_editar() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormularioJuegos.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Editar Juego");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            Logger.error("Error al abrir el formulario de juegos (Editar): " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
