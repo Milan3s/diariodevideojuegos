@@ -9,10 +9,10 @@ public class Juego {
     private String genero;
     private String modoJuego;
     private String fechaLanzamiento;
-    private int idEstado;
+    private Estado estado;  // Se cambió a Estado
     private boolean esRecomendado;
     private String imagen;
-    private int idConsola; // Para la tabla de relación juegos_consolas
+    private Consola consola; // Se cambió a Consola
 
     // Constructores
     public Juego() {}
@@ -91,12 +91,12 @@ public class Juego {
         this.fechaLanzamiento = fechaLanzamiento;
     }
 
-    public int getIdEstado() {
-        return idEstado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setIdEstado(int idEstado) {
-        this.idEstado = idEstado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
     public boolean isEsRecomendado() {
@@ -115,18 +115,16 @@ public class Juego {
         this.imagen = imagen;
     }
 
-    public int getIdConsola() {
-        return idConsola;
+    public Consola getConsola() {
+        return consola;
     }
 
-    public void setIdConsola(int idConsola) {
-        this.idConsola = idConsola;
+    public void setConsola(Consola consola) {
+        this.consola = consola;
     }
 
     @Override
     public String toString() {
         return nombre;
     }
-    
-    
 }

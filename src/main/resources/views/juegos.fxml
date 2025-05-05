@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="671.0" prefWidth="816.0" styleClass="mainFxmlClass" stylesheets="@../styles/juegos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.JuegosController">
+<AnchorPane prefHeight="722.0" prefWidth="1167.0" styleClass="mainFxmlClass" stylesheets="@../styles/juegos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.JuegosController">
 
     <!-- Título -->
     <Text fx:id="tituloJuegos" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Juegos" />
@@ -16,10 +16,10 @@
     <Button layoutX="30.0" layoutY="60.0" onAction="#abrirModalAgregarJuego" styleClass="juegos-button" text="Añadir juego" />
 
     <!-- ListView -->
-    <ListView fx:id="listaJuegos" layoutX="30.0" layoutY="116.0" prefHeight="574.0" prefWidth="248.0" styleClass="lista-juegos" />
+    <ListView fx:id="listaJuegos" layoutX="30.0" layoutY="116.0" prefHeight="632.0" prefWidth="248.0" styleClass="lista-juegos" />
 
     <!-- Detalles (Card) -->
-    <AnchorPane layoutX="300.0" layoutY="116.0" prefHeight="574.0" prefWidth="492.0" styleClass="detalle-card">
+    <AnchorPane layoutX="300.0" layoutY="116.0" prefHeight="606.0" prefWidth="733.0" styleClass="detalle-card">
 
         <Label layoutX="20.0" layoutY="20.0" styleClass="detalle-titulo" text="Nombre" />
         <Label fx:id="lblNombre" layoutX="180.0" layoutY="20.0" styleClass="detalle-valor" />
@@ -42,7 +42,19 @@
         <Label layoutX="20.0" layoutY="230.0" styleClass="detalle-titulo" text="Recomendado" />
         <Label fx:id="lblRecomendado" layoutX="180.0" layoutY="230.0" styleClass="detalle-valor" />
 
-        <Label layoutX="20.0" layoutY="265.0" styleClass="detalle-titulo" text="Imagen" />
-        <ImageView fx:id="imgDetalle" fitHeight="239.0" fitWidth="216.0" layoutX="20.0" layoutY="305.0" preserveRatio="true" />
+        <Label layoutX="20.0" layoutY="265.0" styleClass="detalle-titulo" text="Estado" />
+        <Label fx:id="lblEstado" layoutX="180.0" layoutY="265.0" styleClass="detalle-valor" />
+
+        <Label layoutX="20.0" layoutY="300.0" styleClass="detalle-titulo" text="Consola" />
+        <Label fx:id="lblConsola" layoutX="180.0" layoutY="300.0" styleClass="detalle-valor" />
+
+        <Label layoutX="20.0" layoutY="335.0" styleClass="detalle-titulo" text="Imagen" />
+
+        <!-- Imagen y texto "No hay imagen" -->
+        <ImageView fx:id="imgDetalle" fitHeight="239.0" fitWidth="216.0" layoutX="20.0" layoutY="365.0" preserveRatio="true" />
+        
+        <!-- Mueve el Label debajo de la imagen -->
+        <Label fx:id="lblNoImagen" layoutX="20.0" layoutY="605.0" styleClass="detalle-valor" text="No hay imagen" visible="false" />
+
     </AnchorPane>
 </AnchorPane>
