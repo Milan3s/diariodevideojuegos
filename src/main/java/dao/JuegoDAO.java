@@ -42,7 +42,7 @@ public class JuegoDAO {
                     stmt.setNull(8, java.sql.Types.INTEGER);
                 }
                 stmt.setBoolean(9, juego.isEsRecomendado());
-                
+
                 // Solo el nombre de la imagen, no la ruta completa
                 String nombreImagen = juego.getImagen() != null ? new File(juego.getImagen()).getName() : null;
                 stmt.setString(10, nombreImagen); // Guardar solo el nombre de la imagen
@@ -96,9 +96,7 @@ public class JuegoDAO {
                 + "LEFT JOIN consolas c ON jc.id_consola = c.id_consola "
                 + "ORDER BY j.nombre ASC";
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Juego juego = new Juego();
@@ -130,4 +128,131 @@ public class JuegoDAO {
 
         return lista;
     }
+
+    public boolean eliminarJuego(int idJuego) {
+        String sqlJuego = "SELECT imagen FROM juegos WHERE id_juegos = ?";
+        String sqlEliminarJuego = "DELETE FROM juegos WHERE id_juegos = ?";
+        String sqlEliminarRelacionConsola = "DELETE FROM juegos_consolas WHERE id_juego = ?";
+
+        try (Connection conn = Conexion.obtenerConexion()) {
+            // Iniciar transacción
+            conn.setAutoCommit(false);
+
+            // Primero, obtenemos la imagen asociada al juego
+            String imagenJuego = null;
+            try (PreparedStatement stmt = conn.prepareStatement(sqlJuego)) {
+                stmt.setInt(1, idJuego);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        imagenJuego = rs.getString("imagen");
+                    }
+                }
+            }
+
+            // Eliminar las relaciones con las consolas
+            try (PreparedStatement stmt = conn.prepareStatement(sqlEliminarRelacionConsola)) {
+                stmt.setInt(1, idJuego);
+                stmt.executeUpdate();
+            }
+
+            // Eliminar el juego
+            try (PreparedStatement stmt = conn.prepareStatement(sqlEliminarJuego)) {
+                stmt.setInt(1, idJuego);
+                int filas = stmt.executeUpdate();
+
+                // Si el juego se eliminó correctamente, también eliminamos la imagen
+                if (filas > 0 && imagenJuego != null && !imagenJuego.isEmpty()) {
+                    // Eliminar la imagen del disco
+                    File archivoImagen = new File(Conexion.imagenesPath, imagenJuego);
+                    if (archivoImagen.exists()) {
+                        if (archivoImagen.delete()) {
+                            AppLogger.info("Imagen eliminada correctamente: " + archivoImagen.getAbsolutePath());
+                        } else {
+                            AppLogger.warning("No se pudo eliminar la imagen: " + archivoImagen.getAbsolutePath());
+                        }
+                    }
+                }
+
+                conn.commit();  // Commit de la transacción
+                return true;  // Juego y su imagen eliminados correctamente
+            } catch (SQLException e) {
+                conn.rollback();  // Rollback si algo falla
+                AppLogger.severe("Error al eliminar el juego: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            AppLogger.severe("Error de conexión a la base de datos: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;  // Si no se pudo eliminar el juego o la imagen
+    }
+
+    // Método para actualizar un juego
+    public boolean actualizarJuego(Juego juego) {
+        String sqlJuego = "UPDATE juegos SET nombre = ?, descripcion = ?, desarrollador = ?, editor = ?, genero = ?, modo_juego = ?, fecha_lanzamiento = ?, id_estado = ?, es_recomendado = ?, imagen = ? WHERE id_juegos = ?";
+        String sqlEliminarRelacionConsola = "DELETE FROM juegos_consolas WHERE id_juego = ?";  // Eliminar la relación actual
+        String sqlRelacionConsola = "INSERT INTO juegos_consolas (id_juego, id_consola) SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM juegos_consolas WHERE id_juego = ? AND id_consola = ?)";  // Evitar duplicados
+
+        try (Connection conn = Conexion.obtenerConexion()) {
+            conn.setAutoCommit(false); // Iniciar transacción
+
+            try (PreparedStatement stmt = conn.prepareStatement(sqlJuego)) {
+                // Actualizar los campos del juego
+                stmt.setString(1, juego.getNombre());
+                stmt.setString(2, juego.getDescripcion());
+                stmt.setString(3, juego.getDesarrollador());
+                stmt.setString(4, juego.getEditor());
+                stmt.setString(5, juego.getGenero());
+                stmt.setString(6, juego.getModoJuego());
+                stmt.setString(7, juego.getFechaLanzamiento());
+                if (juego.getEstado() != null) {
+                    stmt.setInt(8, juego.getEstado().getId()); // Obtener el ID del estado
+                } else {
+                    stmt.setNull(8, java.sql.Types.INTEGER);
+                }
+                stmt.setBoolean(9, juego.isEsRecomendado());
+
+                // Solo el nombre de la imagen, no la ruta completa
+                String nombreImagen = juego.getImagen() != null ? new File(juego.getImagen()).getName() : null;
+                stmt.setString(10, nombreImagen); // Guardar solo el nombre de la imagen
+
+                stmt.setInt(11, juego.getId());  // ID del juego a actualizar
+
+                int filas = stmt.executeUpdate(); // Ejecuta la actualización
+
+                if (filas > 0) {
+                    // Eliminar las relaciones anteriores con las consolas
+                    try (PreparedStatement stmtEliminarRelacion = conn.prepareStatement(sqlEliminarRelacionConsola)) {
+                        stmtEliminarRelacion.setInt(1, juego.getId());
+                        stmtEliminarRelacion.executeUpdate();  // Eliminar la relación existente
+                    }
+
+                    // Insertar la nueva relación consola-juego solo si no existe
+                    try (PreparedStatement stmtRelacion = conn.prepareStatement(sqlRelacionConsola)) {
+                        if (juego.getConsola() != null) {
+                            stmtRelacion.setInt(1, juego.getId());
+                            stmtRelacion.setInt(2, juego.getConsola().getId());  // Obtener el ID de la consola
+                            stmtRelacion.setInt(3, juego.getId());  // Compara con el ID del juego
+                            stmtRelacion.setInt(4, juego.getConsola().getId());  // Compara con el ID de la consola
+                            stmtRelacion.executeUpdate();
+                        }
+                    }
+
+                    conn.commit();  // Commit de la transacción
+                    return true;  // La actualización fue exitosa
+                }
+
+            } catch (SQLException e) {
+                conn.rollback(); // Rollback si algo falla
+                AppLogger.severe("Error al actualizar juego: " + e.getMessage());
+            }
+
+        } catch (SQLException e) {
+            AppLogger.severe("Error de conexión a la base de datos: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

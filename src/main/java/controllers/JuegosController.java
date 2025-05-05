@@ -1,5 +1,6 @@
 package controllers;
 
+import config.AppLogger;
 import config.Conexion;
 import dao.JuegoDAO;
 import models.Juego;
@@ -19,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -28,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.control.ButtonType;
 
 public class JuegosController implements Initializable {
 
@@ -138,18 +141,33 @@ public class JuegosController implements Initializable {
 
     @FXML
     private void abrirModalAgregarJuego() {
+        // Obtener el juego seleccionado antes de abrir el formulario
+        Juego juegoSeleccionado = listaJuegos.getSelectionModel().getSelectedItem();
+        int juegoSeleccionadoIndex = listaJuegos.getSelectionModel().getSelectedIndex();  // Guardamos el índice del juego seleccionado
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
             Parent root = loader.load();
 
+            // Enviar el juego seleccionado al formulario para editar
+            FormJuegosController formJuegosController = loader.getController();
+            if (juegoSeleccionado != null) {
+                formJuegosController.cargarJuegoParaEditar(juegoSeleccionado);  // Cargar los detalles del juego en el formulario
+            }
+
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setTitle("Añadir Juego");
+            modal.setTitle(juegoSeleccionado == null ? "Añadir Juego" : "Editar Juego");
             modal.setScene(new Scene(root));
             modal.setResizable(false);
             modal.showAndWait();
 
-            cargarJuegos();  // Recargar juegos después de agregar uno
+            cargarJuegos();  // Recargar juegos después de agregar o editar uno
+
+            // Volver a seleccionar el juego previamente seleccionado en la lista
+            if (juegoSeleccionadoIndex >= 0) {
+                listaJuegos.getSelectionModel().select(juegoSeleccionadoIndex);  // Volver a seleccionar el juego
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -158,9 +176,62 @@ public class JuegosController implements Initializable {
 
     @FXML
     private void editarJuego(ActionEvent event) {
+        abrirModalAgregarJuego();  // Usar el mismo método para abrir el formulario de edición
     }
 
     @FXML
     private void eliminarJuego(ActionEvent event) {
+        // Obtener el juego seleccionado de la lista
+        Juego juegoSeleccionado = listaJuegos.getSelectionModel().getSelectedItem();
+        if (juegoSeleccionado != null) {
+            confirmarEliminacionJuego(juegoSeleccionado);  // Mostrar confirmación antes de eliminar
+        } else {
+            mostrarAlerta("No se ha seleccionado ningún juego.");
+        }
+    }
+
+    // Método para mostrar la alerta de confirmación de eliminación
+    private void confirmarEliminacionJuego(Juego juegoSeleccionado) {
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmación de Eliminación");
+        confirmacion.setHeaderText("¿Está seguro de que desea eliminar el juego?");
+        confirmacion.setContentText("El juego: " + juegoSeleccionado.getNombre());
+
+        // Opciones de respuesta
+        confirmacion.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        // Acción a realizar según la respuesta del usuario
+        confirmacion.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                eliminarJuego(juegoSeleccionado);  // Si confirma, eliminamos el juego
+            }
+        });
+    }
+
+    // Método para eliminar el juego
+    private void eliminarJuego(Juego juegoSeleccionado) {
+        boolean exito = new JuegoDAO().eliminarJuego(juegoSeleccionado.getId());
+        if (exito) {
+            mostrarAlerta("Juego eliminado correctamente.");
+            AppLogger.info("Juego eliminado correctamente: " + juegoSeleccionado.getNombre());
+            actualizarListaJuegos();  // Actualizar la lista de juegos
+        } else {
+            mostrarAlerta("Error al eliminar el juego.");
+            AppLogger.severe("Error al eliminar el juego: " + juegoSeleccionado.getNombre());
+        }
+    }
+
+    // Método para mostrar alertas
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    // Método para actualizar la lista de juegos después de eliminar uno
+    private void actualizarListaJuegos() {
+        cargarJuegos();
     }
 }

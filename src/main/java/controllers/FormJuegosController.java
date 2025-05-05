@@ -6,7 +6,7 @@ import models.Consola;
 import models.Estado;
 import models.Juego;
 import config.Conexion;
-import config.AppLogger; // Importa la clase de Logger
+import config.AppLogger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -58,6 +58,7 @@ public class FormJuegosController implements Initializable {
     private ImageView imgPreview;
 
     private File imagenSeleccionada;
+    private Juego juegoEditando;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -131,16 +132,19 @@ public class FormJuegosController implements Initializable {
 
         boolean recomendado = radioSi.isSelected();  // "Sí" es true, "No" es false
 
-        // Guardar la imagen en la ruta deseada
+        // Mantener la imagen existente si no se selecciona una nueva
         String nombreImagen = null;
         if (imagenSeleccionada != null) {
-            // Utilizar la clase Conexion para guardar la imagen
+            // Utilizar la clase Conexion para guardar la nueva imagen si se seleccionó
             nombreImagen = Conexion.guardarImagen(imagenSeleccionada); // Guardamos la imagen en la carpeta
             if (nombreImagen == null) {
                 mostrarAlerta("Error al guardar la imagen.");
                 AppLogger.severe("Error al guardar la imagen seleccionada.");
                 return;
             }
+        } else if (juegoEditando != null) {
+            // Si no se selecciona una nueva imagen, mantener la imagen original
+            nombreImagen = juegoEditando.getImagen();
         }
 
         // Crear el objeto Juego
@@ -157,7 +161,16 @@ public class FormJuegosController implements Initializable {
         juego.setEsRecomendado(recomendado);
         juego.setImagen(nombreImagen); // Guardar solo el nombre de la imagen
 
-        boolean exito = new JuegoDAO().insertarJuego(juego);
+        JuegoDAO dao = new JuegoDAO();
+        boolean exito;
+        if (juegoEditando == null) {
+            // Nuevo juego, insertar
+            exito = dao.insertarJuego(juego);
+        } else {
+            // Editar juego existente
+            juego.setId(juegoEditando.getId());
+            exito = dao.actualizarJuego(juego);  // Debes implementar este método en JuegoDAO
+        }
 
         if (exito) {
             mostrarAlerta("Juego guardado correctamente.");
@@ -192,5 +205,40 @@ public class FormJuegosController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    // Método que llena el formulario con los datos de un juego seleccionado para editar
+    public void cargarJuegoParaEditar(Juego juegoSeleccionado) {
+        juegoEditando = juegoSeleccionado;
+
+        // Llenar los campos con los valores del juego seleccionado
+        txtNombre.setText(juegoSeleccionado.getNombre());
+        txtDescripcion.setText(juegoSeleccionado.getDescripcion());
+        txtDesarrollador.setText(juegoSeleccionado.getDesarrollador());
+        txtEditor.setText(juegoSeleccionado.getEditor());
+        txtGenero.setText(juegoSeleccionado.getGenero());
+        txtModoJuego.setText(juegoSeleccionado.getModoJuego());
+        dateFechaLanzamiento.setValue(juegoSeleccionado.getFechaLanzamiento() != null
+                ? java.time.LocalDate.parse(juegoSeleccionado.getFechaLanzamiento())
+                : null);
+
+        // Configurar estado y consola
+        comboEstado.setValue(juegoSeleccionado.getEstado());
+        comboConsola.setValue(juegoSeleccionado.getConsola());
+
+        // Configurar imagen si existe
+        if (juegoSeleccionado.getImagen() != null && !juegoSeleccionado.getImagen().isEmpty()) {
+            File imageFile = new File(Conexion.imagenesPath, juegoSeleccionado.getImagen());
+            if (imageFile.exists()) {
+                imgPreview.setImage(new Image(imageFile.toURI().toString()));
+            }
+        }
+
+        // Configurar el estado del radio button
+        if (juegoSeleccionado.isEsRecomendado()) {
+            radioSi.setSelected(true);
+        } else {
+            radioNo.setSelected(true);
+        }
     }
 }
