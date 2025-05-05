@@ -1,19 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
-
 .root {
     -fx-background-color: white;
     -fx-font-family: 'Raleway';
     -fx-text-fill: black;
 }
 
-/* Título principal */
+/* Título */
 .inicio-titulo {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #000;
+    -fx-text-fill: black;
     -fx-padding: 10 0 20 0;
 }
-/* Botón estilo blanco y negro con sombra como las tarjetas */
+
+/* Botón estilo blanco y negro con sombra */
 .juegos-button {
     -fx-background-color: white;
     -fx-text-fill: black;
@@ -32,29 +31,47 @@
     -fx-background-color: #f0f0f0;
 }
 
-
-/* Contenedor de tarjetas (si se usan en esta vista) */
-.inicio-grid {
-    -fx-padding: 20;
+/* Estilo del card detalle */
+.detalle-card {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0.3, 0, 4);
 }
 
-.card-inicio {
+/* Etiquetas */
+.detalle-titulo {
+    -fx-font-size: 14px;
+    -fx-text-fill: #444;
+}
+
+.detalle-valor {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000;
+}
+
+/* ListView estilo */
+.lista-juegos {
     -fx-background-color: white;
     -fx-border-color: black;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
-    -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0.3, 0, 2);
 }
 
-.card-label {
-    -fx-font-size: 16px;
-    -fx-text-fill: #333;
+.lista-juegos .list-cell:filled:selected {
+    -fx-background-color: black;
+    -fx-text-fill: white;
 }
 
-.card-value {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: black;
+.lista-juegos .list-cell:filled:hover {
+    -fx-background-color: #222;
+    -fx-text-fill: white;
+}
+
+.lista-juegos .list-cell:empty:hover {
+    -fx-background-color: transparent;
 }

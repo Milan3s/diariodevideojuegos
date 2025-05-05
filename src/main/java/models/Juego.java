@@ -3,7 +3,18 @@ package models;
 public class Juego {
     private int id;
     private String nombre;
+    private String descripcion;
+    private String desarrollador;
+    private String editor;
+    private String genero;
+    private String modoJuego;
+    private String fechaLanzamiento;
+    private int idEstado;
+    private boolean esRecomendado;
+    private String imagen;
+    private int idConsola; // Para la tabla de relación juegos_consolas
 
+    // Constructores
     public Juego() {}
 
     public Juego(String nombre) {
@@ -15,19 +26,107 @@ public class Juego {
         this.nombre = nombre;
     }
 
+    // Getters y setters
     public int getId() {
         return id;
-    }
-
-    public String getNombre() {
-        return nombre;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getDesarrollador() {
+        return desarrollador;
+    }
+
+    public void setDesarrollador(String desarrollador) {
+        this.desarrollador = desarrollador;
+    }
+
+    public String getEditor() {
+        return editor;
+    }
+
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public String getModoJuego() {
+        return modoJuego;
+    }
+
+    public void setModoJuego(String modoJuego) {
+        this.modoJuego = modoJuego;
+    }
+
+    public String getFechaLanzamiento() {
+        return fechaLanzamiento;
+    }
+
+    public void setFechaLanzamiento(String fechaLanzamiento) {
+        this.fechaLanzamiento = fechaLanzamiento;
+    }
+
+    public int getIdEstado() {
+        return idEstado;
+    }
+
+    public void setIdEstado(int idEstado) {
+        this.idEstado = idEstado;
+    }
+
+    public boolean isEsRecomendado() {
+        return esRecomendado;
+    }
+
+    public void setEsRecomendado(boolean esRecomendado) {
+        this.esRecomendado = esRecomendado;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public int getIdConsola() {
+        return idConsola;
+    }
+
+    public void setIdConsola(int idConsola) {
+        this.idConsola = idConsola;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
+    
+    
 }
