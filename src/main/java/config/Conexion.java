@@ -16,7 +16,7 @@ public class Conexion {
     private static final String url = "jdbc:sqlite:" + dbPath;
 
     // Ruta base donde se almacenarán las imágenes de los juegos
-    private static final String imagenesPath = Paths.get(System.getProperty("user.home"), "Documents", "diariodevideojuegos", "imagenes", "juegos").toString();
+    public static final String imagenesPath = Paths.get(System.getProperty("user.home"), "Documents", "diariodevideojuegos", "imagenes", "juegos").toString();
 
     // Método para obtener la URL de la base de datos
     public static String getUrl() {

@@ -1,5 +1,6 @@
 package controllers;
 
+import config.Conexion;
 import dao.JuegoDAO;
 import models.Juego;
 import models.Estado;
@@ -18,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -58,6 +60,10 @@ public class JuegosController implements Initializable {
     private Label lblConsola; // Agregado para mostrar la consola
 
     private static final String IMAGENES_PATH = Paths.get(System.getProperty("user.home"), "Documents", "diariodevideojuegos", "imagenes", "juegos").toString();
+    @FXML
+    private Button btnEditar;
+    @FXML
+    private Button btnEliminar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -106,32 +112,27 @@ public class JuegosController implements Initializable {
         lblModo.setText(juego.getModoJuego());
 
         // Determinar si el juego es recomendado
-        String recomendado = juego.isEsRecomendado() ? "Sí" : "No";
-        lblRecomendado.setText(recomendado);
+        lblRecomendado.setText(juego.isEsRecomendado() ? "Sí" : "No");
 
         // Mostrar estado y consola
-        if (juego.getEstado() != null) {
-            lblEstado.setText(juego.getEstado().getNombre());  // Mostrar el nombre del estado
-        } else {
-            lblEstado.setText("No disponible");
-        }
+        lblEstado.setText(juego.getEstado() != null ? juego.getEstado().getNombre() : "No disponible");
+        lblConsola.setText(juego.getConsola() != null ? juego.getConsola().getNombre() : "No disponible");
 
-        if (juego.getConsola() != null) {
-            lblConsola.setText(juego.getConsola().getNombre()); // Mostrar el nombre de la consola
+        // Verificar si el juego tiene una imagen asignada
+        if (juego.getImagen() != null && !juego.getImagen().isEmpty()) {
+            // Si tiene imagen, intenta cargarla desde la ruta
+            File imageFile = new File(Conexion.imagenesPath, juego.getImagen());  // No necesitas un nuevo método
+            if (imageFile.exists()) {
+                imgDetalle.setImage(new Image(imageFile.toURI().toString()));  // Cargar la imagen
+                lblNoImagen.setVisible(false);  // Ocultar el mensaje "No hay imagen"
+            } else {
+                imgDetalle.setImage(null);  // Si la imagen no existe, asegurarse de que no se muestra nada
+                lblNoImagen.setVisible(true);  // Mostrar mensaje "No hay imagen"
+            }
         } else {
-            lblConsola.setText("No disponible");
-        }
-
-        // Mostrar imagen o texto "No hay imagen"
-        String rutaImagen = Paths.get(IMAGENES_PATH, juego.getImagen()).toString();
-        File imgFile = new File(rutaImagen);
-
-        if (imgFile.exists()) {
-            imgDetalle.setImage(new Image("file:" + rutaImagen)); // Cargar imagen
-            lblNoImagen.setVisible(false); // Ocultar el texto "No hay imagen" si la imagen existe
-        } else {
-            imgDetalle.setImage(null); // No mostrar imagen
-            lblNoImagen.setVisible(true); // Mostrar texto "No hay imagen"
+            // Si no tiene imagen, mostrar el mensaje "No hay imagen"
+            imgDetalle.setImage(null);  // Asegurarse de que no se muestra ninguna imagen
+            lblNoImagen.setVisible(true);  // Mostrar mensaje "No hay imagen"
         }
     }
 
@@ -153,5 +154,13 @@ public class JuegosController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void editarJuego(ActionEvent event) {
+    }
+
+    @FXML
+    private void eliminarJuego(ActionEvent event) {
     }
 }
