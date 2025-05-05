@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.ImageView?>
@@ -15,20 +16,28 @@
     <Text fx:id="tituloJuegos" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Juegos" />
 
     <!-- HBox para los botones: Añadir, Editar, Eliminar -->
-    <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="60.0" spacing="10.0">
+    <HBox alignment="CENTER_LEFT" layoutX="368.0" layoutY="115.0" prefHeight="42.0" prefWidth="325.0" spacing="10.0">
         <!-- Botón Añadir -->
-        <Button layoutX="10.0" onAction="#abrirModalAgregarJuego" styleClass="juegos-button" text="Añadir juego" />
+        <Button layoutX="10.0" onAction="#abrirModalAgregarJuego" prefHeight="42.0" prefWidth="105.0" styleClass="juegos-button" text="Añadir" />
         <!-- Botón Editar -->
-        <Button fx:id="btnEditar" onAction="#editarJuego" styleClass="juegos-button" text="Editar" />
+        <Button fx:id="btnEditar" onAction="#editarJuego" prefHeight="42.0" prefWidth="109.0" styleClass="juegos-button" text="Editar" />
         <!-- Botón Eliminar -->
-        <Button fx:id="btnEliminar" onAction="#eliminarJuego" styleClass="juegos-button" text="Eliminar" />
+        <Button fx:id="btnEliminar" onAction="#eliminarJuego" prefHeight="42.0" prefWidth="116.0" styleClass="juegos-button" text="Eliminar" />
+    </HBox>
+
+    <!-- HBox para los ComboBox de Estado y Consola -->
+    <HBox layoutX="30.0" layoutY="108.0" prefHeight="54.0" prefWidth="325.0" spacing="10.0">
+        <!-- ComboBox Estado -->
+        <ComboBox fx:id="comboEstado" prefHeight="52.0" prefWidth="155.0" promptText="Estados" styleClass="combo-box-style" />
+        <!-- ComboBox Consola -->
+        <ComboBox fx:id="comboConsola" prefHeight="27.0" prefWidth="161.0" promptText="Consolas" styleClass="combo-box-style" />
     </HBox>
 
     <!-- ListView -->
-    <ListView fx:id="listaJuegos" layoutX="30.0" layoutY="116.0" prefHeight="606.0" prefWidth="248.0" styleClass="lista-juegos" />
+    <ListView fx:id="listaJuegos" layoutX="30.0" layoutY="171.0" prefHeight="606.0" prefWidth="325.0" styleClass="lista-juegos" />
 
     <!-- Detalles (Card) -->
-    <AnchorPane layoutX="300.0" layoutY="116.0" prefHeight="606.0" prefWidth="733.0" styleClass="detalle-card">
+    <AnchorPane layoutX="368.0" layoutY="171.0" prefHeight="606.0" prefWidth="664.0" styleClass="detalle-card">
         <Label layoutX="20.0" layoutY="20.0" styleClass="detalle-titulo" text="Nombre" />
         <Label fx:id="lblNombre" layoutX="180.0" layoutY="20.0" styleClass="detalle-valor" />
 

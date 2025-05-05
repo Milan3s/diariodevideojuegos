@@ -18,8 +18,8 @@
     -fx-text-fill: black;
     -fx-border-color: black;
     -fx-border-width: 1px;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
+    -fx-border-radius: 0; /* Elimina el border-radius */
+    -fx-background-radius: 0; /* Elimina el background-radius */
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-padding: 10 20 10 20;
@@ -50,6 +50,25 @@
 .detalle-valor {
     -fx-font-size: 16px;    
     -fx-text-fill: #000;
+}
+
+/* Estilo para ComboBox (igual que los botones, sin border-radius) */
+.combo-box-style {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0; /* Elimina el border-radius */
+    -fx-background-radius: 0; /* Elimina el background-radius */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0.3, 0, 2);
+    -fx-cursor: hand;
+}
+
+.combo-box-style:hover {
+    -fx-background-color: #f0f0f0;
 }
 
 /* ListView estilo */

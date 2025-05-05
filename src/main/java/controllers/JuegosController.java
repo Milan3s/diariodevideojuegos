@@ -31,6 +31,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 
 public class JuegosController implements Initializable {
 
@@ -67,6 +68,10 @@ public class JuegosController implements Initializable {
     private Button btnEditar;
     @FXML
     private Button btnEliminar;
+    @FXML
+    private ComboBox<?> comboEstado;
+    @FXML
+    private ComboBox<?> comboConsola;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
