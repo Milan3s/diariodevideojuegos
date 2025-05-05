@@ -89,7 +89,8 @@ public class JuegoDAO {
         String sql = "SELECT j.id_juegos, j.nombre, j.descripcion, j.desarrollador, j.editor, "
                 + "j.genero, j.modo_juego, j.fecha_lanzamiento, j.es_recomendado, j.imagen, "
                 + "e.id_estado, e.nombre AS nombre_estado, "
-                + "c.id_consola, c.nombre AS nombre_consola "
+                + "c.id_consola, c.nombre AS nombre_consola, c.abreviatura AS abreviatura_consola, "
+                + "CONCAT(j.nombre, ' (', c.abreviatura, ')') AS juego_consola "
                 + "FROM juegos j "
                 + "LEFT JOIN estados e ON j.id_estado = e.id_estado "
                 + "LEFT JOIN juegos_consolas jc ON j.id_juegos = jc.id_juego "
@@ -113,10 +114,19 @@ public class JuegoDAO {
 
                 // Relacionados con Estado y Consola
                 Estado estado = new Estado(rs.getInt("id_estado"), rs.getString("nombre_estado"));
-                Consola consola = new Consola(rs.getInt("id_consola"), rs.getString("nombre_consola"));
+
+                // Aquí se pasan los tres parámetros al constructor de Consola
+                Consola consola = new Consola(
+                        rs.getInt("id_consola"),
+                        rs.getString("nombre_consola"),
+                        rs.getString("abreviatura_consola")
+                );
 
                 juego.setEstado(estado);
                 juego.setConsola(consola);
+
+                // Aquí añadimos el campo que contiene el nombre del juego y la consola
+                juego.setNombreConsola(rs.getString("juego_consola"));
 
                 lista.add(juego);
             }

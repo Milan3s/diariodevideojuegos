@@ -1,6 +1,7 @@
 package models;
 
 public class Juego {
+
     private int id;
     private String nombre;
     private String descripcion;
@@ -13,9 +14,11 @@ public class Juego {
     private boolean esRecomendado;
     private String imagen;
     private Consola consola; // Se cambió a Consola
+    private String nombreConsola; // Nuevo campo para almacenar el nombre formateado
 
     // Constructores
-    public Juego() {}
+    public Juego() {
+    }
 
     public Juego(String nombre) {
         this.nombre = nombre;
@@ -123,8 +126,19 @@ public class Juego {
         this.consola = consola;
     }
 
+    // Nuevo getter y setter para el campo nombreConsola
+    public String getNombreConsola() {
+        return nombreConsola;
+    }
+
+    public void setNombreConsola(String nombreConsola) {
+        this.nombreConsola = nombreConsola;
+    }
+
     @Override
     public String toString() {
-        return nombre;
+        // Concatenamos el nombre del juego con el nombre de la consola entre paréntesis
+        return nombre + " (" + consola.getNombre() + ")";
     }
+
 }

@@ -3,15 +3,16 @@ package models;
 public class Consola {
     private int id;
     private String nombre;
+    private String abreviatura;
 
-    public Consola() {
-    }
-
-    public Consola(int id, String nombre) {
+    // Constructor
+    public Consola(int id, String nombre, String abreviatura) {
         this.id = id;
         this.nombre = nombre;
+        this.abreviatura = abreviatura;
     }
 
+    // Getters y setters
     public int getId() {
         return id;
     }
@@ -28,8 +29,22 @@ public class Consola {
         this.nombre = nombre;
     }
 
+    public String getAbreviatura() {
+        return abreviatura;
+    }
+
+    public void setAbreviatura(String abreviatura) {
+        this.abreviatura = abreviatura;
+    }
+
+    // Modificamos el toString para devolver el nombre completo
     @Override
     public String toString() {
-        return nombre;
+        return nombre;  // Devolvemos el nombre completo de la consola
+    }
+
+    // Método adicional para obtener la abreviatura
+    public String getAbreviaturaCompleta() {
+        return abreviatura;  // Devuelve la abreviatura de la consola
     }
 }

@@ -86,7 +86,7 @@ public class JuegosController implements Initializable {
     }
 
     private void configurarListView() {
-        listaJuegos.setCellFactory(lv -> new ListCell<>() {
+        listaJuegos.setCellFactory(lv -> new ListCell<Juego>() {
             @Override
             protected void updateItem(Juego item, boolean empty) {
                 super.updateItem(item, empty);
@@ -96,7 +96,8 @@ public class JuegosController implements Initializable {
                     setDisable(true);
                     setMouseTransparent(true);
                 } else {
-                    setText(item.getNombre());
+                    // Mostrar el nombre del juego con la consola entre paréntesis
+                    setText(item.getNombreConsola());  // Usamos el campo juego_consola que contiene "Super Mario (SNES)"
                     setDisable(false);
                     setMouseTransparent(false);
                 }
