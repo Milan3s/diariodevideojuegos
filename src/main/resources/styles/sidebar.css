@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+.root {
+    -fx-background-color: white;
+    -fx-font-family: "Raleway";
+    -fx-text-fill: black;
+}
+
+/* Título de sección (si se usa texto en el sidebar) */
+.sidebar-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* Botones del sidebar y del instalador */
+.sidebar-button, .action-button {
+    -fx-font-size: 14px;
+    -fx-pref-height: 36px;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, black, 2, 0, 1, 1);
+    -fx-cursor: hand;
+}
+
+.sidebar-button:hover, .action-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Sidebar con fondo gris claro y sombra lateral para separarlo del contenido */
+.sidebar {
+    -fx-background-color: #f7f7f7;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0.3, 2, 0);
+}
+
+/* Zona de contenido */
+.content-area {
+    -fx-background-color: white;
+    -fx-padding: 20;
+}

@@ -1,0 +1,29 @@
+package controllers;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.StackPane;
+import javafx.scene.Node;
+import java.io.IOException;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+
+public class SidebarController {
+
+    @FXML
+    private StackPane contentArea;
+    @FXML
+    private VBox sidebar;
+    @FXML
+    private Button btnInicio;
+
+    @FXML
+    private void handleInicio() {
+        try {
+            Node node = FXMLLoader.load(getClass().getResource("/views/inicio.fxml"));
+            contentArea.getChildren().setAll(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="rootContainer" alignment="CENTER" prefHeight="527" prefWidth="418" spacing="20" styleClass="root" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.setup">
+
+    <children>
+        <Label fx:id="lblTitulo" styleClass="title-label" text="Menú de Instalación" />
+
+        <GridPane fx:id="botonera" alignment="CENTER" hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="100" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            </rowConstraints>
+            <padding>
+                <Insets bottom="10" left="20" right="20" top="10" />
+            </padding>
+
+            <children>
+                <Button id="botonInstalar" fx:id="btnInstalar" maxWidth="Infinity" onAction="#handleInstalar" styleClass="action-button" text="Instalar" GridPane.rowIndex="0" />
+
+                <Button id="botonVerificar" fx:id="btnVerificar" maxWidth="Infinity" onAction="#handleVerificar" styleClass="action-button" text="Verificar" GridPane.rowIndex="1" />
+
+                <Button id="botonBorrar" fx:id="btnBorrar" maxWidth="Infinity" onAction="#handleBorrar" styleClass="action-button" text="Borrar" GridPane.rowIndex="2" />
+                
+                <Button id="botonIniciar" fx:id="btnIniciar" maxWidth="Infinity" onAction="#handleIniciar" styleClass="action-button" text="Iniciar aplicación" GridPane.rowIndex="4" />
+
+                <Button id="botonCerrar" fx:id="btnCerrar" maxWidth="Infinity" onAction="#handleCerrar" styleClass="action-button" text="Cerrar" GridPane.rowIndex="3" />
+            </children>
+        </GridPane>
+        <Label id="mensajeEstado" fx:id="lblMensaje" alignment="TOP_LEFT" prefHeight="91.0" prefWidth="314.0" styleClass="message-label" />
+        
+        <Label id="rutaBase" fx:id="lblRuta" alignment="TOP_LEFT" prefHeight="62.0" prefWidth="315.0" styleClass="path-label" />
+    </children>
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+</VBox>

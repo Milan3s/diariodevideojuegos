@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600" prefWidth="800" styleClass="root"
+            stylesheets="@../styles/sidebar.css"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.SidebarController">
+
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+
+            <!-- Sidebar lateral -->
+            <left>
+                <VBox fx:id="sidebar" alignment="TOP_CENTER" prefWidth="200"
+                      spacing="15" styleClass="sidebar">
+                    <padding>
+                        <Insets top="20" bottom="10" left="10" right="10" />
+                    </padding>
+
+                    <Text styleClass="sidebar-title" text="Menú" />
+
+                    <Button fx:id="btnInicio" onAction="#handleInicio"
+                            prefWidth="180" styleClass="sidebar-button"
+                            text="Inicio" />
+                </VBox>
+            </left>
+
+            <!-- Contenido central -->
+            <center>
+                <StackPane fx:id="contentArea" styleClass="content-area" />
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>
+
