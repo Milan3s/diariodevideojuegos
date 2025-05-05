@@ -8,8 +8,12 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.fxml.Initializable;
 
-public class SidebarController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class SidebarController implements Initializable {
 
     @FXML
     private StackPane contentArea;
@@ -19,6 +23,12 @@ public class SidebarController {
     private Button btnInicio;
     @FXML
     private Button btnJuegos;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        //handleInicio(); 
+        handleJuegos();
+    }
 
     @FXML
     private void handleInicio() {
@@ -39,5 +49,4 @@ public class SidebarController {
             e.printStackTrace();
         }
     }
-
 }

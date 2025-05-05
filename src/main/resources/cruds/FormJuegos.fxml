@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormJuegosController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.FormJuegosController">
+
     <stylesheets>
         <URL value="@/styles/formjuegos.css"/>
     </stylesheets>
+
+    <!-- Título -->
+    <Text text="Añadir Juego" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" />
+
+    <!-- Formulario con GridPane -->
+    <GridPane layoutX="30.0" layoutY="80.0" hgap="10" vgap="15">
+        <Label text="Nombre del juego:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="txtNombre" promptText="Ej: The Legend of Zelda" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+        <Button text="Guardar"
+                onAction="#guardarJuego"
+                styleClass="juegos-button"
+                GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    </GridPane>
+
 </AnchorPane>
