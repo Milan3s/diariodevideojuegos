@@ -15,6 +15,7 @@ import config.Database; // <- Import correcto de tu clase modularizada
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -109,7 +110,7 @@ public class setup {
     }
 
     @FXML
-    private void handleIniciar() {
+    private void handleIniciar(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/home.fxml"));
             Parent root = fxmlLoader.load();
@@ -117,8 +118,12 @@ public class setup {
             Stage stage = new Stage();
             stage.setTitle("Inicio - Diario de Videojuegos");
             stage.setScene(new Scene(root));
-            stage.setResizable(true); // ✅ permitir redimensionamiento
+            stage.setResizable(true);
             stage.show();
+
+            // Cierra la ventana actual (setup)
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.close();
 
             lblMensaje.setText("Aplicación iniciada correctamente.");
         } catch (IOException e) {
