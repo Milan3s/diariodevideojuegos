@@ -1,3 +1,4 @@
+/* Estilo para el root */
 .root {
     -fx-background-color: white;
     -fx-font-family: 'Raleway';
@@ -30,6 +31,7 @@
 .juegos-button:hover {
     -fx-background-color: #f0f0f0;
 }
+
 /* Estilo para ComboBox (igual que los botones, sin border-radius) */
 .combo-box-style {
     -fx-background-color: white;
@@ -70,4 +72,36 @@
 
 .lista-juegos .list-cell:empty:hover {
     -fx-background-color: transparent;
+}
+
+/* Estilo para el panel de detalle */
+.detalle-card {    
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+    -fx-padding: 15px;
+    -fx-border-color: black; /* Borde negro añadido */
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px; /* Borde redondeado */    
+    -fx-font-size: 17px; /* Tamaño de letra en el panel de detalle */
+}
+
+
+/* Vista previa del video */
+.video-preview {
+    -fx-pref-width: 230px;
+    -fx-pref-height: 300px;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-color: #f0f0f0;
+}
+
+/* Ajustes para MediaView y otras vistas */
+.media-preview {
+    -fx-pref-width: 230px;
+    -fx-pref-height: 300px;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-color: #f0f0f0;
 }

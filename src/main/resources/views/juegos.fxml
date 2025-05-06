@@ -71,56 +71,56 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                      <Label prefHeight="39.0" prefWidth="60.0" styleClass="detalle-titulo" text="Nombre :" />
+                      <Label prefHeight="33.0" prefWidth="113.0" styleClass="detalle-titulo" text="Nombre :" />
                       <Label fx:id="lblNombre" prefHeight="44.0" prefWidth="457.0" styleClass="detalle-valor" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                <children>
-                      <Label prefHeight="43.0" prefWidth="135.0" styleClass="detalle-titulo" text="Fecha de lanzamiento :" />
+                      <Label prefHeight="33.0" prefWidth="241.0" styleClass="detalle-titulo" text="Fecha de lanzamiento :" />
                       <Label fx:id="lblFecha" prefHeight="43.0" prefWidth="376.0" styleClass="detalle-valor" />
                </children>
             </HBox>
               <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="1">
                   <children>
-                      <Label prefHeight="36.0" prefWidth="63.0" styleClass="detalle-titulo" text="Género :" />
-                      <Label fx:id="lblGenero" prefHeight="33.0" prefWidth="468.0" styleClass="detalle-valor" />
+                      <Label prefHeight="33.0" prefWidth="75.0" styleClass="detalle-titulo" text="Género :" />
+                      <Label fx:id="lblGenero" prefHeight="33.0" prefWidth="447.0" styleClass="detalle-valor" />
                   </children>
               </HBox>
               <!-- Otros detalles -->
               <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="3">
                   <children>
-                      <Label prefHeight="36.0" prefWidth="69.0" styleClass="detalle-titulo" text="Editor :" />
+                      <Label prefHeight="33.0" prefWidth="112.0" styleClass="detalle-titulo" text="Editor :" />
                       <Label fx:id="lblEditor" prefHeight="33.0" prefWidth="489.0" styleClass="detalle-valor" />
                   </children>
               </HBox>
               <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="4">
                   <children>
-                      <Label prefHeight="37.0" prefWidth="88.0" styleClass="detalle-titulo" text="Desarrollador :" />
+                      <Label prefHeight="33.0" prefWidth="166.0" styleClass="detalle-titulo" text="Desarrollador :" />
                       <Label fx:id="lblDesarrollador" prefHeight="33.0" prefWidth="428.0" styleClass="detalle-valor" />
                   </children>
               </HBox>
               <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="5">
                   <children>
-                      <Label prefHeight="37.0" prefWidth="106.0" styleClass="detalle-titulo" text="Modo de juego :" />
+                      <Label prefHeight="33.0" prefWidth="183.0" styleClass="detalle-titulo" text="Modo de juego :" />
                       <Label fx:id="lblModo" prefHeight="33.0" prefWidth="424.0" styleClass="detalle-valor" />
                   </children>
               </HBox>
               <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="6">
                   <children>
-                      <Label prefHeight="36.0" prefWidth="93.0" styleClass="detalle-titulo" text="Recomendado :" />
+                      <Label prefHeight="32.0" prefWidth="173.0" styleClass="detalle-titulo" text="Recomendado :" />
                       <Label fx:id="lblRecomendado" prefHeight="32.0" prefWidth="424.0" styleClass="detalle-valor" />
                   </children>
               </HBox>
               <HBox prefHeight="32.0" prefWidth="335.0" GridPane.rowIndex="7">
                   <children>
-                      <Label prefHeight="32.0" prefWidth="60.0" styleClass="detalle-titulo" text="Estado :" />
+                      <Label prefHeight="32.0" prefWidth="112.0" styleClass="detalle-titulo" text="Estado :" />
                       <Label fx:id="lblEstado" prefHeight="32.0" prefWidth="471.0" styleClass="detalle-valor" />
                   </children>
               </HBox>
               <HBox prefHeight="32.0" prefWidth="350.0" GridPane.rowIndex="8">
                   <children>
-                      <Label prefHeight="32.0" prefWidth="58.0" styleClass="detalle-titulo" text="Consola :" />
+                      <Label prefHeight="32.0" prefWidth="123.0" styleClass="detalle-titulo" text="Consola :" />
                       <Label fx:id="lblConsola" prefHeight="38.0" prefWidth="457.0" styleClass="detalle-valor" />
                   </children>
               </HBox>
