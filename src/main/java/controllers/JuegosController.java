@@ -27,12 +27,14 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.media.MediaView;
 
 public class JuegosController implements Initializable {
 
@@ -60,11 +62,10 @@ public class JuegosController implements Initializable {
     @FXML
     private Label lblNoImagen;
     @FXML
-    private Label lblEstado;  // Agregado para mostrar el estado
+    private Label lblEstado;
     @FXML
-    private Label lblConsola; // Agregado para mostrar la consola
+    private Label lblConsola;
 
-    private static final String IMAGENES_PATH = Paths.get(System.getProperty("user.home"), "Documents", "diariodevideojuegos", "imagenes", "juegos").toString();
     @FXML
     private Button btnEditar;
     @FXML
@@ -76,8 +77,15 @@ public class JuegosController implements Initializable {
     @FXML
     private MediaView videoDetalle;
 
-    // Para guardar el juego seleccionado actualmente
     private Juego juegoSeleccionado;
+    private MediaPlayer mediaPlayer;
+
+    @FXML
+    private Button btnReproducir;
+    @FXML
+    private Button btnPausar;
+    @FXML
+    private Button btnDetener;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -102,8 +110,7 @@ public class JuegosController implements Initializable {
                     setDisable(true);
                     setMouseTransparent(true);
                 } else {
-                    // Mostrar el nombre del juego con la consola entre paréntesis
-                    setText(item.getNombreConsola());  // Usamos el campo juego_consola que contiene "Super Mario (SNES)"
+                    setText(item.getNombreConsola()); // Usamos el campo juego_consola que contiene "Super Mario (SNES)"
                     setDisable(false);
                     setMouseTransparent(false);
                 }
@@ -114,23 +121,20 @@ public class JuegosController implements Initializable {
             if (nuevo != null) {
                 juegoSeleccionado = nuevo;  // Guardamos el juego seleccionado
                 mostrarDetalle(juegoSeleccionado);  // Mostramos los detalles en los labels
+                // Reproducir automáticamente el video si está disponible
+                reproducirVideo(null);
             }
         });
     }
 
     private void mostrarDetalle(Juego juego) {
-        // Mostrar detalles del juego
         lblNombre.setText(juego.getNombre());
         lblGenero.setText(juego.getGenero());
         lblEditor.setText(juego.getEditor());
         lblDesarrollador.setText(juego.getDesarrollador());
         lblFecha.setText(juego.getFechaLanzamiento());
         lblModo.setText(juego.getModoJuego());
-
-        // Determinar si el juego es recomendado
         lblRecomendado.setText(juego.isEsRecomendado() ? "Sí" : "No");
-
-        // Mostrar estado y consola
         lblEstado.setText(juego.getEstado() != null ? juego.getEstado().getNombre() : "No disponible");
         lblConsola.setText(juego.getConsola() != null ? juego.getConsola().getNombre() : "No disponible");
 
@@ -153,42 +157,67 @@ public class JuegosController implements Initializable {
         if (juego.getVideo() != null && !juego.getVideo().isEmpty()) {
             File videoFile = new File(Conexion.videosPath, juego.getVideo());
             if (videoFile.exists()) {
-                // Intenta cargar el video en el MediaView
                 try {
-                    // Establecer un nuevo MediaPlayer con la URI del video
-                    javafx.scene.media.Media media = new javafx.scene.media.Media(videoFile.toURI().toString());
-                    javafx.scene.media.MediaPlayer mediaPlayer = new javafx.scene.media.MediaPlayer(media);
+                    // Si ya existe un MediaPlayer, lo detenemos antes de crear uno nuevo
+                    if (mediaPlayer != null) {
+                        mediaPlayer.stop();
+                    }
+
+                    Media media = new Media(videoFile.toURI().toString());
+                    mediaPlayer = new MediaPlayer(media);
                     videoDetalle.setMediaPlayer(mediaPlayer);
-                    mediaPlayer.setAutoPlay(true); // Reproducir automáticamente el video
+                    mediaPlayer.setAutoPlay(false); // No reproducir automáticamente al cargar
 
                 } catch (Exception e) {
-                    // Si el archivo no se puede reproducir, muestra un mensaje
                     AppLogger.warning("No se pudo reproducir el video: " + videoFile.getAbsolutePath());
                     videoDetalle.setMediaPlayer(null);  // Limpiar el MediaView
                 }
-            } else {
-                // Si no existe el archivo de video
-                videoDetalle.setMediaPlayer(null);
-                AppLogger.warning("Video no encontrado: " + videoFile.getAbsolutePath());
             }
         } else {
-            // Si no hay video, limpiar el MediaView
             videoDetalle.setMediaPlayer(null);
         }
     }
 
     @FXML
-    private void abrirModalAgregarJuego() {
-        // Si se está añadiendo un juego, el formulario debe estar vacío
-        juegoSeleccionado = null;
+    private void reproducirVideo(ActionEvent event) {
+        if (mediaPlayer != null) {
+            mediaPlayer.play(); // Reproducir el video
+            btnReproducir.setDisable(true);  // Deshabilitar el botón "Reproducir" cuando el video está en reproducción
+            btnPausar.setDisable(false);   // Habilitar el botón "Pausar"
+            btnDetener.setDisable(false);  // Habilitar el botón "Detener"
+            AppLogger.info("Reproduciendo video.");
+        }
+    }
 
+    @FXML
+    private void pausarVideo(ActionEvent event) {
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.pause(); // Pausar el video
+            btnPausar.setDisable(true);  // Deshabilitar el botón "Pausar" mientras el video está en pausa
+            btnReproducir.setDisable(false);  // Habilitar el botón "Reproducir"
+            AppLogger.info("Video pausado.");
+        }
+    }
+
+    @FXML
+    private void detenerVideo(ActionEvent event) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop(); // Detener la reproducción del video
+            videoDetalle.setMediaPlayer(null); // Limpiar el MediaView
+            btnReproducir.setDisable(false); // Habilitar el botón "Reproducir"
+            btnPausar.setDisable(true);     // Deshabilitar el botón "Pausar"
+            btnDetener.setDisable(true);    // Deshabilitar el botón "Detener"
+            AppLogger.info("Video detenido.");
+        }
+    }
+
+    @FXML
+    private void abrirModalAgregarJuego(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
             Parent root = loader.load();
-
             FormJuegosController formJuegosController = loader.getController();
             formJuegosController.limpiarFormulario();  // Limpiar el formulario para añadir un nuevo juego
-
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setTitle("Añadir Juego");
@@ -197,23 +226,19 @@ public class JuegosController implements Initializable {
             modal.showAndWait();
 
             cargarJuegos();  // Recargar juegos después de agregar uno
-
         } catch (IOException e) {
-            e.printStackTrace();
+            AppLogger.severe("Error al abrir el modal de agregar juego: " + e.getMessage());
         }
     }
 
     @FXML
     private void editarJuego(ActionEvent event) {
-        // Verificamos si hay un juego seleccionado
         if (juegoSeleccionado != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
                 Parent root = loader.load();
-
                 FormJuegosController formJuegosController = loader.getController();
                 formJuegosController.cargarJuegoParaEditar(juegoSeleccionado);  // Cargar los detalles del juego en el formulario
-
                 Stage modal = new Stage();
                 modal.initModality(Modality.APPLICATION_MODAL);
                 modal.setTitle("Editar Juego");
@@ -222,26 +247,35 @@ public class JuegosController implements Initializable {
                 modal.showAndWait();
 
                 cargarJuegos();  // Recargar juegos después de editar uno
-
             } catch (IOException e) {
-                e.printStackTrace();
+                AppLogger.severe("Error al abrir el modal de editar juego: " + e.getMessage());
             }
         } else {
             mostrarAlerta("Por favor, seleccione un juego para editar.");
         }
     }
 
-    @FXML
-    private void eliminarJuego(ActionEvent event) {
-        // Obtener el juego seleccionado de la lista
-        if (juegoSeleccionado != null) {
-            confirmarEliminacionJuego(juegoSeleccionado);  // Mostrar confirmación antes de eliminar
+    private void eliminarJuego(Juego juegoSeleccionado) {
+        boolean exito = new JuegoDAO().eliminarJuego(juegoSeleccionado.getId());
+        if (exito) {
+            mostrarAlerta("Juego eliminado correctamente.");
+            AppLogger.info("Juego eliminado correctamente: " + juegoSeleccionado.getNombre());
+            cargarJuegos();  // Recargar la lista de juegos después de la eliminación
         } else {
-            mostrarAlerta("No se ha seleccionado ningún juego.");
+            mostrarAlerta("Error al eliminar el juego.");
+            AppLogger.severe("Error al eliminar el juego: " + juegoSeleccionado.getNombre());
         }
     }
 
-    // Método para mostrar la alerta de confirmación de eliminación
+    // Método para mostrar alertas
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
     private void confirmarEliminacionJuego(Juego juegoSeleccionado) {
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmación de Eliminación");
@@ -259,30 +293,13 @@ public class JuegosController implements Initializable {
         });
     }
 
-    // Método para eliminar el juego
-    private void eliminarJuego(Juego juegoSeleccionado) {
-        boolean exito = new JuegoDAO().eliminarJuego(juegoSeleccionado.getId());
-        if (exito) {
-            mostrarAlerta("Juego eliminado correctamente.");
-            AppLogger.info("Juego eliminado correctamente: " + juegoSeleccionado.getNombre());
-            actualizarListaJuegos();  // Actualizar la lista de juegos
+    @FXML
+    private void eliminarJuego(ActionEvent event) {
+        if (juegoSeleccionado != null) {
+            confirmarEliminacionJuego(juegoSeleccionado); // Llamar al método de confirmación
         } else {
-            mostrarAlerta("Error al eliminar el juego.");
-            AppLogger.severe("Error al eliminar el juego: " + juegoSeleccionado.getNombre());
+            mostrarAlerta("No se ha seleccionado ningún juego.");
         }
     }
 
-    // Método para mostrar alertas
-    private void mostrarAlerta(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Información");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    // Método para actualizar la lista de juegos después de eliminar uno
-    private void actualizarListaJuegos() {
-        cargarJuegos();
-    }
 }
