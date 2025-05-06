@@ -50,7 +50,7 @@
         <StackPane layoutX="247.0" layoutY="389.0" prefHeight="306.0" prefWidth="467.0">
             <children>
                 <!-- Video encima de la imagen -->
-                <MediaView fx:id="videoDetalle" fitHeight="150.0" fitWidth="100.0" scaleX="-2.0" />
+                <MediaView fx:id="videoDetalle" fitHeight="300.0" fitWidth="230.0" scaleX="-2.0" />
             </children>
         </StackPane>
       <GridPane layoutX="22.0" layoutY="15.0" prefHeight="294.0" prefWidth="513.0">

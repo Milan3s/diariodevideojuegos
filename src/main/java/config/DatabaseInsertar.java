@@ -51,14 +51,14 @@ public class DatabaseInsertar {
                 // =========================
                 // JUEGOS
                 // =========================
-                String sqlJuegos = "INSERT INTO juegos (nombre, descripcion, desarrollador, editor, genero, modo_juego, fecha_lanzamiento, id_estado, es_recomendado, imagen) VALUES "
-                        + "('The Legend of Zelda: Ocarina of Time', 'Aventura épica en Hyrule', 'Nintendo EAD', 'Nintendo', 'Aventura', 'Un jugador', '1998-11-21', 3, 1, 'zelda_ocarina_of_time.jpg'), "
-                        + "('Shadow of the Colossus', 'Derrota colosos en un mundo desolado', 'Team Ico', 'Sony', 'Acción/Aventura', 'Un jugador', '2005-10-18', 2, 0, 'shadow_of_the_colossus.jpg'), "
-                        + "('Super Mario World', 'Plataformas clásico de SNES', 'Nintendo', 'Nintendo', 'Plataformas', 'Un jugador', '1990-11-21', 3, 0, 'super_mario_world.jpg'), "
-                        + "('Virtua Fighter 2', 'Lucha 3D técnica', 'Sega AM2', 'Sega', 'Lucha', 'Multijugador', '1994-11-01', 3, 0, 'virtua_fighter_2.jpg'), "
-                        + "('Final Fantasy VII', 'RPG épico con Cloud Strife', 'Square', 'Square', 'RPG', 'Un jugador', '1997-01-31', 3, 1, 'final_fantasy_vii.jpg'), "
-                        + "('Super Mario Odyssey', 'Aventura 3D con Cappy', 'Nintendo', 'Nintendo', 'Plataformas', 'Un jugador', '2017-10-27', 3, 1, 'super_mario_odyssey.jpg'), "
-                        + "('Chrono Trigger', 'Viajes en el tiempo en un RPG clásico', 'Square', 'Square', 'RPG', 'Un jugador', '1995-03-11', 3, 0, 'chrono_trigger.jpg');";
+                String sqlJuegos = "INSERT INTO juegos (nombre, descripcion, desarrollador, editor, genero, modo_juego, fecha_lanzamiento, id_estado, es_recomendado, imagen, video) VALUES "
+                        + "('The Legend of Zelda: Ocarina of Time', 'Aventura épica en Hyrule', 'Nintendo EAD', 'Nintendo', 'Aventura', 'Un jugador', '1998-11-21', 3, 1, 'zelda_ocarina_of_time.jpg', 'zelda_ocarina_of_time.mp4'), "
+                        + "('Shadow of the Colossus', 'Derrota colosos en un mundo desolado', 'Team Ico', 'Sony', 'Acción/Aventura', 'Un jugador', '2005-10-18', 2, 0, 'shadow_of_the_colossus.jpg', 'shadow_of_the_colossus.mp4'), "
+                        + "('Super Mario World', 'Plataformas clásico de SNES', 'Nintendo', 'Nintendo', 'Plataformas', 'Un jugador', '1990-11-21', 3, 0, 'super_mario_world.jpg', 'super_mario_world.mp4'), "
+                        + "('Virtua Fighter 2', 'Lucha 3D técnica', 'Sega AM2', 'Sega', 'Lucha', 'Multijugador', '1994-11-01', 3, 0, 'virtua_fighter_2.jpg', 'virtua_fighter_2.mp4'), "
+                        + "('Final Fantasy VII', 'RPG épico con Cloud Strife', 'Square', 'Square', 'RPG', 'Un jugador', '1997-01-31', 3, 1, 'final_fantasy_vii.jpg', 'final_fantasy_vii.mp4'), "
+                        + "('Super Mario Odyssey', 'Aventura 3D con Cappy', 'Nintendo', 'Nintendo', 'Plataformas', 'Un jugador', '2017-10-27', 3, 1, 'super_mario_odyssey.jpg', 'super_mario_odyssey.mp4'), "
+                        + "('Chrono Trigger', 'Viajes en el tiempo en un RPG clásico', 'Square', 'Square', 'RPG', 'Un jugador', '1995-03-11', 3, 0, 'chrono_trigger.jpg', 'chrono_trigger.mp4');";
 
                 // =========================
                 // RELACIÓN JUEGOS - CONSOLAS
@@ -80,30 +80,6 @@ public class DatabaseInsertar {
                 String sqlLogros = "INSERT INTO logros (nombre, descripcion, horas_estimadas, anio, fecha_inicio, fecha_fin, intentos, creditos, puntuacion, fecha_registro, id_juego, id_estado, id_dificultad, id_consola) VALUES "
                         + "('Logro 1', 'Completa el juego en modo difícil', 10, 2025, '2025-05-01', '2025-06-01', 3, 100, 10, '2025-04-30', 1, 3, 2, 5), "
                         + "('Logro 2', 'Derrota a los jefes en modo normal', 5, 2025, '2025-05-01', '2025-06-01', 2, 50, 8, '2025-04-30', 2, 2, 3, 6);";
-
-                // =========================
-                // VIDEOS (Se cambió 'video_url' por 'video')
-                // =========================
-                String sqlVideos = "INSERT INTO videos (video, id_juego) VALUES "
-                        + "('zelda_ocarina_of_time.mp4', 1), "
-                        + "('shadow_of_the_colossus.mp4', 2), "
-                        + "('super_mario_world.mp4', 3), "
-                        + "('virtua_fighter_2.mp4', 4), "
-                        + "('final_fantasy_vii.mp4', 5), "
-                        + "('super_mario_odyssey.mp4', 6), "
-                        + "('chrono_trigger.mp4', 7);";
-
-                // =========================
-                // OVERLAYS (Se cambió 'overlay_url' por 'overlay')
-                // =========================
-                String sqlOverlays = "INSERT INTO overlays (overlay, id_juego) VALUES "
-                        + "('zelda_ocarina_of_time_overlay.png', 1), "
-                        + "('shadow_of_the_colossus_overlay.png', 2), "
-                        + "('super_mario_world_overlay.png', 3), "
-                        + "('virtua_fighter_2_overlay.png', 4), "
-                        + "('final_fantasy_vii_overlay.png', 5), "
-                        + "('super_mario_odyssey_overlay.png', 6), "
-                        + "('chrono_trigger_overlay.png', 7);";
 
                 // =========================
                 // EVENTOS
@@ -133,8 +109,6 @@ public class DatabaseInsertar {
                 conn.createStatement().execute(sqlJuegosConsolas);
                 conn.createStatement().execute(sqlVotos);
                 conn.createStatement().execute(sqlLogros);
-                conn.createStatement().execute(sqlVideos);
-                conn.createStatement().execute(sqlOverlays);
                 conn.createStatement().execute(sqlEventos);
                 conn.createStatement().execute(sqlMetasTwitch);
                 conn.createStatement().execute(sqlSeguidores);

@@ -17,10 +17,9 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.scene.media.MediaView;
@@ -101,7 +100,6 @@ public class FormJuegosController implements Initializable {
         }
     }
 
-    
     @FXML
     private void guardarJuego(ActionEvent event) {
         // Validaciones mínimas: solo el campo "Nombre" es obligatorio
@@ -153,11 +151,18 @@ public class FormJuegosController implements Initializable {
             nombreImagen = juegoEditando.getImagen();
         }
 
-        // Video y Overlay
+        // Video y Overlay        
         String nombreVideo = null;
         if (mediaPreview.getMediaPlayer() != null) {
-            nombreVideo = Conexion.guardarVideo(new File(mediaPreview.getMediaPlayer().getMedia().getSource()));  // Guardar video
+            nombreVideo = mediaPreview.getMediaPlayer().getMedia().getSource();  // Esto te dará la URL completa
+            nombreVideo = new File(nombreVideo).getName();  // Solo obtener el nombre del archivo
+            try {
+                nombreVideo = URLDecoder.decode(nombreVideo, "UTF-8");  // Decodificar para reemplazar %20 por espacios
+            } catch (UnsupportedEncodingException e) {
+                AppLogger.severe("Error al decodificar el nombre del video: " + e.getMessage());
+            }
         }
+
         String nombreOverlay = null;
         if (overlayPreview.getImage() != null) {
             nombreOverlay = Conexion.guardarOverlay(new File(overlayPreview.getImage().getUrl()));  // Guardar overlay
@@ -187,7 +192,7 @@ public class FormJuegosController implements Initializable {
         } else {
             // Editar juego existente
             juego.setId(juegoEditando.getId());
-            exito = dao.actualizarJuego(juego);  // Debes implementar este método en JuegoDAO
+            exito = dao.actualizarJuego(juego);  // Implementar este método en JuegoDAO
         }
 
         if (exito) {
@@ -270,14 +275,25 @@ public class FormJuegosController implements Initializable {
 
         File archivo = fileChooser.showOpenDialog(null);
         if (archivo != null) {
-            // Guardamos el video
-            String nombreVideo = Conexion.guardarVideo(archivo);
-            if (nombreVideo != null) {
+            // Decodificar el nombre del archivo si contiene caracteres codificados
+            String nombreVideo = archivo.getName();  // Nombre del archivo, con %20 para los espacios
+
+            try {
+                // Decodificar el nombre del archivo (reemplazar '%20' por espacio)
+                nombreVideo = URLDecoder.decode(nombreVideo, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                AppLogger.severe("Error al decodificar el nombre del video: " + e.getMessage());
+            }
+
+            // Guardamos el video en el disco y obtenemos el nombre del archivo
+            if (Conexion.guardarVideo(archivo) != null) {
                 // Actualizamos la vista previa del video
                 mediaPreview.setMediaPlayer(new javafx.scene.media.MediaPlayer(
                         new javafx.scene.media.Media(archivo.toURI().toString())
                 ));
                 AppLogger.info("Video seleccionado: " + archivo.getAbsolutePath());
+                // Guardamos el nombre del video en el juego
+                juegoEditando.setVideo(nombreVideo);  // Asignar el nombre del video al objeto Juego
             } else {
                 mostrarAlerta("Error al guardar el video.");
                 AppLogger.severe("Error al guardar el video.");

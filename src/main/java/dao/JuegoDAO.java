@@ -18,12 +18,10 @@ public class JuegoDAO {
 
     // Insertar un juego con su relación a consola, videos y overlays
     public boolean insertarJuego(Juego juego) {
-        String sqlJuego = "INSERT INTO juegos (nombre, descripcion, desarrollador, editor, genero, modo_juego, fecha_lanzamiento, id_estado, es_recomendado, imagen) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlJuego = "INSERT INTO juegos (nombre, descripcion, desarrollador, editor, genero, modo_juego, fecha_lanzamiento, id_estado, es_recomendado, imagen, video) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String sqlRelacion = "INSERT INTO juegos_consolas (id_juego, id_consola) VALUES (?, ?)";
-        String sqlVideo = "INSERT INTO videos (video, id_juego) VALUES (?, ?)";  // Se cambió video_url por video
-        String sqlOverlay = "INSERT INTO overlays (overlay, id_juego) VALUES (?, ?)";  // Se cambió overlay_url por overlay
 
         try (Connection conn = Conexion.obtenerConexion()) {
             conn.setAutoCommit(false); // Iniciar transacción
@@ -48,6 +46,9 @@ public class JuegoDAO {
                 String nombreImagen = juego.getImagen() != null ? new File(juego.getImagen()).getName() : null;
                 stmt.setString(10, nombreImagen); // Guardar solo el nombre de la imagen
 
+                // Insertar video del juego si existe
+                stmt.setString(11, juego.getVideo()); // Insertar el nombre del video directamente en la tabla juegos
+
                 int filas = stmt.executeUpdate(); // Ejecuta la inserción
 
                 if (filas > 0) {
@@ -64,25 +65,6 @@ public class JuegoDAO {
                                     relStmt.executeUpdate();
                                 }
                             }
-
-                            // Insertar video del juego si existe
-                            if (juego.getVideo() != null) {
-                                try (PreparedStatement videoStmt = conn.prepareStatement(sqlVideo)) {
-                                    videoStmt.setString(1, juego.getVideo()); // Ruta del video
-                                    videoStmt.setInt(2, idJuego);  // Relacionar con el juego
-                                    videoStmt.executeUpdate();
-                                }
-                            }
-
-                            // Insertar overlay del juego si existe
-                            if (juego.getOverlay() != null) {
-                                try (PreparedStatement overlayStmt = conn.prepareStatement(sqlOverlay)) {
-                                    overlayStmt.setString(1, juego.getOverlay()); // Ruta del overlay
-                                    overlayStmt.setInt(2, idJuego);  // Relacionar con el juego
-                                    overlayStmt.executeUpdate();
-                                }
-                            }
-
                         }
                     }
 
@@ -102,22 +84,19 @@ public class JuegoDAO {
         return false;
     }
 
-    // Obtener todos los juegos junto con su estado, consola, videos y overlays
+    // Obtener todos los juegos junto con su estado, consola y video
     public ObservableList<Juego> obtenerTodos() {
         ObservableList<Juego> lista = FXCollections.observableArrayList();
 
         String sql = "SELECT j.id_juegos, j.nombre, j.descripcion, j.desarrollador, j.editor, "
-                + "j.genero, j.modo_juego, j.fecha_lanzamiento, j.es_recomendado, j.imagen, "
+                + "j.genero, j.modo_juego, j.fecha_lanzamiento, j.es_recomendado, j.imagen, j.video, "
                 + "e.id_estado, e.nombre AS nombre_estado, "
                 + "c.id_consola, c.nombre AS nombre_consola, c.abreviatura AS abreviatura_consola, "
-                + "v.video, o.overlay, "  // Se cambió video_url y overlay_url por video y overlay
                 + "CONCAT(j.nombre, ' (', c.abreviatura, ')') AS juego_consola "
                 + "FROM juegos j "
                 + "LEFT JOIN estados e ON j.id_estado = e.id_estado "
                 + "LEFT JOIN juegos_consolas jc ON j.id_juegos = jc.id_juego "
                 + "LEFT JOIN consolas c ON jc.id_consola = c.id_consola "
-                + "LEFT JOIN videos v ON j.id_juegos = v.id_juego "
-                + "LEFT JOIN overlays o ON j.id_juegos = o.id_juego "
                 + "ORDER BY j.nombre ASC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -134,6 +113,7 @@ public class JuegoDAO {
                 juego.setFechaLanzamiento(rs.getString("fecha_lanzamiento"));
                 juego.setEsRecomendado(rs.getBoolean("es_recomendado"));
                 juego.setImagen(rs.getString("imagen")); // Solo el nombre de la imagen
+                juego.setVideo(rs.getString("video")); // Obtener el video directamente desde la tabla juegos
 
                 // Relacionados con Estado y Consola
                 Estado estado = new Estado(rs.getInt("id_estado"), rs.getString("nombre_estado"));
@@ -147,10 +127,6 @@ public class JuegoDAO {
                 juego.setConsola(consola);
                 juego.setNombreConsola(rs.getString("juego_consola"));
 
-                // Asignamos los datos de video y overlay
-                juego.setVideo(rs.getString("video"));
-                juego.setOverlay(rs.getString("overlay"));
-
                 lista.add(juego);
             }
 
@@ -162,25 +138,25 @@ public class JuegoDAO {
         return lista;
     }
 
-    // Eliminar un juego y sus videos y overlays relacionados
+    // Eliminar un juego y sus relaciones con consola y video
     public boolean eliminarJuego(int idJuego) {
-        String sqlJuego = "SELECT imagen FROM juegos WHERE id_juegos = ?";
+        String sqlJuego = "SELECT imagen, video FROM juegos WHERE id_juegos = ?";
         String sqlEliminarJuego = "DELETE FROM juegos WHERE id_juegos = ?";
-        String sqlEliminarRelacionConsola = "DELETE FROM juegos_consolas WHERE id_juego = ?";
-        String sqlEliminarVideos = "DELETE FROM videos WHERE id_juego = ?";  // Eliminar video relacionado
-        String sqlEliminarOverlays = "DELETE FROM overlays WHERE id_juego = ?";  // Eliminar overlay relacionado
+        String sqlEliminarRelacionConsola = "DELETE FROM juegos_consolas WHERE id_juego = ?";  // Eliminar la relación actual
 
         try (Connection conn = Conexion.obtenerConexion()) {
             // Iniciar transacción
             conn.setAutoCommit(false);
 
-            // Primero, obtenemos la imagen asociada al juego
+            // Primero, obtenemos la imagen y el video asociados al juego
             String imagenJuego = null;
+            String videoJuego = null;
             try (PreparedStatement stmt = conn.prepareStatement(sqlJuego)) {
                 stmt.setInt(1, idJuego);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         imagenJuego = rs.getString("imagen");
+                        videoJuego = rs.getString("video");
                     }
                 }
             }
@@ -191,38 +167,40 @@ public class JuegoDAO {
                 stmt.executeUpdate();  // Eliminar la relación existente
             }
 
-            // Eliminar videos relacionados
-            try (PreparedStatement stmt = conn.prepareStatement(sqlEliminarVideos)) {
-                stmt.setInt(1, idJuego);
-                stmt.executeUpdate();  // Eliminar el video asociado
-            }
-
-            // Eliminar overlays relacionados
-            try (PreparedStatement stmt = conn.prepareStatement(sqlEliminarOverlays)) {
-                stmt.setInt(1, idJuego);
-                stmt.executeUpdate();  // Eliminar el overlay asociado
-            }
-
             // Eliminar el juego
             try (PreparedStatement stmt = conn.prepareStatement(sqlEliminarJuego)) {
                 stmt.setInt(1, idJuego);
                 int filas = stmt.executeUpdate();
 
-                // Si el juego se eliminó correctamente, también eliminamos la imagen
-                if (filas > 0 && imagenJuego != null && !imagenJuego.isEmpty()) {
-                    // Eliminar la imagen del disco
-                    File archivoImagen = new File(Conexion.imagenesPath, imagenJuego);
-                    if (archivoImagen.exists()) {
-                        if (archivoImagen.delete()) {
-                            AppLogger.info("Imagen eliminada correctamente: " + archivoImagen.getAbsolutePath());
-                        } else {
-                            AppLogger.warning("No se pudo eliminar la imagen: " + archivoImagen.getAbsolutePath());
+                // Si el juego se eliminó correctamente, también eliminamos la imagen y el video
+                if (filas > 0) {
+                    if (imagenJuego != null && !imagenJuego.isEmpty()) {
+                        // Eliminar la imagen del disco
+                        File archivoImagen = new File(Conexion.imagenesPath, imagenJuego);
+                        if (archivoImagen.exists()) {
+                            if (archivoImagen.delete()) {
+                                AppLogger.info("Imagen eliminada correctamente: " + archivoImagen.getAbsolutePath());
+                            } else {
+                                AppLogger.warning("No se pudo eliminar la imagen: " + archivoImagen.getAbsolutePath());
+                            }
                         }
                     }
-                }
 
-                conn.commit();  // Commit de la transacción
-                return true;  // Juego, video, overlay y su relación eliminados correctamente
+                    if (videoJuego != null && !videoJuego.isEmpty()) {
+                        // Eliminar el video del disco
+                        File archivoVideo = new File(Conexion.videosPath, videoJuego);
+                        if (archivoVideo.exists()) {
+                            if (archivoVideo.delete()) {
+                                AppLogger.info("Video eliminado correctamente: " + archivoVideo.getAbsolutePath());
+                            } else {
+                                AppLogger.warning("No se pudo eliminar el video: " + archivoVideo.getAbsolutePath());
+                            }
+                        }
+                    }
+
+                    conn.commit();  // Commit de la transacción
+                    return true;  // Juego, video y su relación eliminados correctamente
+                }
             } catch (SQLException e) {
                 conn.rollback();  // Rollback si algo falla
                 AppLogger.severe("Error al eliminar el juego: " + e.getMessage());
@@ -232,16 +210,14 @@ public class JuegoDAO {
             e.printStackTrace();
         }
 
-        return false;  // Si no se pudo eliminar el juego, video o overlay
+        return false;  // Si no se pudo eliminar el juego
     }
 
-    // Método para actualizar un juego con video y overlay
+    // Método para actualizar un juego con video
     public boolean actualizarJuego(Juego juego) {
-        String sqlJuego = "UPDATE juegos SET nombre = ?, descripcion = ?, desarrollador = ?, editor = ?, genero = ?, modo_juego = ?, fecha_lanzamiento = ?, id_estado = ?, es_recomendado = ?, imagen = ? WHERE id_juegos = ?";
+        String sqlJuego = "UPDATE juegos SET nombre = ?, descripcion = ?, desarrollador = ?, editor = ?, genero = ?, modo_juego = ?, fecha_lanzamiento = ?, id_estado = ?, es_recomendado = ?, imagen = ?, video = ? WHERE id_juegos = ?";
         String sqlEliminarRelacionConsola = "DELETE FROM juegos_consolas WHERE id_juego = ?";  // Eliminar la relación actual
         String sqlRelacionConsola = "INSERT INTO juegos_consolas (id_juego, id_consola) SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM juegos_consolas WHERE id_juego = ? AND id_consola = ?)";  // Evitar duplicados
-        String sqlEliminarVideos = "DELETE FROM videos WHERE id_juego = ?";  // Eliminar videos antiguos
-        String sqlEliminarOverlays = "DELETE FROM overlays WHERE id_juego = ?";  // Eliminar overlays antiguos
 
         try (Connection conn = Conexion.obtenerConexion()) {
             conn.setAutoCommit(false); // Iniciar transacción
@@ -266,7 +242,10 @@ public class JuegoDAO {
                 String nombreImagen = juego.getImagen() != null ? new File(juego.getImagen()).getName() : null;
                 stmt.setString(10, nombreImagen); // Guardar solo el nombre de la imagen
 
-                stmt.setInt(11, juego.getId());  // ID del juego a actualizar
+                // Actualizar video
+                stmt.setString(11, juego.getVideo());  // Insertar el nombre del video directamente en la tabla juegos
+
+                stmt.setInt(12, juego.getId());  // ID del juego a actualizar
 
                 int filas = stmt.executeUpdate(); // Ejecuta la actualización
 
@@ -285,32 +264,6 @@ public class JuegoDAO {
                             stmtRelacion.setInt(3, juego.getId());  // Compara con el ID del juego
                             stmtRelacion.setInt(4, juego.getConsola().getId());  // Compara con el ID de la consola
                             stmtRelacion.executeUpdate();
-                        }
-                    }
-
-                    // Eliminar videos antiguos y agregar el nuevo video
-                    try (PreparedStatement stmtEliminar = conn.prepareStatement(sqlEliminarVideos)) {
-                        stmtEliminar.setInt(1, juego.getId());
-                        stmtEliminar.executeUpdate();  // Eliminar los videos anteriores
-                    }
-                    if (juego.getVideo() != null) {
-                        try (PreparedStatement stmtVideo = conn.prepareStatement("INSERT INTO videos (video, id_juego) VALUES (?, ?)")) {
-                            stmtVideo.setString(1, juego.getVideo());
-                            stmtVideo.setInt(2, juego.getId());
-                            stmtVideo.executeUpdate();
-                        }
-                    }
-
-                    // Eliminar overlays antiguos y agregar el nuevo overlay
-                    try (PreparedStatement stmtEliminar = conn.prepareStatement(sqlEliminarOverlays)) {
-                        stmtEliminar.setInt(1, juego.getId());
-                        stmtEliminar.executeUpdate();  // Eliminar los overlays anteriores
-                    }
-                    if (juego.getOverlay() != null) {
-                        try (PreparedStatement stmtOverlay = conn.prepareStatement("INSERT INTO overlays (overlay, id_juego) VALUES (?, ?)")) {
-                            stmtOverlay.setString(1, juego.getOverlay());
-                            stmtOverlay.setInt(2, juego.getId());
-                            stmtOverlay.executeUpdate();
                         }
                     }
 
