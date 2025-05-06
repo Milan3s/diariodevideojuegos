@@ -155,9 +155,11 @@ public class JuegosController implements Initializable {
             if (videoFile.exists()) {
                 // Intenta cargar el video en el MediaView
                 try {
-                    videoDetalle.setMediaPlayer(new javafx.scene.media.MediaPlayer(
-                            new javafx.scene.media.Media(videoFile.toURI().toString())
-                    ));
+                    // Establecer un nuevo MediaPlayer con la URI del video
+                    javafx.scene.media.Media media = new javafx.scene.media.Media(videoFile.toURI().toString());
+                    javafx.scene.media.MediaPlayer mediaPlayer = new javafx.scene.media.MediaPlayer(media);
+                    videoDetalle.setMediaPlayer(mediaPlayer);
+                    mediaPlayer.setAutoPlay(true); // Reproducir automáticamente el video
                 } catch (Exception e) {
                     // Si el archivo no se puede reproducir, muestra un mensaje
                     AppLogger.warning("No se pudo reproducir el video: " + videoFile.getAbsolutePath());
