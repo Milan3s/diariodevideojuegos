@@ -76,6 +76,9 @@ public class JuegosController implements Initializable {
     @FXML
     private MediaView videoDetalle;
 
+    // Para guardar el juego seleccionado actualmente
+    private Juego juegoSeleccionado;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cargarJuegos();
@@ -109,7 +112,8 @@ public class JuegosController implements Initializable {
 
         listaJuegos.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, nuevo) -> {
             if (nuevo != null) {
-                mostrarDetalle(nuevo);
+                juegoSeleccionado = nuevo;  // Guardamos el juego seleccionado
+                mostrarDetalle(juegoSeleccionado);  // Mostramos los detalles en los labels
             }
         });
     }
@@ -132,51 +136,64 @@ public class JuegosController implements Initializable {
 
         // Verificar si el juego tiene una imagen asignada
         if (juego.getImagen() != null && !juego.getImagen().isEmpty()) {
-            // Si tiene imagen, intenta cargarla desde la ruta
-            File imageFile = new File(Conexion.imagenesPath, juego.getImagen());  // No necesitas un nuevo método
+            File imageFile = new File(Conexion.imagenesPath, juego.getImagen());
             if (imageFile.exists()) {
-                imgDetalle.setImage(new Image(imageFile.toURI().toString()));  // Cargar la imagen
-                lblNoImagen.setVisible(false);  // Ocultar el mensaje "No hay imagen"
+                imgDetalle.setImage(new Image(imageFile.toURI().toString()));
+                lblNoImagen.setVisible(false);
             } else {
-                imgDetalle.setImage(null);  // Si la imagen no existe, asegurarse de que no se muestra nada
-                lblNoImagen.setVisible(true);  // Mostrar mensaje "No hay imagen"
+                imgDetalle.setImage(null);
+                lblNoImagen.setVisible(true);
             }
         } else {
-            // Si no tiene imagen, mostrar el mensaje "No hay imagen"
-            imgDetalle.setImage(null);  // Asegurarse de que no se muestra ninguna imagen
-            lblNoImagen.setVisible(true);  // Mostrar mensaje "No hay imagen"
+            imgDetalle.setImage(null);
+            lblNoImagen.setVisible(true);
+        }
+
+        // **Previsualización de video compatible con MP4 y FLV**
+        if (juego.getVideo() != null && !juego.getVideo().isEmpty()) {
+            File videoFile = new File(Conexion.videosPath, juego.getVideo());
+            if (videoFile.exists()) {
+                // Intenta cargar el video en el MediaView
+                try {
+                    videoDetalle.setMediaPlayer(new javafx.scene.media.MediaPlayer(
+                            new javafx.scene.media.Media(videoFile.toURI().toString())
+                    ));
+                } catch (Exception e) {
+                    // Si el archivo no se puede reproducir, muestra un mensaje
+                    AppLogger.warning("No se pudo reproducir el video: " + videoFile.getAbsolutePath());
+                    videoDetalle.setMediaPlayer(null);  // Limpiar el MediaView
+                }
+            } else {
+                // Si no existe el archivo de video
+                videoDetalle.setMediaPlayer(null);
+                AppLogger.warning("Video no encontrado: " + videoFile.getAbsolutePath());
+            }
+        } else {
+            // Si no hay video, limpiar el MediaView
+            videoDetalle.setMediaPlayer(null);
         }
     }
 
     @FXML
     private void abrirModalAgregarJuego() {
-        // Obtener el juego seleccionado antes de abrir el formulario
-        Juego juegoSeleccionado = listaJuegos.getSelectionModel().getSelectedItem();
-        int juegoSeleccionadoIndex = listaJuegos.getSelectionModel().getSelectedIndex();  // Guardamos el índice del juego seleccionado
+        // Si se está añadiendo un juego, el formulario debe estar vacío
+        juegoSeleccionado = null;
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
             Parent root = loader.load();
 
-            // Enviar el juego seleccionado al formulario para editar
             FormJuegosController formJuegosController = loader.getController();
-            if (juegoSeleccionado != null) {
-                formJuegosController.cargarJuegoParaEditar(juegoSeleccionado);  // Cargar los detalles del juego en el formulario
-            }
+            formJuegosController.limpiarFormulario();  // Limpiar el formulario para añadir un nuevo juego
 
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setTitle(juegoSeleccionado == null ? "Añadir Juego" : "Editar Juego");
+            modal.setTitle("Añadir Juego");
             modal.setScene(new Scene(root));
             modal.setResizable(false);
             modal.showAndWait();
 
-            cargarJuegos();  // Recargar juegos después de agregar o editar uno
-
-            // Volver a seleccionar el juego previamente seleccionado en la lista
-            if (juegoSeleccionadoIndex >= 0) {
-                listaJuegos.getSelectionModel().select(juegoSeleccionadoIndex);  // Volver a seleccionar el juego
-            }
+            cargarJuegos();  // Recargar juegos después de agregar uno
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -185,13 +202,35 @@ public class JuegosController implements Initializable {
 
     @FXML
     private void editarJuego(ActionEvent event) {
-        abrirModalAgregarJuego();  // Usar el mismo método para abrir el formulario de edición
+        // Verificamos si hay un juego seleccionado
+        if (juegoSeleccionado != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
+                Parent root = loader.load();
+
+                FormJuegosController formJuegosController = loader.getController();
+                formJuegosController.cargarJuegoParaEditar(juegoSeleccionado);  // Cargar los detalles del juego en el formulario
+
+                Stage modal = new Stage();
+                modal.initModality(Modality.APPLICATION_MODAL);
+                modal.setTitle("Editar Juego");
+                modal.setScene(new Scene(root));
+                modal.setResizable(false);
+                modal.showAndWait();
+
+                cargarJuegos();  // Recargar juegos después de editar uno
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mostrarAlerta("Por favor, seleccione un juego para editar.");
+        }
     }
 
     @FXML
     private void eliminarJuego(ActionEvent event) {
         // Obtener el juego seleccionado de la lista
-        Juego juegoSeleccionado = listaJuegos.getSelectionModel().getSelectedItem();
         if (juegoSeleccionado != null) {
             confirmarEliminacionJuego(juegoSeleccionado);  // Mostrar confirmación antes de eliminar
         } else {

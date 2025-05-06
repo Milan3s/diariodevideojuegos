@@ -47,11 +47,10 @@
         </StackPane>
         <HBox layoutX="24.0" layoutY="162.0" prefHeight="20.0" prefWidth="683.0" />
         <Label layoutX="247.0" layoutY="356.0" styleClass="detalle-titulo" text="Video" />
-        <StackPane layoutX="247.0" layoutY="389.0" prefHeight="252.0" prefWidth="356.0">
+        <StackPane layoutX="247.0" layoutY="389.0" prefHeight="306.0" prefWidth="467.0">
             <children>
-                <ImageView fitHeight="301.0" fitWidth="504.0" pickOnBounds="true" preserveRatio="true" />
                 <!-- Video encima de la imagen -->
-                <MediaView fx:id="videoDetalle" fitHeight="300.0" fitWidth="500.0" />
+                <MediaView fx:id="videoDetalle" fitHeight="150.0" fitWidth="100.0" scaleX="-2.0" />
             </children>
         </StackPane>
       <GridPane layoutX="22.0" layoutY="15.0" prefHeight="294.0" prefWidth="513.0">

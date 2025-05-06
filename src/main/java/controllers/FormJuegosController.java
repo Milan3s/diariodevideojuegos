@@ -23,6 +23,7 @@ import java.nio.file.StandardCopyOption;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import javafx.scene.media.MediaView;
 
 public class FormJuegosController implements Initializable {
 
@@ -59,6 +60,10 @@ public class FormJuegosController implements Initializable {
 
     private File imagenSeleccionada;
     private Juego juegoEditando;
+    @FXML
+    private MediaView mediaPreview;
+    @FXML
+    private ImageView overlayPreview;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -96,6 +101,7 @@ public class FormJuegosController implements Initializable {
         }
     }
 
+    
     @FXML
     private void guardarJuego(ActionEvent event) {
         // Validaciones mínimas: solo el campo "Nombre" es obligatorio
@@ -147,6 +153,16 @@ public class FormJuegosController implements Initializable {
             nombreImagen = juegoEditando.getImagen();
         }
 
+        // Video y Overlay
+        String nombreVideo = null;
+        if (mediaPreview.getMediaPlayer() != null) {
+            nombreVideo = Conexion.guardarVideo(new File(mediaPreview.getMediaPlayer().getMedia().getSource()));  // Guardar video
+        }
+        String nombreOverlay = null;
+        if (overlayPreview.getImage() != null) {
+            nombreOverlay = Conexion.guardarOverlay(new File(overlayPreview.getImage().getUrl()));  // Guardar overlay
+        }
+
         // Crear el objeto Juego
         Juego juego = new Juego();
         juego.setNombre(nombre);
@@ -160,6 +176,8 @@ public class FormJuegosController implements Initializable {
         juego.setConsola(consolaSeleccionada);
         juego.setEsRecomendado(recomendado);
         juego.setImagen(nombreImagen); // Guardar solo el nombre de la imagen
+        juego.setVideo(nombreVideo);  // Guardar nombre de video
+        juego.setOverlay(nombreOverlay);  // Guardar nombre de overlay
 
         JuegoDAO dao = new JuegoDAO();
         boolean exito;
@@ -182,7 +200,7 @@ public class FormJuegosController implements Initializable {
         }
     }
 
-    private void limpiarFormulario() {
+    void limpiarFormulario() {
         txtNombre.clear();
         txtDescripcion.clear();
         txtDesarrollador.clear();
@@ -195,6 +213,8 @@ public class FormJuegosController implements Initializable {
         grupoRecomendado.selectToggle(radioSi); // Seleccionar "Sí" por defecto
         imgPreview.setImage(null);
         imagenSeleccionada = null;
+        mediaPreview.setMediaPlayer(null);  // Limpiar el video
+        overlayPreview.setImage(null);  // Limpiar el overlay
 
         AppLogger.info("Formulario de juego limpiado.");
     }
@@ -241,4 +261,49 @@ public class FormJuegosController implements Initializable {
             radioNo.setSelected(true);
         }
     }
+
+    @FXML
+    private void seleccionarVideo(ActionEvent event) {
+        // Usar FileChooser para seleccionar el archivo de video
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos de Video", "*.mp4", "*.avi", "*.mov"));
+
+        File archivo = fileChooser.showOpenDialog(null);
+        if (archivo != null) {
+            // Guardamos el video
+            String nombreVideo = Conexion.guardarVideo(archivo);
+            if (nombreVideo != null) {
+                // Actualizamos la vista previa del video
+                mediaPreview.setMediaPlayer(new javafx.scene.media.MediaPlayer(
+                        new javafx.scene.media.Media(archivo.toURI().toString())
+                ));
+                AppLogger.info("Video seleccionado: " + archivo.getAbsolutePath());
+            } else {
+                mostrarAlerta("Error al guardar el video.");
+                AppLogger.severe("Error al guardar el video.");
+            }
+        }
+    }
+
+    @FXML
+    private void seleccionarOverlay(ActionEvent event) {
+        // Usar FileChooser para seleccionar el archivo de overlay
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos de Overlay", "*.png", "*.jpg", "*.jpeg"));
+
+        File archivo = fileChooser.showOpenDialog(null);
+        if (archivo != null) {
+            // Guardamos el overlay
+            String nombreOverlay = Conexion.guardarOverlay(archivo);
+            if (nombreOverlay != null) {
+                // Actualizamos la vista previa del overlay
+                overlayPreview.setImage(new Image(archivo.toURI().toString()));
+                AppLogger.info("Overlay seleccionado: " + archivo.getAbsolutePath());
+            } else {
+                mostrarAlerta("Error al guardar el overlay.");
+                AppLogger.severe("Error al guardar el overlay.");
+            }
+        }
+    }
+
 }

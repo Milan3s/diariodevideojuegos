@@ -98,11 +98,11 @@ public class Conexion {
         }
 
         try {
-            // Mover la imagen al directorio de destino
-            Files.move(imagen.toPath(), destinoPath); // Usamos Files.move() para mover el archivo
-            AppLogger.info("Imagen movida correctamente: " + destinoPath.toString());
+            // Copiar la imagen al directorio de destino
+            Files.copy(imagen.toPath(), destinoPath, StandardCopyOption.REPLACE_EXISTING); // Usamos Files.copy() para copiar el archivo
+            AppLogger.info("Imagen copiada correctamente: " + destinoPath.toString());
         } catch (IOException e) {
-            AppLogger.severe("Error al mover la imagen: " + e.getMessage());
+            AppLogger.severe("Error al copiar la imagen: " + e.getMessage());
             e.printStackTrace();
             return null;  // Si ocurre un error, retornamos null
         }
@@ -143,11 +143,11 @@ public class Conexion {
         }
 
         try {
-            // Mover el video al directorio de destino
-            Files.move(video.toPath(), destinoPath);
-            AppLogger.info("Video movido correctamente: " + destinoPath.toString());
+            // Copiar el video al directorio de destino
+            Files.copy(video.toPath(), destinoPath, StandardCopyOption.REPLACE_EXISTING);
+            AppLogger.info("Video copiado correctamente: " + destinoPath.toString());
         } catch (IOException e) {
-            AppLogger.severe("Error al mover el video: " + e.getMessage());
+            AppLogger.severe("Error al copiar el video: " + e.getMessage());
             e.printStackTrace();
             return null;  // Si ocurre un error, retornamos null
         }
@@ -188,11 +188,11 @@ public class Conexion {
         }
 
         try {
-            // Mover el overlay al directorio de destino
-            Files.move(overlay.toPath(), destinoPath);
-            AppLogger.info("Overlay movido correctamente: " + destinoPath.toString());
+            // Copiar el overlay al directorio de destino
+            Files.copy(overlay.toPath(), destinoPath, StandardCopyOption.REPLACE_EXISTING);
+            AppLogger.info("Overlay copiado correctamente: " + destinoPath.toString());
         } catch (IOException e) {
-            AppLogger.severe("Error al mover el overlay: " + e.getMessage());
+            AppLogger.severe("Error al copiar el overlay: " + e.getMessage());
             e.printStackTrace();
             return null;  // Si ocurre un error, retornamos null
         }

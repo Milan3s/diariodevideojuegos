@@ -15,6 +15,10 @@ public class Juego {
     private String imagen;
     private Consola consola; // Se cambió a Consola
     private String nombreConsola; // Nuevo campo para almacenar el nombre formateado
+    
+    // Nuevos campos para video y overlay
+    private String video; // Ruta del video
+    private String overlay; // Ruta del overlay
 
     // Constructores
     public Juego() {
@@ -135,10 +139,26 @@ public class Juego {
         this.nombreConsola = nombreConsola;
     }
 
+    // Nuevos getters y setters para video y overlay
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
+    public String getOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(String overlay) {
+        this.overlay = overlay;
+    }
+
     @Override
     public String toString() {
         // Concatenamos el nombre del juego con el nombre de la consola entre paréntesis
         return nombre + " (" + consola.getNombre() + ")";
     }
-
 }

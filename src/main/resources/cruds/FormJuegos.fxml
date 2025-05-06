@@ -15,13 +15,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" 
-            styleClass="mainFxmlClass" 
-            xmlns="http://javafx.com/javafx/23.0.1" 
-            xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="controllers.FormJuegosController">
+<AnchorPane prefHeight="1128.0" prefWidth="854.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormJuegosController">
 
     <stylesheets>
         <URL value="@/styles/formjuegos.css" />
@@ -81,9 +78,25 @@
         <Label text="Imagen" GridPane.columnIndex="0" GridPane.rowIndex="6" />
         <Button onAction="#seleccionarImagen" prefWidth="180" text="Seleccionar Imagen..." GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-        <!-- Vista previa -->
+        <!-- Vista previa imagen -->
         <Label text="Vista previa" GridPane.columnIndex="2" GridPane.rowIndex="6" />
         <ImageView fx:id="imgPreview" fitHeight="216.0" fitWidth="226.0" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+
+        <!-- Video -->
+        <Label text="Video" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <Button onAction="#seleccionarVideo" prefWidth="180" text="Seleccionar Video..." GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+        <!-- Vista previa video -->
+        <Label text="Vista previa Video" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+        <MediaView fx:id="mediaPreview" fitHeight="216.0" fitWidth="226.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+
+        <!-- Overlay -->
+        <Label text="Overlay" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <Button onAction="#seleccionarOverlay" prefWidth="180" text="Seleccionar Overlay..." GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+        <!-- Vista previa overlay -->
+        <Label text="Vista previa Overlay" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+        <ImageView fx:id="overlayPreview" fitHeight="216.0" fitWidth="226.0" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="8" />
 
         <columnConstraints>
             <ColumnConstraints />
@@ -91,7 +104,10 @@
             <ColumnConstraints />
             <ColumnConstraints />
         </columnConstraints>
+
         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
@@ -102,7 +118,7 @@
         </rowConstraints>
     </GridPane>
 
-    <!-- Botón Guardar -->
-    <Button layoutX="392.0" layoutY="548.0" onAction="#guardarJuego" styleClass="juegos-button" text="Guardar" />
+       <!-- Botón Guardar -->
+    <Button layoutX="398.0" layoutY="1072.0" onAction="#guardarJuego" styleClass="juegos-button" text="Guardar" />
 
 </AnchorPane>
