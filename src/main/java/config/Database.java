@@ -1,12 +1,15 @@
 package config;
 
 /**
- * Clase que contiene el esquema SQL completo para la base de datos del diario de videojuegos.
+ * Clase que contiene el esquema SQL completo para la base de datos del diario
+ * de videojuegos.
  */
 public class Database {
 
     /**
-     * Devuelve el esquema SQL como una cadena para crear todas las tablas necesarias.
+     * Devuelve el esquema SQL como una cadena para crear todas las tablas
+     * necesarias.
+     *
      * @return Cadena con sentencias SQL CREATE TABLE.
      */
     public static String getSqlSchema() {
@@ -19,7 +22,7 @@ public class Database {
                 + "CREATE TABLE IF NOT EXISTS consolas (\n"
                 + "    id_consola INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT NOT NULL,\n"
-                + "    abreviatura TEXT,  -- Nueva columna 'abreviatura' agregada\n"
+                + "    abreviatura TEXT,  -- Columna 'abreviatura' añadida\n"
                 + "    anio INTEGER,\n"
                 + "    fabricante TEXT,\n"
                 + "    generacion TEXT,\n"
@@ -47,6 +50,12 @@ public class Database {
                 + "    es_recomendado BOOLEAN DEFAULT FALSE,\n"
                 + "    imagen TEXT,\n"
                 + "    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)\n"
+                + ");\n"
+                + "CREATE TABLE IF NOT EXISTS videos (\n"
+                + "    id_video INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    video_url TEXT NOT NULL,\n"
+                + "    id_juego INTEGER NOT NULL,\n"
+                + "    FOREIGN KEY (id_juego) REFERENCES juegos(id_juegos)\n"
                 + ");\n"
                 + "CREATE TABLE IF NOT EXISTS juegos_consolas (\n"
                 + "    id_juego INTEGER NOT NULL,\n"

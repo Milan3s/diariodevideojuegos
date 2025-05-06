@@ -32,6 +32,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.media.MediaView;
 
 public class JuegosController implements Initializable {
 
@@ -72,6 +73,8 @@ public class JuegosController implements Initializable {
     private ComboBox<?> comboEstado;
     @FXML
     private ComboBox<?> comboConsola;
+    @FXML
+    private MediaView videoDetalle;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

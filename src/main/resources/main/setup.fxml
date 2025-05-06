@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="rootContainer" alignment="CENTER" prefHeight="527" prefWidth="418" spacing="20" styleClass="root" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.setup">
+<VBox fx:id="rootContainer" alignment="CENTER" prefHeight="632.0" prefWidth="425.0" spacing="20" styleClass="root" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.setup">
 
     <children>
         <Label fx:id="lblTitulo" styleClass="title-label" text="Menú de Instalación" />
@@ -19,6 +19,8 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints vgrow="NEVER" />
+            <RowConstraints />
+            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
@@ -37,11 +39,14 @@
                 <Button id="botonIniciar" fx:id="btnIniciar" maxWidth="Infinity" onAction="#handleIniciar" styleClass="action-button" text="Iniciar aplicación" GridPane.rowIndex="4" />
 
                 <Button id="botonCerrar" fx:id="btnCerrar" maxWidth="Infinity" onAction="#handleCerrar" styleClass="action-button" text="Cerrar" GridPane.rowIndex="3" />
+
+                <!-- Nuevo Botón para Insertar los Datos -->
+                <Button id="botonInsertar" fx:id="btnInsertar" maxWidth="Infinity" onAction="#handleInsertar" styleClass="action-button" text="Insertar Datos" GridPane.rowIndex="5" />
             </children>
         </GridPane>
-        <Label id="mensajeEstado" fx:id="lblMensaje" alignment="TOP_LEFT" prefHeight="91.0" prefWidth="314.0" styleClass="message-label" />
+        <Label id="mensajeEstado" fx:id="lblMensaje" alignment="TOP_LEFT" prefHeight="134.0" prefWidth="315.0" styleClass="message-label" />
         
-        <Label id="rutaBase" fx:id="lblRuta" alignment="TOP_LEFT" prefHeight="62.0" prefWidth="315.0" styleClass="path-label" />
+        <Label id="rutaBase" fx:id="lblRuta" alignment="TOP_LEFT" prefHeight="98.0" prefWidth="316.0" styleClass="path-label" />
     </children>
 
     <padding>

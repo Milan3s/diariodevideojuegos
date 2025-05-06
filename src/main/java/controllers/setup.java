@@ -13,12 +13,16 @@ import java.sql.Statement;
 
 import config.Database;
 import config.Conexion;  // Import correcto de tu clase Conexion
+import config.DatabaseInsertar;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -48,6 +52,8 @@ public class setup {
     private Label lblRuta;
     @FXML
     private Button btnIniciar;
+    @FXML
+    private Button btnInsertar;
 
     // Botón: INSTALAR
     @FXML
@@ -135,6 +141,16 @@ public class setup {
             lblMensaje.setText("Error al iniciar la aplicación.");
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleInsertar() {
+        // Llamamos al método para insertar los datos en la base de datos
+        DatabaseInsertar.insertarDatos(); // Esta es la llamada a la clase DatabaseInsertar
+
+        // Alerta para indicar que los datos fueron insertados correctamente
+        Alert alert = new Alert(AlertType.INFORMATION, "Los datos se han insertado correctamente.", ButtonType.OK);
+        alert.showAndWait();
     }
 
 }
