@@ -3,6 +3,7 @@ module main {
     requires javafx.fxml;
     requires java.sql;
     requires java.base;
+    requires javafx.media; // Asegúrate de que esta línea esté presente
 
     opens main to javafx.fxml, javafx.graphics;
     opens controllers to javafx.fxml;
