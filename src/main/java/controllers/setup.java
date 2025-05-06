@@ -11,7 +11,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-import config.Database; // <- Import correcto de tu clase modularizada
+import config.Database;
+import config.Conexion;  // Import correcto de tu clase Conexion
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -55,13 +56,15 @@ public class setup {
             Files.createDirectories(basePath.resolve("Config/Database"));
             Files.createDirectories(basePath.resolve("imagenes/juegos"));
             Files.createDirectories(basePath.resolve("imagenes/consola"));
+            Files.createDirectories(basePath.resolve("videos/juegos"));
+            Files.createDirectories(basePath.resolve("overlays/juegos"));
 
             String url = "jdbc:sqlite:" + dbPath;
 
             try (Connection conn = DriverManager.getConnection(url)) {
                 if (conn != null) {
                     Statement stmt = conn.createStatement();
-                    stmt.executeUpdate(Database.getSqlSchema()); // <- Aquí usas el método externo
+                    stmt.executeUpdate(Database.getSqlSchema()); // Usamos el esquema de la base de datos
                     lblMensaje.setText("Base de datos y estructura creada correctamente.");
                 } else {
                     lblMensaje.setText("Error: no se pudo crear la base de datos.");
@@ -81,6 +84,8 @@ public class setup {
         resultado.append(Files.exists(basePath.resolve("Config/Database")) ? "✔ Config/Database\n" : "✘ Config/Database\n");
         resultado.append(Files.exists(basePath.resolve("imagenes/juegos")) ? "✔ imagenes/juegos\n" : "✘ imagenes/juegos\n");
         resultado.append(Files.exists(basePath.resolve("imagenes/consola")) ? "✔ imagenes/consola\n" : "✘ imagenes/consola\n");
+        resultado.append(Files.exists(basePath.resolve("videos/juegos")) ? "✔ videos/juegos\n" : "✘ videos/juegos\n");
+        resultado.append(Files.exists(basePath.resolve("overlays/juegos")) ? "✔ overlays/juegos\n" : "✘ overlays/juegos\n");
         resultado.append(Files.exists(dbPath) ? "✔ Base de datos (midiario.db)\n" : "✘ Base de datos (midiario.db)\n");
 
         lblMensaje.setText(resultado.toString());
@@ -91,14 +96,13 @@ public class setup {
     @FXML
     private void handleBorrar() {
         try {
-            if (Files.exists(dbPath)) {
-                Files.delete(dbPath);
-                lblMensaje.setText("Base de datos midiario.db eliminada.");
-            } else {
-                lblMensaje.setText("No existe midiario.db.");
-            }
+            // Borrar el directorio principal "diariodevideojuegos" y su contenido
+            Conexion.borrarDirectorioPrincipal();  // Llama al método para eliminar la carpeta
+
+            // Mostrar mensaje de confirmación
+            lblMensaje.setText("Directorio 'diariodevideojuegos' y su contenido han sido eliminados.");
         } catch (Exception e) {
-            lblMensaje.setText("Error al borrar base de datos.");
+            lblMensaje.setText("Error al borrar el directorio.");
             e.printStackTrace();
         }
     }
@@ -109,6 +113,7 @@ public class setup {
         System.exit(0);
     }
 
+    // Iniciar la aplicación
     @FXML
     private void handleIniciar(ActionEvent event) {
         try {

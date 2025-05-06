@@ -19,6 +19,7 @@ public class Database {
                 + "CREATE TABLE IF NOT EXISTS consolas (\n"
                 + "    id_consola INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT NOT NULL,\n"
+                + "    abreviatura TEXT,  -- Nueva columna 'abreviatura' agregada\n"
                 + "    anio INTEGER,\n"
                 + "    fabricante TEXT,\n"
                 + "    generacion TEXT,\n"

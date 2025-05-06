@@ -26,6 +26,12 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.45.1.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>13</version>  <!-- Agregar esta dependencia para MediaView -->
+        </dependency>
     </dependencies>
     <build>
         <plugins>

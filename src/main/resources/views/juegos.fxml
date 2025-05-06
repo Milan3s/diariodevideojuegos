@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="909.0" prefWidth="1423.0" styleClass="mainFxmlClass" stylesheets="@../styles/juegos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.JuegosController">
@@ -111,13 +110,6 @@
          </children>
       </HBox>
       <Label layoutX="263.0" layoutY="336.0" styleClass="detalle-titulo" text="Video" />
-      <StackPane layoutX="263.0" layoutY="374.0" prefHeight="281.0" prefWidth="455.0">
-         <children>
-            <Label fx:id="lblNoImagen1" prefHeight="237.0" prefWidth="219.0" styleClass="detalle-valor" text="No hay imagen" visible="false" />
-            <ImageView fx:id="ImagenVideo" fitHeight="281.0" fitWidth="456.0" preserveRatio="true" />
-            <MediaView fitHeight="200.0" fitWidth="200.0" />
-         </children>
-      </StackPane>
     </AnchorPane>
 
 </AnchorPane>
