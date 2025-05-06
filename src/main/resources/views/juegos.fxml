@@ -131,9 +131,9 @@
                 </HBox>
             </children>
         </GridPane>
-            <Button fx:id="btnReproducir" layoutX="247.0" layoutY="715.0" onAction="#reproducirVideo" text="Reproducir" />
-            <Button fx:id="btnPausar" layoutX="362.0" layoutY="715.0" onAction="#pausarVideo" text="Pausar" />
-            <Button fx:id="btnDetener" layoutX="444.0" layoutY="715.0" onAction="#detenerVideo" text="Detener" />
+            <Button fx:id="btnReproducir" layoutX="261.0" layoutY="715.0" onAction="#reproducirVideo" text="Reproducir" />
+            <Button fx:id="btnPausar" layoutX="385.0" layoutY="715.0" onAction="#pausarVideo" text="Pausar" />
+            <Button fx:id="btnDetener" layoutX="467.0" layoutY="715.0" onAction="#detenerVideo" text="Detener" />
     </AnchorPane>
 
 </AnchorPane>

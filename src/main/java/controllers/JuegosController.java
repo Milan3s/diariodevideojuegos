@@ -181,8 +181,15 @@ public class JuegosController implements Initializable {
     @FXML
     private void reproducirVideo(ActionEvent event) {
         if (mediaPlayer != null) {
-            mediaPlayer.play(); // Reproducir el video
-            btnReproducir.setDisable(true);  // Deshabilitar el botón "Reproducir" cuando el video está en reproducción
+            // Si el video está detenido, reiniciamos el MediaPlayer
+            if (mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
+                mediaPlayer.play(); // Reproducir el video desde el inicio
+            } else {
+                mediaPlayer.play(); // Reanudar el video
+            }
+
+            // Deshabilitar el botón "Reproducir" cuando el video está en reproducción
+            btnReproducir.setDisable(true);
             btnPausar.setDisable(false);   // Habilitar el botón "Pausar"
             btnDetener.setDisable(false);  // Habilitar el botón "Detener"
             AppLogger.info("Reproduciendo video.");
@@ -202,11 +209,33 @@ public class JuegosController implements Initializable {
     @FXML
     private void detenerVideo(ActionEvent event) {
         if (mediaPlayer != null) {
-            mediaPlayer.stop(); // Detener la reproducción del video
-            videoDetalle.setMediaPlayer(null); // Limpiar el MediaView
+            mediaPlayer.pause(); // Pausar el video para no dejarlo en ejecución
+            mediaPlayer.seek(mediaPlayer.getStartTime()); // Volver al inicio del video
+
+            // Limpiar el MediaView sin eliminar la referencia
+            videoDetalle.setMediaPlayer(mediaPlayer);
+
+            // Mostrar la imagen del juego en caso de que el video haya sido detenido
+            if (juegoSeleccionado != null) {
+                if (juegoSeleccionado.getImagen() != null && !juegoSeleccionado.getImagen().isEmpty()) {
+                    File imageFile = new File(Conexion.imagenesPath, juegoSeleccionado.getImagen());
+                    if (imageFile.exists()) {
+                        imgDetalle.setImage(new Image(imageFile.toURI().toString())); // Mostrar la imagen del juego
+                        lblNoImagen.setVisible(false);
+                    } else {
+                        imgDetalle.setImage(null);
+                        lblNoImagen.setVisible(true); // Si no hay imagen, mostrar el texto de "No hay imagen"
+                    }
+                } else {
+                    imgDetalle.setImage(null);
+                    lblNoImagen.setVisible(true); // Si no hay imagen, mostrar el texto de "No hay imagen"
+                }
+            }
+
+            // Restablecer botones
             btnReproducir.setDisable(false); // Habilitar el botón "Reproducir"
-            btnPausar.setDisable(true);     // Deshabilitar el botón "Pausar"
-            btnDetener.setDisable(true);    // Deshabilitar el botón "Detener"
+            btnPausar.setDisable(true);      // Deshabilitar el botón "Pausar"
+            btnDetener.setDisable(true);     // Deshabilitar el botón "Detener"
             AppLogger.info("Video detenido.");
         }
     }

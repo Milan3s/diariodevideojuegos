@@ -12,8 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -22,7 +21,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import javafx.scene.media.MediaView;
 
 public class FormJuegosController implements Initializable {
 
@@ -55,14 +53,10 @@ public class FormJuegosController implements Initializable {
     private ToggleGroup grupoRecomendado;
 
     @FXML
-    private ImageView imgPreview;
+    private MediaView mediaPreview; // Solo el MediaView, sin ImageView para el overlay
 
     private File imagenSeleccionada;
     private Juego juegoEditando;
-    @FXML
-    private MediaView mediaPreview;
-    @FXML
-    private ImageView overlayPreview;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -95,7 +89,7 @@ public class FormJuegosController implements Initializable {
         File archivo = fileChooser.showOpenDialog(null);
         if (archivo != null) {
             imagenSeleccionada = archivo;
-            imgPreview.setImage(new Image(archivo.toURI().toString()));  // Actualiza el ImageView con la imagen seleccionada
+            // Actualiza la vista previa de la imagen seleccionada si es necesario
             AppLogger.info("Imagen seleccionada: " + archivo.getAbsolutePath());
         }
     }
@@ -151,7 +145,7 @@ public class FormJuegosController implements Initializable {
             nombreImagen = juegoEditando.getImagen();
         }
 
-        // Video y Overlay        
+        // Video
         String nombreVideo = null;
         if (mediaPreview.getMediaPlayer() != null) {
             nombreVideo = mediaPreview.getMediaPlayer().getMedia().getSource();  // Esto te dará la URL completa
@@ -161,11 +155,6 @@ public class FormJuegosController implements Initializable {
             } catch (UnsupportedEncodingException e) {
                 AppLogger.severe("Error al decodificar el nombre del video: " + e.getMessage());
             }
-        }
-
-        String nombreOverlay = null;
-        if (overlayPreview.getImage() != null) {
-            nombreOverlay = Conexion.guardarOverlay(new File(overlayPreview.getImage().getUrl()));  // Guardar overlay
         }
 
         // Crear el objeto Juego
@@ -182,7 +171,6 @@ public class FormJuegosController implements Initializable {
         juego.setEsRecomendado(recomendado);
         juego.setImagen(nombreImagen); // Guardar solo el nombre de la imagen
         juego.setVideo(nombreVideo);  // Guardar nombre de video
-        juego.setOverlay(nombreOverlay);  // Guardar nombre de overlay
 
         JuegoDAO dao = new JuegoDAO();
         boolean exito;
@@ -216,10 +204,8 @@ public class FormJuegosController implements Initializable {
         comboEstado.getSelectionModel().clearSelection();
         comboConsola.getSelectionModel().clearSelection();
         grupoRecomendado.selectToggle(radioSi); // Seleccionar "Sí" por defecto
-        imgPreview.setImage(null);
         imagenSeleccionada = null;
         mediaPreview.setMediaPlayer(null);  // Limpiar el video
-        overlayPreview.setImage(null);  // Limpiar el overlay
 
         AppLogger.info("Formulario de juego limpiado.");
     }
@@ -255,7 +241,8 @@ public class FormJuegosController implements Initializable {
         if (juegoSeleccionado.getImagen() != null && !juegoSeleccionado.getImagen().isEmpty()) {
             File imageFile = new File(Conexion.imagenesPath, juegoSeleccionado.getImagen());
             if (imageFile.exists()) {
-                imgPreview.setImage(new Image(imageFile.toURI().toString()));
+                // No es necesario mostrar la imagen en el ImageView de overlayPreview
+                AppLogger.info("Imagen cargada correctamente: " + imageFile.getAbsolutePath());
             }
         }
 
@@ -300,26 +287,4 @@ public class FormJuegosController implements Initializable {
             }
         }
     }
-
-    @FXML
-    private void seleccionarOverlay(ActionEvent event) {
-        // Usar FileChooser para seleccionar el archivo de overlay
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos de Overlay", "*.png", "*.jpg", "*.jpeg"));
-
-        File archivo = fileChooser.showOpenDialog(null);
-        if (archivo != null) {
-            // Guardamos el overlay
-            String nombreOverlay = Conexion.guardarOverlay(archivo);
-            if (nombreOverlay != null) {
-                // Actualizamos la vista previa del overlay
-                overlayPreview.setImage(new Image(archivo.toURI().toString()));
-                AppLogger.info("Overlay seleccionado: " + archivo.getAbsolutePath());
-            } else {
-                mostrarAlerta("Error al guardar el overlay.");
-                AppLogger.severe("Error al guardar el overlay.");
-            }
-        }
-    }
-
 }
