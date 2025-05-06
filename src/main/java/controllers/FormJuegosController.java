@@ -12,6 +12,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 
@@ -55,6 +57,9 @@ public class FormJuegosController implements Initializable {
     @FXML
     private MediaView mediaPreview; // Solo el MediaView, sin ImageView para el overlay
 
+    @FXML
+    private ImageView imgPreview; // ImageView para mostrar la previsualización de la imagen
+
     private File imagenSeleccionada;
     private Juego juegoEditando;
 
@@ -90,6 +95,7 @@ public class FormJuegosController implements Initializable {
         if (archivo != null) {
             imagenSeleccionada = archivo;
             // Actualiza la vista previa de la imagen seleccionada si es necesario
+            imgPreview.setImage(new Image(archivo.toURI().toString()));  // Mostrar la imagen seleccionada en imgPreview
             AppLogger.info("Imagen seleccionada: " + archivo.getAbsolutePath());
         }
     }
@@ -218,6 +224,7 @@ public class FormJuegosController implements Initializable {
         alert.showAndWait();
     }
 
+    // Método que llena el formulario con los datos de un juego seleccionado para editar    
     // Método que llena el formulario con los datos de un juego seleccionado para editar
     public void cargarJuegoParaEditar(Juego juegoSeleccionado) {
         juegoEditando = juegoSeleccionado;
@@ -241,9 +248,27 @@ public class FormJuegosController implements Initializable {
         if (juegoSeleccionado.getImagen() != null && !juegoSeleccionado.getImagen().isEmpty()) {
             File imageFile = new File(Conexion.imagenesPath, juegoSeleccionado.getImagen());
             if (imageFile.exists()) {
-                // No es necesario mostrar la imagen en el ImageView de overlayPreview
-                AppLogger.info("Imagen cargada correctamente: " + imageFile.getAbsolutePath());
+                imgPreview.setImage(new Image(imageFile.toURI().toString())); // Mostrar la imagen en el ImageView
             }
+        }
+
+        // Configurar el video si existe
+        if (juegoSeleccionado.getVideo() != null && !juegoSeleccionado.getVideo().isEmpty()) {
+            File videoFile = new File(Conexion.videosPath, juegoSeleccionado.getVideo());
+            if (videoFile.exists()) {
+                // Crear un nuevo MediaPlayer con el video seleccionado
+                javafx.scene.media.Media media = new javafx.scene.media.Media(videoFile.toURI().toString());
+                javafx.scene.media.MediaPlayer mediaPlayer = new javafx.scene.media.MediaPlayer(media);
+                mediaPreview.setMediaPlayer(mediaPlayer);
+                mediaPlayer.setAutoPlay(false); // No reproducir automáticamente al cargar el video
+
+                // Aquí puedes añadir controles, como la opción de reproducir el video si es necesario.
+                AppLogger.info("Video cargado correctamente: " + videoFile.getAbsolutePath());
+            } else {
+                AppLogger.warning("El archivo de video no existe: " + videoFile.getAbsolutePath());
+            }
+        } else {
+            mediaPreview.setMediaPlayer(null);  // Limpiar el MediaPlayer si no hay video
         }
 
         // Configurar el estado del radio button
@@ -287,4 +312,5 @@ public class FormJuegosController implements Initializable {
             }
         }
     }
+
 }

@@ -242,6 +242,14 @@ public class JuegosController implements Initializable {
 
     @FXML
     private void abrirModalAgregarJuego(ActionEvent event) {
+        // Verificar si hay un video en reproducción y pausarlo si es necesario
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.pause();  // Pausar el video
+            btnPausar.setDisable(true);  // Deshabilitar botón de Pausar mientras está pausado
+            btnReproducir.setDisable(false);  // Habilitar el botón de Reproducir
+            AppLogger.info("Video pausado automáticamente al abrir el formulario para agregar un juego.");
+        }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
             Parent root = loader.load();
@@ -263,6 +271,14 @@ public class JuegosController implements Initializable {
     @FXML
     private void editarJuego(ActionEvent event) {
         if (juegoSeleccionado != null) {
+            // Verificar si hay un video en reproducción y pausarlo si es necesario
+            if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                mediaPlayer.pause();  // Pausar el video
+                btnPausar.setDisable(true);  // Deshabilitar botón de Pausar mientras está pausado
+                btnReproducir.setDisable(false);  // Habilitar el botón de Reproducir
+                AppLogger.info("Video pausado automáticamente al editar el juego.");
+            }
+
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
                 Parent root = loader.load();
@@ -330,5 +346,4 @@ public class JuegosController implements Initializable {
             mostrarAlerta("No se ha seleccionado ningún juego.");
         }
     }
-
 }

@@ -80,7 +80,7 @@
 
         <!-- Vista previa imagen -->
         <Label text="Vista previa" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-        <ImageView fx:id="imgPreview" fitHeight="216.0" fitWidth="226.0" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+        <ImageView fx:id="imgPreview" fitHeight="170.0" fitWidth="249.0" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="6" />
 
         <!-- Video -->
         <Label text="Video" GridPane.columnIndex="0" GridPane.rowIndex="7" />
@@ -88,7 +88,7 @@
 
         <!-- Vista previa video -->
         <Label text="Vista previa Video" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-        <MediaView fx:id="mediaPreview" fitHeight="216.0" fitWidth="226.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+        <MediaView fx:id="mediaPreview" fitHeight="150.0" fitWidth="250.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
 
         <columnConstraints>
             <ColumnConstraints />
