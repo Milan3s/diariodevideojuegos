@@ -46,86 +46,87 @@
             <ImageView fx:id="imgDetalle" fitHeight="239.0" fitWidth="216.0" preserveRatio="true" />
         </StackPane>
         <HBox layoutX="24.0" layoutY="162.0" prefHeight="20.0" prefWidth="683.0" />
-        <Label layoutX="247.0" layoutY="356.0" styleClass="detalle-titulo" text="Video" />
+        <Label layoutX="279.0" layoutY="356.0" styleClass="detalle-titulo" text="Video" />
         <StackPane layoutX="247.0" layoutY="389.0" prefHeight="306.0" prefWidth="467.0">
             <children>
                 <!-- Video encima de la imagen -->
-                <MediaView fx:id="videoDetalle" fitHeight="300.0" fitWidth="230.0" scaleX="-2.0" />
+                <MediaView fx:id="videoDetalle" fitHeight="314.0" fitWidth="410.0" preserveRatio="true" />
             </children>
         </StackPane>
-      <GridPane layoutX="22.0" layoutY="15.0" prefHeight="294.0" prefWidth="513.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                      <Label prefHeight="33.0" prefWidth="113.0" styleClass="detalle-titulo" text="Nombre :" />
-                      <Label fx:id="lblNombre" prefHeight="44.0" prefWidth="457.0" styleClass="detalle-valor" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
-               <children>
-                      <Label prefHeight="33.0" prefWidth="241.0" styleClass="detalle-titulo" text="Fecha de lanzamiento :" />
-                      <Label fx:id="lblFecha" prefHeight="43.0" prefWidth="376.0" styleClass="detalle-valor" />
-               </children>
-            </HBox>
-              <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="1">
-                  <children>
-                      <Label prefHeight="33.0" prefWidth="75.0" styleClass="detalle-titulo" text="Género :" />
-                      <Label fx:id="lblGenero" prefHeight="33.0" prefWidth="447.0" styleClass="detalle-valor" />
-                  </children>
-              </HBox>
-              <!-- Otros detalles -->
-              <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="3">
-                  <children>
-                      <Label prefHeight="33.0" prefWidth="112.0" styleClass="detalle-titulo" text="Editor :" />
-                      <Label fx:id="lblEditor" prefHeight="33.0" prefWidth="489.0" styleClass="detalle-valor" />
-                  </children>
-              </HBox>
-              <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="4">
-                  <children>
-                      <Label prefHeight="33.0" prefWidth="166.0" styleClass="detalle-titulo" text="Desarrollador :" />
-                      <Label fx:id="lblDesarrollador" prefHeight="33.0" prefWidth="428.0" styleClass="detalle-valor" />
-                  </children>
-              </HBox>
-              <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="5">
-                  <children>
-                      <Label prefHeight="33.0" prefWidth="183.0" styleClass="detalle-titulo" text="Modo de juego :" />
-                      <Label fx:id="lblModo" prefHeight="33.0" prefWidth="424.0" styleClass="detalle-valor" />
-                  </children>
-              </HBox>
-              <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="6">
-                  <children>
-                      <Label prefHeight="32.0" prefWidth="173.0" styleClass="detalle-titulo" text="Recomendado :" />
-                      <Label fx:id="lblRecomendado" prefHeight="32.0" prefWidth="424.0" styleClass="detalle-valor" />
-                  </children>
-              </HBox>
-              <HBox prefHeight="32.0" prefWidth="335.0" GridPane.rowIndex="7">
-                  <children>
-                      <Label prefHeight="32.0" prefWidth="112.0" styleClass="detalle-titulo" text="Estado :" />
-                      <Label fx:id="lblEstado" prefHeight="32.0" prefWidth="471.0" styleClass="detalle-valor" />
-                  </children>
-              </HBox>
-              <HBox prefHeight="32.0" prefWidth="350.0" GridPane.rowIndex="8">
-                  <children>
-                      <Label prefHeight="32.0" prefWidth="123.0" styleClass="detalle-titulo" text="Consola :" />
-                      <Label fx:id="lblConsola" prefHeight="38.0" prefWidth="457.0" styleClass="detalle-valor" />
-                  </children>
-              </HBox>
-         </children>
-      </GridPane>
+
+        <GridPane layoutX="22.0" layoutY="15.0" prefHeight="294.0" prefWidth="513.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <HBox prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <Label prefHeight="33.0" prefWidth="113.0" styleClass="detalle-titulo" text="Nombre :" />
+                        <Label fx:id="lblNombre" prefHeight="44.0" prefWidth="457.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+                    <children>
+                        <Label prefHeight="33.0" prefWidth="241.0" styleClass="detalle-titulo" text="Fecha de lanzamiento :" />
+                        <Label fx:id="lblFecha" prefHeight="43.0" prefWidth="376.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="1">
+                    <children>
+                        <Label prefHeight="33.0" prefWidth="75.0" styleClass="detalle-titulo" text="Género :" />
+                        <Label fx:id="lblGenero" prefHeight="33.0" prefWidth="447.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <!-- Otros detalles -->
+                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="3">
+                    <children>
+                        <Label prefHeight="33.0" prefWidth="112.0" styleClass="detalle-titulo" text="Editor :" />
+                        <Label fx:id="lblEditor" prefHeight="33.0" prefWidth="489.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="4">
+                    <children>
+                        <Label prefHeight="33.0" prefWidth="166.0" styleClass="detalle-titulo" text="Desarrollador :" />
+                        <Label fx:id="lblDesarrollador" prefHeight="33.0" prefWidth="428.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="5">
+                    <children>
+                        <Label prefHeight="33.0" prefWidth="183.0" styleClass="detalle-titulo" text="Modo de juego :" />
+                        <Label fx:id="lblModo" prefHeight="33.0" prefWidth="424.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="6">
+                    <children>
+                        <Label prefHeight="32.0" prefWidth="173.0" styleClass="detalle-titulo" text="Recomendado :" />
+                        <Label fx:id="lblRecomendado" prefHeight="32.0" prefWidth="424.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="32.0" prefWidth="335.0" GridPane.rowIndex="7">
+                    <children>
+                        <Label prefHeight="32.0" prefWidth="112.0" styleClass="detalle-titulo" text="Estado :" />
+                        <Label fx:id="lblEstado" prefHeight="32.0" prefWidth="471.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="32.0" prefWidth="350.0" GridPane.rowIndex="8">
+                    <children>
+                        <Label prefHeight="32.0" prefWidth="123.0" styleClass="detalle-titulo" text="Consola :" />
+                        <Label fx:id="lblConsola" prefHeight="38.0" prefWidth="457.0" styleClass="detalle-valor" />
+                    </children>
+                </HBox>
+            </children>
+        </GridPane>
     </AnchorPane>
 
 </AnchorPane>

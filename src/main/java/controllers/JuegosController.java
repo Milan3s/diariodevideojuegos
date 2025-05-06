@@ -161,10 +161,6 @@ public class JuegosController implements Initializable {
                     videoDetalle.setMediaPlayer(mediaPlayer);
                     mediaPlayer.setAutoPlay(true); // Reproducir automáticamente el video
 
-                    // Ajustar el tamaño del video
-                   // videoDetalle.setFitWidth(230);  // Establecer el ancho a 230 píxeles
-                   // videoDetalle.setFitHeight(300); // Establecer la altura a 300 píxeles
-
                 } catch (Exception e) {
                     // Si el archivo no se puede reproducir, muestra un mensaje
                     AppLogger.warning("No se pudo reproducir el video: " + videoFile.getAbsolutePath());
