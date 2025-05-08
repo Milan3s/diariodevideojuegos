@@ -1,7 +1,151 @@
-/*
- * Empty Stylesheet file.
- */
+.root {
+    -fx-background-color: white;
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+}
 
-.mainFxmlClass {
+/* Título */
+.inicio-titulo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
 
+/* Botones */
+.consolas-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0.3, 0, 2);
+    -fx-cursor: hand;
+}
+
+.consolas-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ComboBox */
+.combo-box-style {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.combo-box-style:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ListView */
+.lista-consolas {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 17px;
+}
+
+.lista-consolas .list-cell:filled:selected {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.lista-consolas .list-cell:filled:hover {
+    -fx-background-color: #222;
+    -fx-text-fill: white;
+}
+
+/* Detalle Card */
+.detalle-card {
+    -fx-padding: 20;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 20px;
+}
+
+/* Títulos dentro del detalle */
+.detalle-titulo {
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+/* Valores dentro del detalle */
+.detalle-valor {
+    -fx-font-size: 20px;
+}
+
+/* Altura común para botones y combos */
+.consolas-button, .combo-box-style {
+    -fx-pref-height: 42px;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 20;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+}
+
+.consolas-button:hover, .combo-box-style:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Iconos de control */
+.control-icon {
+    -fx-fill: black;
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.control-icon:hover {
+    -fx-fill: #555;
+}
+
+/* Paginado clásico */
+.paginado-box {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+    -fx-padding: 0 10;
+}
+
+.paginado-button {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.paginado-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.pagina-label {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-text-fill: black;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.numeracion {
+    -fx-font-size: 20px;
 }
