@@ -33,6 +33,8 @@ import models.Juego;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.scene.layout.BorderPane;
@@ -229,7 +231,20 @@ public class JuegosController implements Initializable {
         lblGenero.setText(juego.getGenero());
         lblEditor.setText(juego.getEditor());
         lblDesarrollador.setText(juego.getDesarrollador());
-        lblFecha.setText(juego.getFechaLanzamiento());
+
+        // Formatear la fecha a dd/MM/yyyy
+        if (juego.getFechaLanzamiento() != null && !juego.getFechaLanzamiento().isEmpty()) {
+            try {
+                LocalDate fecha = LocalDate.parse(juego.getFechaLanzamiento());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                lblFecha.setText(fecha.format(formatter));
+            } catch (Exception e) {
+                lblFecha.setText("Fecha inválida");
+            }
+        } else {
+            lblFecha.setText("No disponible");
+        }
+
         lblModo.setText(juego.getModoJuego());
         lblRecomendado.setText(juego.isEsRecomendado() ? "Sí" : "No");
         lblEstado.setText(juego.getEstado() != null ? juego.getEstado().getNombre() : "No disponible");
@@ -313,8 +328,6 @@ public class JuegosController implements Initializable {
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setScene(new Scene(root));
             modal.setTitle("Añadir Juego");
-
-            // 🔒 AÑADIR ESTA LÍNEA PARA DESACTIVAR MAXIMIZAR Y REDIMENSIONAR:
             modal.setResizable(false);
 
             modal.showAndWait();
