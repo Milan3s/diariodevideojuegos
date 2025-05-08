@@ -1,4 +1,3 @@
-// dao/InicioDAO.java
 package dao;
 
 import config.Conexion;
@@ -8,33 +7,118 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class InicioDAO {
 
     public Inicio obtenerResumen() {
-        String[] tablas = {
-            "SELECT COUNT(*) FROM juegos",
-            "SELECT COUNT(*) FROM logros",
-            "SELECT COUNT(*) FROM consolas",
-            "SELECT COUNT(*) FROM eventos",
-            "SELECT COUNT(*) FROM metas_twitch",
-            "SELECT SUM(cantidad) FROM seguidores"
-        };
+        int totalJuegos = 0;
+        int totalLogros = 0;
+        int totalConsolas = 0;
+        int totalEventos = 0;
+        int totalMetas = 0;
+        int totalSeguidores = 0;
+
+        String metaSeguidoresProgreso = "No disponible";
+        String metaJuegosCompletadosDescripcion = "No disponible";
+        String mejorasDelCanal = "Sin mejoras registradas";
+        String fechaExtensible = "No registrada";
+        String diasParaExtensible = "No disponible";
 
         try (Connection conn = Conexion.obtenerConexion()) {
-            int[] resultados = new int[tablas.length];
-            for (int i = 0; i < tablas.length; i++) {
-                try (PreparedStatement stmt = conn.prepareStatement(tablas[i]);
-                     ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        resultados[i] = rs.getInt(1);
+
+            // Conteos generales
+            totalJuegos = ejecutarConteo(conn, "SELECT COUNT(*) FROM juegos");
+            totalLogros = ejecutarConteo(conn, "SELECT COUNT(*) FROM logros");
+            totalConsolas = ejecutarConteo(conn, "SELECT COUNT(*) FROM consolas");
+            totalEventos = ejecutarConteo(conn, "SELECT COUNT(*) FROM eventos");
+            totalMetas = ejecutarConteo(conn, "SELECT COUNT(*) FROM metas_twitch");
+            totalSeguidores = ejecutarConteo(conn, "SELECT SUM(cantidad) FROM seguidores");
+
+            // Meta de seguidores
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT meta FROM metas_twitch WHERE descripcion LIKE '%seguidores%' LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int meta = rs.getInt("meta");
+                    if (meta > 0) {
+                        int progreso = Math.min((totalSeguidores * 100) / meta, 100);
+                        metaSeguidoresProgreso = totalSeguidores + " / " + meta + " - " + progreso + "%";
+                    } else {
+                        metaSeguidoresProgreso = "Meta inválida";
                     }
                 }
             }
-            return new Inicio(resultados[0], resultados[1], resultados[2], resultados[3], resultados[4], resultados[5]);
+
+            // Meta de juegos completados
+            int juegosCompletados = 0;
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT COUNT(*) FROM juegos j JOIN estados e ON j.id_estado = e.id_estado WHERE e.tipo = 'juego' AND e.nombre = 'Completado'");
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    juegosCompletados = rs.getInt(1);
+                    if (totalJuegos < 50) {
+                        metaJuegosCompletadosDescripcion =
+                                "Completados: " + juegosCompletados + " / " + totalJuegos +
+                                ". No hay suficientes juegos para alcanzar la meta de 50.";
+                    } else if (juegosCompletados >= 50) {
+                        metaJuegosCompletadosDescripcion =
+                                "Completados: " + juegosCompletados + " / " + totalJuegos + ". ¡Meta alcanzada!";
+                    } else {
+                        int faltan = 50 - juegosCompletados;
+                        metaJuegosCompletadosDescripcion =
+                                "Completados: " + juegosCompletados + " / " + totalJuegos +
+                                ". Faltan " + faltan + " para la meta.";
+                    }
+                }
+            }
+
+            // Mejoras del canal (última mejora registrada)
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT descripcion FROM mejoras_canal ORDER BY fecha DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    mejorasDelCanal = rs.getString("descripcion");
+                }
+            }
+
+            // Próximo extensible (buscado en metas_twitch por texto relacionado)
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT fecha_fin FROM metas_twitch WHERE descripcion LIKE '%extensible%' OR descripcion LIKE '%aniversario%' ORDER BY fecha_fin DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String fechaStr = rs.getString("fecha_fin");
+                    fechaExtensible = fechaStr;
+                    LocalDate fechaEvento = LocalDate.parse(fechaStr);
+                    long diasFaltan = ChronoUnit.DAYS.between(LocalDate.now(), fechaEvento);
+                    diasParaExtensible = "Faltan " + diasFaltan + " días";
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Inicio(0, 0, 0, 0, 0, 0);
+        }
+
+        return new Inicio(
+                totalJuegos,
+                totalLogros,
+                totalConsolas,
+                totalEventos,
+                totalMetas,
+                totalSeguidores,
+                metaSeguidoresProgreso,
+                metaJuegosCompletadosDescripcion,
+                mejorasDelCanal,
+                fechaExtensible,
+                diasParaExtensible
+        );
+    }
+
+    private int ejecutarConteo(Connection conn, String sql) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
         }
     }
 }
