@@ -2,15 +2,10 @@ package controllers;
 
 import config.AppLogger;
 import config.Conexion;
+import dao.ComboDAO;
 import dao.JuegoDAO;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import models.Juego;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -30,6 +26,15 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Consola;
+import models.Estado;
+import models.Juego;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class JuegosController implements Initializable {
 
@@ -37,63 +42,121 @@ public class JuegosController implements Initializable {
     @FXML private ListView<Juego> listaJuegos;
     @FXML private Label lblNombre, lblGenero, lblEditor, lblDesarrollador, lblFecha, lblModo, lblRecomendado, lblEstado, lblConsola;
     @FXML private ImageView imgDetalle;
-    @FXML private ComboBox<?> comboEstado, comboConsola;
+    @FXML private ComboBox<Estado> comboEstado;
+    @FXML private ComboBox<Consola> comboConsola;
     @FXML private MediaView videoDetalle;
     @FXML private HBox controlesVideo;
     @FXML private StackPane videoContainer;
     @FXML private FontAwesomeIconView iconoVideoNoDisponible;
     @FXML private FontAwesomeIconView iconoImagenNoDisponible;
+    @FXML private TextField campoBusqueda;
+    @FXML private Label paginaActual;
+    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML private Button btnEditar, btnEliminar;
 
+    private ObservableList<Juego> todosLosJuegos = FXCollections.observableArrayList();
+    private ObservableList<Juego> juegosFiltrados = FXCollections.observableArrayList();
+
+    private static final int ITEMS_POR_PAGINA = 10;
+    private int pagina = 1;
     private Juego juegoSeleccionado;
     private MediaPlayer mediaPlayer;
-    @FXML private Button btnEditar;
-    @FXML private Button btnEliminar;
-    @FXML
-    private TextField campoBusqueda;
-    @FXML
-    private Label paginaActual;
-    @FXML
-    private Button btnPrimero;
-    @FXML
-    private Button btnAnterior;
-    @FXML
-    private Button btnSiguiente;
-    @FXML
-    private Button btnUltimo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        cargarCombos();
+        comboEstado.setOnAction(this::filtrarJuegos);
+        comboConsola.setOnAction(this::filtrarJuegos);
+        campoBusqueda.setOnKeyReleased(this::filtrarJuegos);
         cargarJuegos();
         configurarListView();
         ocultarControlesYIconos();
     }
 
-    private void ocultarControlesYIconos() {
-        if (controlesVideo != null) controlesVideo.setVisible(false);
-        if (iconoVideoNoDisponible != null) iconoVideoNoDisponible.setVisible(false);
-        if (iconoImagenNoDisponible != null) iconoImagenNoDisponible.setVisible(false);
+    private void cargarCombos() {
+        ObservableList<Estado> estados = ComboDAO.cargarEstadosPorTipo("juego");
+        estados.add(0, new Estado(-1, "Todos"));
+        comboEstado.setItems(estados);
+        comboEstado.setButtonCell(new ListCell<>() {
+            @Override protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null || item.getId() == -1) ? "Estados" : item.getNombre());
+            }
+        });
+        comboEstado.setCellFactory(lv -> new ListCell<>() {
+            @Override protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getNombre());
+            }
+        });
+        comboEstado.getSelectionModel().selectFirst();
+
+        ObservableList<Consola> consolas = ComboDAO.cargarConsolas();
+        consolas.add(0, new Consola(-1, "Todos", ""));
+        comboConsola.setItems(consolas);
+        comboConsola.setButtonCell(new ListCell<>() {
+            @Override protected void updateItem(Consola item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null || item.getId() == -1) ? "Consolas" : item.getNombre());
+            }
+        });
+        comboConsola.setCellFactory(lv -> new ListCell<>() {
+            @Override protected void updateItem(Consola item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getNombre());
+            }
+        });
+        comboConsola.getSelectionModel().selectFirst();
     }
 
     private void cargarJuegos() {
-        JuegoDAO dao = new JuegoDAO();
-        ObservableList<Juego> juegos = dao.obtenerTodos();
-        listaJuegos.setItems(juegos);
+        todosLosJuegos.setAll(new JuegoDAO().obtenerTodos());
+        aplicarFiltros();
+    }
+
+    private void aplicarFiltros() {
+        String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
+        Estado estadoSel = comboEstado.getSelectionModel().getSelectedItem();
+        Consola consolaSel = comboConsola.getSelectionModel().getSelectedItem();
+
+        juegosFiltrados.setAll(todosLosJuegos.stream()
+            .filter(j -> texto.isEmpty() || j.getNombre().toLowerCase().contains(texto))
+            .filter(j -> estadoSel == null || estadoSel.getId() == -1 || (j.getEstado() != null && j.getEstado().getId() == estadoSel.getId()))
+            .filter(j -> consolaSel == null || consolaSel.getId() == -1 || (j.getConsola() != null && j.getConsola().getId() == consolaSel.getId()))
+            .collect(Collectors.toList())
+        );
+
+        pagina = 1;
+        actualizarPaginado();
+    }
+
+    private void actualizarPaginado() {
+        int desde = (pagina - 1) * ITEMS_POR_PAGINA;
+        int hasta = Math.min(desde + ITEMS_POR_PAGINA, juegosFiltrados.size());
+        if (desde > hasta) desde = 0;
+        listaJuegos.setItems(FXCollections.observableArrayList(juegosFiltrados.subList(desde, hasta)));
+        paginaActual.setText(String.valueOf(pagina));
+    }
+
+    @FXML private void filtrarJuegos(ActionEvent e) { aplicarFiltros(); }
+    @FXML private void filtrarJuegos(KeyEvent e) { aplicarFiltros(); }
+    @FXML private void irPrimeraPagina(ActionEvent e) { pagina = 1; actualizarPaginado(); }
+    @FXML private void irPaginaAnterior(ActionEvent e) { if (pagina > 1) pagina--; actualizarPaginado(); }
+    @FXML private void irPaginaSiguiente(ActionEvent e) {
+        int total = (int) Math.ceil((double) juegosFiltrados.size() / ITEMS_POR_PAGINA);
+        if (pagina < total) pagina++;
+        actualizarPaginado();
+    }
+    @FXML private void irUltimaPagina(ActionEvent e) {
+        pagina = (int) Math.ceil((double) juegosFiltrados.size() / ITEMS_POR_PAGINA);
+        actualizarPaginado();
     }
 
     private void configurarListView() {
         listaJuegos.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Juego item, boolean empty) {
+            @Override protected void updateItem(Juego item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setDisable(true);
-                    setMouseTransparent(true);
-                } else {
-                    setText(item.getNombreConsola());
-                    setDisable(false);
-                    setMouseTransparent(false);
-                }
+                setText(empty || item == null ? null : item.getNombreConsola());
             }
         });
 
@@ -104,7 +167,6 @@ public class JuegosController implements Initializable {
                 videoDetalle.setMediaPlayer(null);
                 mediaPlayer = null;
             }
-
             if (nuevo != null) {
                 juegoSeleccionado = nuevo;
                 mostrarDetalle(juegoSeleccionado);
@@ -125,22 +187,15 @@ public class JuegosController implements Initializable {
         lblEstado.setText(juego.getEstado() != null ? juego.getEstado().getNombre() : "No disponible");
         lblConsola.setText(juego.getConsola() != null ? juego.getConsola().getNombre() : "No disponible");
 
-        // Imagen
-        if (juego.getImagen() != null && !juego.getImagen().isEmpty()) {
-            File imageFile = new File(Conexion.imagenesPath, juego.getImagen());
-            if (imageFile.exists()) {
-                imgDetalle.setImage(new Image(imageFile.toURI().toString()));
-                iconoImagenNoDisponible.setVisible(false);
-            } else {
-                imgDetalle.setImage(null);
-                iconoImagenNoDisponible.setVisible(true);
-            }
+        File imageFile = new File(Conexion.imagenesPath, juego.getImagen() != null ? juego.getImagen() : "");
+        if (imageFile.exists()) {
+            imgDetalle.setImage(new Image(imageFile.toURI().toString()));
+            iconoImagenNoDisponible.setVisible(false);
         } else {
             imgDetalle.setImage(null);
             iconoImagenNoDisponible.setVisible(true);
         }
 
-        // Video
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
@@ -158,7 +213,6 @@ public class JuegosController implements Initializable {
                     controlesVideo.setVisible(true);
                     iconoVideoNoDisponible.setVisible(false);
                 } catch (Exception e) {
-                    AppLogger.warning("No se pudo reproducir el video: " + videoFile.getAbsolutePath());
                     controlesVideo.setVisible(false);
                     iconoVideoNoDisponible.setVisible(true);
                 }
@@ -172,94 +226,87 @@ public class JuegosController implements Initializable {
         }
     }
 
-    @FXML
-    private void reproducirVideo(MouseEvent event) {
-        if (mediaPlayer != null) {
-            mediaPlayer.play();
-            AppLogger.info("Reproduciendo video.");
-        }
+    private void ocultarControlesYIconos() {
+        controlesVideo.setVisible(false);
+        iconoVideoNoDisponible.setVisible(false);
+        iconoImagenNoDisponible.setVisible(false);
     }
 
-    @FXML
-    private void pausarVideo(MouseEvent event) {
-        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            mediaPlayer.pause();
-            AppLogger.info("Video pausado.");
-        }
+    @FXML private void reproducirVideo(MouseEvent event) {
+        if (mediaPlayer != null) mediaPlayer.play();
     }
 
-    @FXML
-    private void detenerVideo(MouseEvent event) {
+    @FXML private void pausarVideo(MouseEvent event) {
+        if (mediaPlayer != null) mediaPlayer.pause();
+    }
+
+    @FXML private void detenerVideo(MouseEvent event) {
         if (mediaPlayer != null) {
             mediaPlayer.pause();
             mediaPlayer.seek(mediaPlayer.getStartTime());
-            AppLogger.info("Video detenido.");
         }
     }
 
-    @FXML
-    private void abrirModalAgregarJuego(ActionEvent event) {
-        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            mediaPlayer.pause();
-            AppLogger.info("Video pausado automáticamente al abrir el formulario para agregar un juego.");
-        }
-
+    @FXML private void abrirModalAgregarJuego(ActionEvent event) {
+        if (mediaPlayer != null) mediaPlayer.pause();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
             Parent root = loader.load();
-            FormJuegosController formJuegosController = loader.getController();
-            formJuegosController.limpiarFormulario();
+            FormJuegosController controller = loader.getController();
+            controller.limpiarFormulario();
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setTitle("Añadir Juego");
             modal.setScene(new Scene(root));
-            modal.setResizable(false);
+            modal.setTitle("Añadir Juego");
             modal.showAndWait();
-
             cargarJuegos();
         } catch (IOException e) {
             AppLogger.severe("Error al abrir el modal de agregar juego: " + e.getMessage());
         }
     }
 
-    @FXML
-    private void editarJuego(ActionEvent event) {
+    @FXML private void editarJuego(ActionEvent event) {
         if (juegoSeleccionado != null) {
-            if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-                mediaPlayer.pause();
-                AppLogger.info("Video pausado automáticamente al editar el juego.");
-            }
-
+            if (mediaPlayer != null) mediaPlayer.pause();
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
                 Parent root = loader.load();
-                FormJuegosController formJuegosController = loader.getController();
-                formJuegosController.cargarJuegoParaEditar(juegoSeleccionado);
+                FormJuegosController controller = loader.getController();
+                controller.cargarJuegoParaEditar(juegoSeleccionado);
                 Stage modal = new Stage();
                 modal.initModality(Modality.APPLICATION_MODAL);
-                modal.setTitle("Editar Juego");
                 modal.setScene(new Scene(root));
-                modal.setResizable(false);
+                modal.setTitle("Editar Juego");
                 modal.showAndWait();
-
                 cargarJuegos();
             } catch (IOException e) {
                 AppLogger.severe("Error al abrir el modal de editar juego: " + e.getMessage());
             }
         } else {
-            mostrarAlerta("Por favor, seleccione un juego para editar.");
+            mostrarAlerta("Seleccione un juego para editar.");
         }
     }
 
-    private void eliminarJuego(Juego juegoSeleccionado) {
-        boolean exito = new JuegoDAO().eliminarJuego(juegoSeleccionado.getId());
-        if (exito) {
-            mostrarAlerta("Juego eliminado correctamente.");
-            AppLogger.info("Juego eliminado correctamente: " + juegoSeleccionado.getNombre());
-            cargarJuegos();
+    @FXML private void eliminarJuego(ActionEvent event) {
+        if (juegoSeleccionado != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Eliminar Juego");
+            alert.setHeaderText("¿Eliminar juego seleccionado?");
+            alert.setContentText(juegoSeleccionado.getNombre());
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    boolean ok = new JuegoDAO().eliminarJuego(juegoSeleccionado.getId());
+                    if (ok) {
+                        mostrarAlerta("Juego eliminado.");
+                        cargarJuegos();
+                    } else {
+                        mostrarAlerta("No se pudo eliminar.");
+                    }
+                }
+            });
         } else {
-            mostrarAlerta("Error al eliminar el juego.");
-            AppLogger.severe("Error al eliminar el juego: " + juegoSeleccionado.getNombre());
+            mostrarAlerta("Seleccione un juego para eliminar.");
         }
     }
 
@@ -270,29 +317,4 @@ public class JuegosController implements Initializable {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-
-    private void confirmarEliminacionJuego(Juego juegoSeleccionado) {
-        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Confirmación de Eliminación");
-        confirmacion.setHeaderText("¿Está seguro de que desea eliminar el juego?");
-        confirmacion.setContentText("El juego: " + juegoSeleccionado.getNombre());
-        confirmacion.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-
-        confirmacion.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.YES) {
-                eliminarJuego(juegoSeleccionado);
-            }
-        });
-    }
-
-    @FXML
-    private void eliminarJuego(ActionEvent event) {
-        if (juegoSeleccionado != null) {
-            confirmarEliminacionJuego(juegoSeleccionado);
-        } else {
-            mostrarAlerta("No se ha seleccionado ningún juego.");
-        }
-    }
-
-
 }

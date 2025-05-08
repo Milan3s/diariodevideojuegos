@@ -23,6 +23,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.util.StringConverter;
 
 public class FormJuegosController implements Initializable {
 
@@ -62,6 +65,12 @@ public class FormJuegosController implements Initializable {
 
     private File imagenSeleccionada;
     private Juego juegoEditando;
+    @FXML
+    private AnchorPane formularioJuego;
+    @FXML
+    private GridPane gridFormulario;
+    @FXML
+    private Button btnGuardar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -77,6 +86,20 @@ public class FormJuegosController implements Initializable {
 
         comboConsola.setItems(ComboDAO.cargarConsolas());
         comboConsola.setPromptText("Seleccione una...");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        dateFechaLanzamiento.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(java.time.LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public java.time.LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) ? java.time.LocalDate.parse(string, formatter) : null;
+            }
+        });
 
         // Agregar log para depuración
         AppLogger.info("Formulario de juegos inicializado correctamente.");

@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
@@ -23,12 +13,18 @@
 
     <!-- Filtros -->
     <HBox layoutX="33.0" layoutY="120.0" spacing="10.0">
-        <ComboBox fx:id="comboEstado" prefHeight="42.0" prefWidth="155.0" promptText="Estados" styleClass="combo-box-style" />
-        <ComboBox fx:id="comboConsola" prefHeight="42.0" prefWidth="161.0" promptText="Consolas" styleClass="combo-box-style" />
+        <ComboBox fx:id="comboEstado" onAction="#filtrarJuegos" prefHeight="42.0" prefWidth="155.0" styleClass="combo-box-style" />
+        <ComboBox fx:id="comboConsola" onAction="#filtrarJuegos" prefHeight="42.0" prefWidth="161.0" styleClass="combo-box-style" />
     </HBox>
 
     <!-- Buscador -->
-    <TextField fx:id="campoBusqueda" layoutX="30.0" layoutY="170.0" prefWidth="332.0" promptText="Buscar..." styleClass="combo-box-style" />
+    <TextField fx:id="campoBusqueda"
+               layoutX="30.0"
+               layoutY="170.0"
+               prefWidth="332.0"
+               promptText="Buscar..."
+               styleClass="combo-box-style"
+               onKeyReleased="#filtrarJuegos" />
 
     <!-- Botones -->
     <HBox layoutX="376.0" layoutY="120.0" spacing="10.0">
@@ -42,17 +38,15 @@
 
     <!-- Paginado clásico -->
     <HBox layoutX="38.0" layoutY="912.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
-        <Button fx:id="btnPrimero" prefHeight="32.0" prefWidth="95.0" styleClass="paginado-button" text="⏮ Primero" />
-        <Button fx:id="btnAnterior" prefHeight="32.0" prefWidth="29.0" styleClass="paginado-button" text="◀" />
+        <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
+        <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
         <Label fx:id="paginaActual" styleClass="numeracion" text="1" />
-        <Button fx:id="btnSiguiente" styleClass="paginado-button" text="▶" />
-        <Button fx:id="btnUltimo" styleClass="paginado-button" text="Último ⏭" />
+        <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente" styleClass="paginado-button" text="▶" />
+        <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
     </HBox>
-
 
     <!-- Panel de detalles -->
     <AnchorPane layoutX="376.0" layoutY="171.0" prefHeight="775.0" prefWidth="959.0" styleClass="detalle-card">
-
         <VBox layoutX="6.0" layoutY="14.0" spacing="10">
             <StackPane prefHeight="239.0" prefWidth="216.0">
                 <ImageView fx:id="imgDetalle" fitHeight="239.0" fitWidth="216.0" preserveRatio="true" />
@@ -63,14 +57,8 @@
         <GridPane hgap="0" layoutX="269.0" layoutY="19.0" prefHeight="260.0" prefWidth="597.0" vgap="10">
             <rowConstraints>
                 <RowConstraints vgrow="NEVER" />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
+                <RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints />
+                <RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints />
             </rowConstraints>
 
             <HBox spacing="10">
@@ -109,9 +97,7 @@
                 <Label styleClass="detalle-titulo" text="Consola :" />
                 <Label fx:id="lblConsola" styleClass="detalle-valor" />
             </HBox>
-            <columnConstraints>
-                <ColumnConstraints />
-            </columnConstraints>
+            <columnConstraints><ColumnConstraints /></columnConstraints>
         </GridPane>
 
         <VBox layoutX="6.0" layoutY="307.0" spacing="10">
@@ -126,6 +112,5 @@
                 <FontAwesomeIconView glyphName="PLAY" onMouseClicked="#reproducirVideo" styleClass="control-icon" />
             </HBox>
         </VBox>
-
     </AnchorPane>
 </AnchorPane>
