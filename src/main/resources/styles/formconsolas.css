@@ -1,7 +1,83 @@
-/*
- * Empty Stylesheet file.
- */
+/* Fondo general del formulario */
+.formulario-base {
+    -fx-background-color: white;
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+}
 
-.mainFxmlClass {
+/* Grid del formulario */
+.form-grid {
+    -fx-background-color: transparent;
+}
 
+/* Etiquetas del formulario */
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* Campos de entrada comunes */
+.form-input, .form-input .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-padding: 6px;
+}
+
+/* Estilo para ComboBox específicamente */
+.combo-box .list-cell {
+    -fx-text-fill: black;
+    -fx-background-color: white;
+}
+
+/* DatePicker sin borde interno */
+.date-picker .arrow-button {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 0 0 0 1px;
+}
+.date-picker .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+/* Botones específicos de consolas */
+.consolas-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 16px;
+    -fx-cursor: hand;
+}
+.consolas-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.consolas-button .fontawesome-icon-view {
+    -fx-fill: black;
+    -fx-padding: 0 6px 0 0; /* espacio entre icono y texto */
+}
+
+/* Imagen (previsualización) */
+.form-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0.3, 0, 2);
+    -fx-border-color: black;
+    -fx-border-width: 1;
+}
+
+/* Vista previa del ComboBox dropdown */
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+}
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: black;
 }

@@ -23,26 +23,49 @@ import java.util.ResourceBundle;
 
 public class FormConsolasController implements Initializable {
 
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtAbreviatura;
-    @FXML private TextField txtAnio;
-    @FXML private TextField txtFabricante;
-    @FXML private TextField txtGeneracion;
-    @FXML private TextField txtRegion;
-    @FXML private TextField txtTipo;
-    @FXML private TextField txtProcesador;
-    @FXML private TextField txtMemoria;
-    @FXML private TextField txtAlmacenamiento;
-    @FXML private TextField txtFrecuencia;
-    @FXML private TextField txtCaracteristicas;
+    private Runnable onGuardarCallback;
 
-    @FXML private DatePicker dateFechaLanzamiento;
-    @FXML private ComboBox<Estado> comboEstado;
-    @FXML private CheckBox chkChip;
-    @FXML private ImageView imgPreview;
-    @FXML private AnchorPane formularioConsola;
-    @FXML private GridPane gridFormulario;
-    @FXML private Button btnGuardar;
+    public void setOnGuardarCallback(Runnable callback) {
+        this.onGuardarCallback = callback;
+    }
+
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtAbreviatura;
+    @FXML
+    private TextField txtAnio;
+    @FXML
+    private TextField txtFabricante;
+    @FXML
+    private TextField txtGeneracion;
+    @FXML
+    private TextField txtRegion;
+    @FXML
+    private TextField txtTipo;
+    @FXML
+    private TextField txtProcesador;
+    @FXML
+    private TextField txtMemoria;
+    @FXML
+    private TextField txtAlmacenamiento;
+    @FXML
+    private TextField txtFrecuencia;
+    @FXML
+    private TextField txtCaracteristicas;
+
+    @FXML
+    private DatePicker dateFechaLanzamiento;
+    @FXML
+    private ComboBox<Estado> comboEstado;
+    @FXML
+    private ImageView imgPreview;
+    @FXML
+    private AnchorPane formularioConsola;
+    @FXML
+    private GridPane gridFormulario;
+    @FXML
+    private Button btnGuardar;
 
     private File imagenSeleccionada;
     private Consola consolaActual;
@@ -51,6 +74,21 @@ public class FormConsolasController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         comboEstado.setItems(ComboDAO.cargarEstadosPorTipo("consola"));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        dateFechaLanzamiento.setConverter(new javafx.util.StringConverter<>() {
+            @Override
+            public String toString(java.time.LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public java.time.LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) ? java.time.LocalDate.parse(string, formatter) : null;
+            }
+        });
+
     }
 
     public void limpiarFormulario() {
@@ -67,7 +105,6 @@ public class FormConsolasController implements Initializable {
         txtAlmacenamiento.clear();
         txtFrecuencia.clear();
         txtCaracteristicas.clear();
-        chkChip.setSelected(false);
         dateFechaLanzamiento.setValue(null);
         comboEstado.getSelectionModel().clearSelection();
         imgPreview.setImage(null);
@@ -89,7 +126,6 @@ public class FormConsolasController implements Initializable {
         txtAlmacenamiento.setText(consola.getAlmacenamiento());
         txtFrecuencia.setText(consola.getFrecuenciaMHz() != null ? consola.getFrecuenciaMHz().toString() : "");
         txtCaracteristicas.setText(consola.getCaracteristicas());
-        chkChip.setSelected(consola.tieneChip());
 
         if (consola.getFechaLanzamiento() != null) {
             dateFechaLanzamiento.setValue(java.time.LocalDate.parse(consola.getFechaLanzamiento()));
@@ -135,12 +171,12 @@ public class FormConsolasController implements Initializable {
             String almacenamiento = txtAlmacenamiento.getText().trim();
             Double frecuencia = txtFrecuencia.getText().isEmpty() ? null : Double.parseDouble(txtFrecuencia.getText());
             String caracteristicas = txtCaracteristicas.getText().trim();
-            boolean chip = chkChip.isSelected();
             String fechaLanzamiento = dateFechaLanzamiento.getValue() != null
-                    ? dateFechaLanzamiento.getValue().format(DateTimeFormatter.ISO_DATE) : null;
+                    ? dateFechaLanzamiento.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    : null;
             Estado estado = comboEstado.getValue();
 
-            String imagenNombre = (consolaActual != null) ? consolaActual.getImagen() : null;
+            String imagenNombre = consolaActual != null ? consolaActual.getImagen() : null;
             if (imagenSeleccionada != null) {
                 imagenNombre = Conexion.guardarImagen(imagenSeleccionada);
             }
@@ -150,11 +186,14 @@ public class FormConsolasController implements Initializable {
                     nombre, abreviatura, anio, fabricante, generacion, region,
                     tipo, procesador, memoria, almacenamiento,
                     fechaLanzamiento, imagenNombre, estado,
-                    frecuencia, chip, caracteristicas
+                    frecuencia, false, caracteristicas // chip = false
             );
 
             boolean exito = consolaActual == null ? dao.insertar(nueva) : dao.actualizar(nueva);
             if (exito) {
+                if (onGuardarCallback != null) {
+                    onGuardarCallback.run();
+                }
                 cerrarVentana();
             } else {
                 mostrarAlerta("No se pudo guardar la consola.");

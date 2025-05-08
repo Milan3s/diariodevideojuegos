@@ -217,15 +217,31 @@ public class ConsolasController implements Initializable {
             Parent root = loader.load();
             FormConsolasController controller = loader.getController();
             controller.limpiarFormulario();
+
+            controller.setOnGuardarCallback(() -> {
+                cargarConsolas();
+                seleccionarUltimaConsola();
+            });
+
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setScene(new Scene(root));
             modal.setTitle("Añadir Consola");
             modal.setResizable(false);
             modal.showAndWait();
-            cargarConsolas();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void seleccionarUltimaConsola() {
+        if (!consolasFiltradas.isEmpty()) {
+            int totalPaginas = (int) Math.ceil((double) consolasFiltradas.size() / ITEMS_POR_PAGINA);
+            pagina = totalPaginas;
+            actualizarPaginado();
+
+            listaConsolas.getSelectionModel().selectLast();
+            listaConsolas.scrollTo(listaConsolas.getItems().size() - 1);
         }
     }
 
@@ -237,17 +253,38 @@ public class ConsolasController implements Initializable {
                 Parent root = loader.load();
                 FormConsolasController controller = loader.getController();
                 controller.cargarConsolaParaEditar(consolaSeleccionada);
+
+                controller.setOnGuardarCallback(() -> {
+                    cargarConsolas();
+                    seleccionarConsolaPorId(consolaSeleccionada.getId());
+                });
+
                 Stage modal = new Stage();
                 modal.initModality(Modality.APPLICATION_MODAL);
                 modal.setScene(new Scene(root));
                 modal.setTitle("Editar Consola");
+                modal.setResizable(false);
                 modal.showAndWait();
-                cargarConsolas();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             mostrarAlerta("Seleccione una consola para editar.");
+        }
+    }
+
+    private void seleccionarConsolaPorId(int id) {
+        for (int i = 0; i < consolasFiltradas.size(); i++) {
+            if (consolasFiltradas.get(i).getId() == id) {
+                int paginaConsola = (i / ITEMS_POR_PAGINA) + 1;
+                pagina = paginaConsola;
+                actualizarPaginado();
+
+                int indiceEnPagina = i % ITEMS_POR_PAGINA;
+                listaConsolas.getSelectionModel().select(indiceEnPagina);
+                listaConsolas.scrollTo(indiceEnPagina);
+                break;
+            }
         }
     }
 
