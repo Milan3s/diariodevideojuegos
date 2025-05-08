@@ -48,6 +48,18 @@ public class JuegosController implements Initializable {
     private MediaPlayer mediaPlayer;
     @FXML private Button btnEditar;
     @FXML private Button btnEliminar;
+    @FXML
+    private TextField campoBusqueda;
+    @FXML
+    private Label paginaActual;
+    @FXML
+    private Button btnPrimero;
+    @FXML
+    private Button btnAnterior;
+    @FXML
+    private Button btnSiguiente;
+    @FXML
+    private Button btnUltimo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -281,4 +293,6 @@ public class JuegosController implements Initializable {
             mostrarAlerta("No se ha seleccionado ningún juego.");
         }
     }
+
+
 }
