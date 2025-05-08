@@ -1,7 +1,6 @@
 package main;
 
 import config.AppLogger;
-import controllers.JuegosController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -14,19 +13,20 @@ import java.io.IOException;
 
 public class App extends Application {
 
-    private static Scene scene;
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws Exception {
-        scene = new Scene(loadFXML("setup")); // Vista inicial
+        primaryStage = stage;
+        Scene scene = new Scene(loadFXML("setup")); // Pantalla inicial
         stage.setScene(scene);
         stage.setTitle("Instalador - Diario de Videojuegos");
-        stage.setResizable(false); // Solo el setup no es redimensionable
+        stage.setResizable(false); // El setup no se puede redimensionar
         stage.show();
     }
 
     static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+        primaryStage.getScene().setRoot(loadFXML(fxml));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
@@ -36,11 +36,11 @@ public class App extends Application {
 
     public static void mostrarPantallaPrincipal() {
         try {
-            FXMLLoader loader = new FXMLLoader(JuegosController.class.getResource("/views/consolas.fxml"));
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/views/inicio.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
 
-            // Ajustar pantalla completa
+            // Ajustar ventana a pantalla completa
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             stage.setX(screenBounds.getMinX());
             stage.setY(screenBounds.getMinY());
@@ -49,8 +49,11 @@ public class App extends Application {
 
             stage.setScene(new Scene(root));
             stage.setTitle("Gestor de Juegos");
-            stage.setResizable(true); // ✅ Mantener botón de maximizar activo
+            stage.setResizable(true);
             stage.show();
+
+            // Cerrar la ventana del setup
+            primaryStage.close();
         } catch (IOException e) {
             AppLogger.severe("Error al cargar la pantalla principal: " + e.getMessage());
         }
