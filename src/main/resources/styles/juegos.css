@@ -83,3 +83,34 @@
 .detalle-valor {
     -fx-font-size: 14px;
 }
+
+
+/* Altura común para botones y combos */
+.juegos-button, .combo-box-style {
+    -fx-pref-height: 42px;  /* misma altura para todo */
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 20; /* ajusta a cero vertical para forzar altura */
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+}
+
+.juegos-button:hover, .combo-box-style:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+
+.control-icon {
+    -fx-fill: black;
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.control-icon:hover {
+    -fx-fill: #555;
+}

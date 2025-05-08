@@ -3,7 +3,8 @@ module main {
     requires javafx.fxml;
     requires java.sql;
     requires java.base;
-    requires javafx.media; // Asegúrate de que esta línea esté presente
+    requires javafx.media;
+    requires de.jensd.fx.glyphs.fontawesome; // <- necesario para usar FontAwesomeIconView
 
     opens main to javafx.fxml, javafx.graphics;
     opens controllers to javafx.fxml;
