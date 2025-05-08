@@ -1,139 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="1026.0" prefWidth="1436.0" styleClass="mainFxmlClass" stylesheets="@../styles/juegos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.JuegosController">
+
     <!-- Título -->
     <Text fx:id="tituloJuegos" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Juegos" />
-    <!-- HBox para los botones: Añadir, Editar, Eliminar -->
-    <HBox alignment="CENTER_LEFT" layoutX="376.0" layoutY="120.0" prefHeight="42.0" prefWidth="325.0" spacing="10.0">
-        <!-- Botón Añadir -->
-        <Button layoutX="10.0" onAction="#abrirModalAgregarJuego" prefHeight="42.0" prefWidth="105.0" styleClass="juegos-button" text="Añadir" />
-        <!-- Botón Editar -->
-        <Button fx:id="btnEditar" onAction="#editarJuego" prefHeight="42.0" prefWidth="109.0" styleClass="juegos-button" text="Editar" />
-        <!-- Botón Eliminar -->
-        <Button fx:id="btnEliminar" onAction="#eliminarJuego" prefHeight="42.0" prefWidth="116.0" styleClass="juegos-button" text="Eliminar" />
+
+    <!-- Filtros -->
+    <HBox layoutX="30.0" layoutY="108.0" spacing="10.0">
+        <ComboBox fx:id="comboEstado" prefWidth="155.0" promptText="Estados" styleClass="combo-box-style" />
+        <ComboBox fx:id="comboConsola" prefWidth="161.0" promptText="Consolas" styleClass="combo-box-style" />
     </HBox>
-    <!-- HBox para los ComboBox de Estado y Consola -->
-    <HBox layoutX="30.0" layoutY="108.0" prefHeight="54.0" prefWidth="325.0" spacing="10.0">
-        <!-- ComboBox Estado -->
-        <ComboBox fx:id="comboEstado" prefHeight="52.0" prefWidth="155.0" promptText="Estados" styleClass="combo-box-style" />
-        <!-- ComboBox Consola -->
-        <ComboBox fx:id="comboConsola" prefHeight="27.0" prefWidth="161.0" promptText="Consolas" styleClass="combo-box-style" />
+
+    <!-- Botones -->
+    <HBox layoutX="376.0" layoutY="120.0" spacing="10.0">
+        <Button onAction="#abrirModalAgregarJuego" prefWidth="105.0" styleClass="juegos-button" text="Añadir" />
+        <Button fx:id="btnEditar" onAction="#editarJuego" prefWidth="109.0" styleClass="juegos-button" text="Editar" />
+        <Button fx:id="btnEliminar" onAction="#eliminarJuego" prefWidth="116.0" styleClass="juegos-button" text="Eliminar" />
     </HBox>
-    <!-- ListView -->
+
+    <!-- Lista de juegos -->
     <ListView fx:id="listaJuegos" layoutX="30.0" layoutY="171.0" prefHeight="732.0" prefWidth="332.0" styleClass="lista-juegos" />
-    <!-- Detalles (Card) -->
+
+    <!-- Panel de detalles -->
     <AnchorPane layoutX="376.0" layoutY="171.0" prefHeight="732.0" prefWidth="944.0" styleClass="detalle-card">
-        <Label layoutX="20.0" layoutY="356.0" styleClass="detalle-titulo" text="Imagen" />
-        <!-- StackPane para la imagen y video -->
-        <StackPane layoutX="20.0" layoutY="389.0" prefHeight="239.0" prefWidth="216.0">
-            <!-- Este label se superpone a la imagen cuando no hay imagen -->
-            <Label fx:id="lblNoImagen" prefHeight="237.0" prefWidth="219.0" styleClass="detalle-valor" text="No hay imagen" visible="false" />
-            <!-- Imagen de fondo (Imagen del juego) -->
-            <ImageView fx:id="imgDetalle" fitHeight="239.0" fitWidth="216.0" preserveRatio="true" />
-        </StackPane>
-        <HBox layoutX="24.0" layoutY="162.0" prefHeight="20.0" prefWidth="683.0" />
-        <Label layoutX="257.0" layoutY="356.0" styleClass="detalle-titulo" text="Video" />
-        <StackPane layoutX="247.0" layoutY="389.0" prefHeight="306.0" prefWidth="467.0">
-            <children>
-                <!-- Video encima de la imagen -->
-                <MediaView fx:id="videoDetalle" fitHeight="314.0" fitWidth="410.0" preserveRatio="true" />
-        
-                <!-- Controles de video (Reproducir, Pausar, Detener) -->
-                <HBox layoutY="290.0" spacing="10.0" />
-            </children>
-        </StackPane>
 
-
-        <GridPane layoutX="22.0" layoutY="15.0" prefHeight="294.0" prefWidth="513.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
+        <!-- Información del juego -->
+        <GridPane layoutX="20.0" layoutY="15.0" prefWidth="900.0" hgap="0" vgap="10">
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="NEVER" />
             </rowConstraints>
-            <children>
-                <HBox prefHeight="100.0" prefWidth="200.0">
-                    <children>
-                        <Label prefHeight="33.0" prefWidth="113.0" styleClass="detalle-titulo" text="Nombre :" />
-                        <Label fx:id="lblNombre" prefHeight="44.0" prefWidth="457.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
-                    <children>
-                        <Label prefHeight="33.0" prefWidth="241.0" styleClass="detalle-titulo" text="Fecha de lanzamiento :" />
-                        <Label fx:id="lblFecha" prefHeight="43.0" prefWidth="376.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="1">
-                    <children>
-                        <Label prefHeight="33.0" prefWidth="75.0" styleClass="detalle-titulo" text="Género :" />
-                        <Label fx:id="lblGenero" prefHeight="33.0" prefWidth="447.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <!-- Otros detalles -->
-                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="3">
-                    <children>
-                        <Label prefHeight="33.0" prefWidth="112.0" styleClass="detalle-titulo" text="Editor :" />
-                        <Label fx:id="lblEditor" prefHeight="33.0" prefWidth="489.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="4">
-                    <children>
-                        <Label prefHeight="33.0" prefWidth="166.0" styleClass="detalle-titulo" text="Desarrollador :" />
-                        <Label fx:id="lblDesarrollador" prefHeight="33.0" prefWidth="428.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="5">
-                    <children>
-                        <Label prefHeight="33.0" prefWidth="183.0" styleClass="detalle-titulo" text="Modo de juego :" />
-                        <Label fx:id="lblModo" prefHeight="33.0" prefWidth="424.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="25.0" prefWidth="683.0" GridPane.rowIndex="6">
-                    <children>
-                        <Label prefHeight="32.0" prefWidth="173.0" styleClass="detalle-titulo" text="Recomendado :" />
-                        <Label fx:id="lblRecomendado" prefHeight="32.0" prefWidth="424.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="32.0" prefWidth="335.0" GridPane.rowIndex="7">
-                    <children>
-                        <Label prefHeight="32.0" prefWidth="112.0" styleClass="detalle-titulo" text="Estado :" />
-                        <Label fx:id="lblEstado" prefHeight="32.0" prefWidth="471.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="32.0" prefWidth="350.0" GridPane.rowIndex="8">
-                    <children>
-                        <Label prefHeight="32.0" prefWidth="123.0" styleClass="detalle-titulo" text="Consola :" />
-                        <Label fx:id="lblConsola" prefHeight="38.0" prefWidth="457.0" styleClass="detalle-valor" />
-                    </children>
-                </HBox>
-            </children>
-        </GridPane>
-            <Button fx:id="btnReproducir" layoutX="261.0" layoutY="715.0" onAction="#reproducirVideo" text="Reproducir" />
-            <Button fx:id="btnPausar" layoutX="385.0" layoutY="715.0" onAction="#pausarVideo" text="Pausar" />
-            <Button fx:id="btnDetener" layoutX="467.0" layoutY="715.0" onAction="#detenerVideo" text="Detener" />
-    </AnchorPane>
 
+            <HBox GridPane.rowIndex="0" spacing="10">
+                <Label text="Nombre :" styleClass="detalle-titulo" />
+                <Label fx:id="lblNombre" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="1" spacing="10">
+                <Label text="Género :" styleClass="detalle-titulo" />
+                <Label fx:id="lblGenero" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="2" spacing="10">
+                <Label text="Fecha de lanzamiento :" styleClass="detalle-titulo" />
+                <Label fx:id="lblFecha" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="3" spacing="10">
+                <Label text="Editor :" styleClass="detalle-titulo" />
+                <Label fx:id="lblEditor" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="4" spacing="10">
+                <Label text="Desarrollador :" styleClass="detalle-titulo" />
+                <Label fx:id="lblDesarrollador" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="5" spacing="10">
+                <Label text="Modo de juego :" styleClass="detalle-titulo" />
+                <Label fx:id="lblModo" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="6" spacing="10">
+                <Label text="Recomendado :" styleClass="detalle-titulo" />
+                <Label fx:id="lblRecomendado" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="7" spacing="10">
+                <Label text="Estado :" styleClass="detalle-titulo" />
+                <Label fx:id="lblEstado" styleClass="detalle-valor" />
+            </HBox>
+            <HBox GridPane.rowIndex="8" spacing="10">
+                <Label text="Consola :" styleClass="detalle-titulo" />
+                <Label fx:id="lblConsola" styleClass="detalle-valor" />
+            </HBox>
+        </GridPane>
+
+        <!-- Multimedia: imagen y video -->
+        <HBox layoutX="20.0" layoutY="340.0" spacing="20">
+            <!-- Imagen -->
+            <VBox spacing="10">
+                <Label text="Imagen" styleClass="detalle-titulo"/>
+                <StackPane prefWidth="216.0" prefHeight="239.0">
+                    <Label fx:id="lblNoImagen" text="No hay imagen" visible="false" styleClass="detalle-valor"/>
+                    <ImageView fx:id="imgDetalle" fitHeight="239.0" fitWidth="216.0" preserveRatio="true" />
+                </StackPane>
+            </VBox>
+
+            <!-- Video -->
+            <VBox spacing="10">
+                <Label text="Video" styleClass="detalle-titulo"/>
+                <StackPane prefHeight="314.0" prefWidth="350.0">
+                    <MediaView fx:id="videoDetalle" fitHeight="350.0" fitWidth="550.0" preserveRatio="true"/>
+                </StackPane>
+                <HBox spacing="10">
+                    <Button fx:id="btnReproducir" onAction="#reproducirVideo" text="Reproducir"/>
+                    <Button fx:id="btnPausar" onAction="#pausarVideo" text="Pausar"/>
+                    <Button fx:id="btnDetener" onAction="#detenerVideo" text="Detener"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </AnchorPane>
 </AnchorPane>

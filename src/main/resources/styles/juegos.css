@@ -1,4 +1,3 @@
-/* Estilo para el root */
 .root {
     -fx-background-color: white;
     -fx-font-family: 'Raleway';
@@ -10,20 +9,17 @@
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: black;
-    -fx-padding: 10 0 20 0;
 }
 
-/* Botón estilo blanco y negro con sombra */
+/* Botones */
 .juegos-button {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;
     -fx-border-width: 1px;
-    -fx-border-radius: 0; /* Elimina el border-radius */
-    -fx-background-radius: 0; /* Elimina el background-radius */
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-padding: 10 20 10 20;
+    -fx-padding: 10 20;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0.3, 0, 2);
     -fx-cursor: hand;
 }
@@ -32,18 +28,15 @@
     -fx-background-color: #f0f0f0;
 }
 
-/* Estilo para ComboBox (igual que los botones, sin border-radius) */
+/* ComboBox */
 .combo-box-style {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;
     -fx-border-width: 1px;
-    -fx-border-radius: 0; /* Elimina el border-radius */
-    -fx-background-radius: 0; /* Elimina el background-radius */
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-padding: 10 20 10 20;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0.3, 0, 2);
+    -fx-padding: 10 20;
     -fx-cursor: hand;
 }
 
@@ -51,7 +44,7 @@
     -fx-background-color: #f0f0f0;
 }
 
-/* ListView estilo */
+/* ListView */
 .lista-juegos {
     -fx-background-color: white;
     -fx-border-color: black;
@@ -70,38 +63,23 @@
     -fx-text-fill: white;
 }
 
-.lista-juegos .list-cell:empty:hover {
-    -fx-background-color: transparent;
+/* Detalle Card */
+.detalle-card {
+    -fx-padding: 20;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 16px;
 }
 
-/* Estilo para el panel de detalle */
-.detalle-card {    
-    -fx-font-family: 'Raleway';
-    -fx-text-fill: black;
-    -fx-padding: 15px;
-    -fx-border-color: black; /* Borde negro añadido */
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px; /* Borde redondeado */    
-    -fx-font-size: 17px; /* Tamaño de letra en el panel de detalle */
+/* Títulos dentro del detalle */
+.detalle-titulo {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
 }
 
-
-/* Vista previa del video */
-.video-preview {
-    -fx-pref-width: 230px;
-    -fx-pref-height: 300px;
-    -fx-border-color: rgba(0, 0, 0, 0.1);
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-color: #f0f0f0;
-}
-
-/* Ajustes para MediaView y otras vistas */
-.media-preview {
-    -fx-pref-width: 230px;
-    -fx-pref-height: 300px;
-    -fx-border-color: rgba(0, 0, 0, 0.1);
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-color: #f0f0f0;
+/* Valores dentro del detalle */
+.detalle-valor {
+    -fx-font-size: 14px;
 }
