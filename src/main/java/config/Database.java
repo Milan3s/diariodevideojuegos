@@ -1,17 +1,7 @@
 package config;
 
-/**
- * Clase que contiene el esquema SQL completo para la base de datos del diario
- * de videojuegos.
- */
 public class Database {
 
-    /**
-     * Devuelve el esquema SQL como una cadena para crear todas las tablas
-     * necesarias.
-     *
-     * @return Cadena con sentencias SQL CREATE TABLE.
-     */
     public static String getSqlSchema() {
         return ""
                 + "CREATE TABLE IF NOT EXISTS estados (\n"
@@ -113,13 +103,27 @@ public class Database {
                 + "    id_meta INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    descripcion TEXT NOT NULL,\n"
                 + "    meta INTEGER NOT NULL,\n"
+                + "    actual INTEGER DEFAULT 0,\n"
+                + "    mes TEXT,\n"
+                + "    anio INTEGER,\n"
                 + "    fecha_inicio TEXT NOT NULL,\n"
                 + "    fecha_fin TEXT,\n"
                 + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
                 + ");\n"
                 + "CREATE TABLE IF NOT EXISTS seguidores (\n"
                 + "    id_seguidores INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-                + "    cantidad INTEGER NOT NULL\n"
+                + "    cantidad INTEGER NOT NULL,\n"
+                + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
+                + ");\n"
+                + "CREATE TABLE IF NOT EXISTS mejoras_canal (\n"
+                + "    id_mejora INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    descripcion TEXT NOT NULL,\n"
+                + "    fecha TEXT DEFAULT CURRENT_DATE\n"
+                + ");\n"
+                + "CREATE TABLE IF NOT EXISTS eventos_extensibles (\n"
+                + "    id_extensible INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    motivo TEXT NOT NULL,\n"
+                + "    fecha_evento TEXT NOT NULL\n"
                 + ");\n";
     }
 }
