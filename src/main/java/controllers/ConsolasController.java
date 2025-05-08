@@ -1,120 +1,295 @@
 package controllers;
 
+import config.Conexion;
+import dao.ComboDAO;
+import dao.ConsolaDAO;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import java.net.URL;
-import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.scene.text.Text;
+import models.Consola;
+import models.Estado;
 
-/**
- * FXML Controller class
- *
- * @author Milanes
- */
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 public class ConsolasController implements Initializable {
 
     @FXML
     private Text tituloConsolas;
     @FXML
-    private ComboBox<?> comboEstado;
+    private ComboBox<Estado> comboEstado;
     @FXML
     private TextField campoBusqueda;
     @FXML
-    private Button btnLimpiar;
+    private Button btnLimpiar, btnAgregar, btnEditar, btnEliminar;
     @FXML
-    private Button btnAgregar;
+    private ListView<Consola> listaConsolas;
     @FXML
-    private Button btnEditar;
-    @FXML
-    private Button btnEliminar;
-    @FXML
-    private ListView<?> listaConsolas;
-    @FXML
-    private Button btnPrimero;
-    @FXML
-    private Button btnAnterior;
+    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
     @FXML
     private Label paginaActual;
-    @FXML
-    private Button btnSiguiente;
-    @FXML
-    private Button btnUltimo;
     @FXML
     private ImageView imgDetalle;
     @FXML
     private FontAwesomeIconView iconoImagenNoDisponible;
     @FXML
-    private Label lblNombre;
-    @FXML
-    private Label lblAbreviatura;
-    @FXML
-    private Label lblAnio;
-    @FXML
-    private Label lblFabricante;
-    @FXML
-    private Label lblGeneracion;
-    @FXML
-    private Label lblRegion;
-    @FXML
-    private Label lblTipo;
-    @FXML
-    private Label lblEstado;
+    private Label lblNombre, lblAbreviatura, lblAnio, lblFabricante, lblGeneracion, lblRegion, lblTipo, lblEstado;
 
-    /**
-     * Initializes the controller class.
-     */
+    private ObservableList<Consola> todasLasConsolas = FXCollections.observableArrayList();
+    private ObservableList<Consola> consolasFiltradas = FXCollections.observableArrayList();
+    private static final int ITEMS_POR_PAGINA = 30;
+    private int pagina = 1;
+    private Consola consolaSeleccionada;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        cargarCombos();
+        cargarConsolas();
+        configurarListView();
+    }
+
+    private void cargarCombos() {
+        ObservableList<Estado> estados = ComboDAO.cargarEstadosConsolas();
+
+        // Agrega opción "Todos"
+        estados.add(0, new Estado(-1, "Todos"));
+
+        comboEstado.setItems(estados);
+
+        comboEstado.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null || item.getId() == -1) ? "Estados" : item.getNombre());
+            }
+        });
+
+        comboEstado.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getNombre());
+            }
+        });
+
+        comboEstado.getSelectionModel().selectFirst();
+        comboEstado.setOnAction(this::filtrarConsolas);
+    }
+
+    private void cargarConsolas() {
+        todasLasConsolas.setAll(new ConsolaDAO().obtenerTodas());
+        aplicarFiltros();
+    }
+
+    private void aplicarFiltros() {
+        String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
+        Estado estadoSel = comboEstado.getSelectionModel().getSelectedItem();
+
+        consolasFiltradas.setAll(todasLasConsolas.stream()
+                .filter(c -> texto.isEmpty() || c.getNombre().toLowerCase().contains(texto))
+                .filter(c -> estadoSel == null || estadoSel.getId() == -1 || (c.getEstado() != null && c.getEstado().getId() == estadoSel.getId()))
+                .collect(Collectors.toList()));
+
+        pagina = 1;
+        actualizarPaginado();
+    }
+
+    private void actualizarPaginado() {
+        int desde = (pagina - 1) * ITEMS_POR_PAGINA;
+        int hasta = Math.min(desde + ITEMS_POR_PAGINA, consolasFiltradas.size());
+        listaConsolas.setItems(FXCollections.observableArrayList(consolasFiltradas.subList(desde, hasta)));
+        paginaActual.setText(String.valueOf(pagina));
+    }
+
+    private void configurarListView() {
+        listaConsolas.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Consola item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getNombre());
+            }
+        });
+
+        listaConsolas.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, nueva) -> {
+            if (nueva != null) {
+                consolaSeleccionada = nueva;
+                mostrarDetalle(nueva);
+            } else {
+                limpiarDetalle();
+            }
+        });
+    }
+
+    private void mostrarDetalle(Consola consola) {
+        lblNombre.setText(consola.getNombre());
+        lblAbreviatura.setText(consola.getAbreviatura());
+        lblAnio.setText(consola.getAnio() != null ? String.valueOf(consola.getAnio()) : "No disponible");
+        lblFabricante.setText(consola.getFabricante());
+        lblGeneracion.setText(consola.getGeneracion());
+        lblRegion.setText(consola.getRegion());
+        lblTipo.setText(consola.getTipo());
+
+        if (consola.getEstado() != null && consola.getEstado().getNombre() != null) {
+            lblEstado.setText(consola.getEstado().getNombre());
+        } else {
+            lblEstado.setText("No disponible");
+        }
+
+        File imageFile = new File(Conexion.imagenesPath, consola.getImagen() != null ? consola.getImagen() : "");
+        if (imageFile.exists()) {
+            imgDetalle.setImage(new Image(imageFile.toURI().toString()));
+            iconoImagenNoDisponible.setVisible(false);
+        } else {
+            imgDetalle.setImage(null);
+            iconoImagenNoDisponible.setVisible(true);
+        }
+    }
+
+    private void limpiarDetalle() {
+        lblNombre.setText("");
+        lblAbreviatura.setText("");
+        lblAnio.setText("");
+        lblFabricante.setText("");
+        lblGeneracion.setText("");
+        lblRegion.setText("");
+        lblTipo.setText("");
+        lblEstado.setText("");
+        imgDetalle.setImage(null);
+        iconoImagenNoDisponible.setVisible(false);
+    }
 
     @FXML
     private void filtrarConsolas(ActionEvent event) {
+        aplicarFiltros();
     }
 
     @FXML
     private void filtrarConsolas(KeyEvent event) {
+        aplicarFiltros();
     }
 
     @FXML
     private void limpiarFiltros(ActionEvent event) {
+        comboEstado.getSelectionModel().selectFirst();
+        campoBusqueda.clear();
+        aplicarFiltros();
     }
 
     @FXML
     private void abrirModalAgregarConsola(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormConsolas.fxml"));
+            Parent root = loader.load();
+            FormConsolasController controller = loader.getController();
+            controller.limpiarFormulario();
+            Stage modal = new Stage();
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setScene(new Scene(root));
+            modal.setTitle("Añadir Consola");
+            modal.setResizable(false);
+            modal.showAndWait();
+            cargarConsolas();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void editarConsola(ActionEvent event) {
+        if (consolaSeleccionada != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormConsolas.fxml"));
+                Parent root = loader.load();
+                FormConsolasController controller = loader.getController();
+                controller.cargarConsolaParaEditar(consolaSeleccionada);
+                Stage modal = new Stage();
+                modal.initModality(Modality.APPLICATION_MODAL);
+                modal.setScene(new Scene(root));
+                modal.setTitle("Editar Consola");
+                modal.showAndWait();
+                cargarConsolas();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mostrarAlerta("Seleccione una consola para editar.");
+        }
     }
 
     @FXML
     private void eliminarConsola(ActionEvent event) {
+        if (consolaSeleccionada != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Eliminar Consola");
+            alert.setHeaderText("¿Eliminar consola seleccionada?");
+            alert.setContentText(consolaSeleccionada.getNombre());
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    boolean ok = new ConsolaDAO().eliminar(consolaSeleccionada.getId());
+                    if (ok) {
+                        mostrarAlerta("Consola eliminada.");
+                        cargarConsolas();
+                    } else {
+                        mostrarAlerta("No se pudo eliminar.");
+                    }
+                }
+            });
+        } else {
+            mostrarAlerta("Seleccione una consola para eliminar.");
+        }
+    }
+
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML
     private void irPrimeraPagina(ActionEvent event) {
+        pagina = 1;
+        actualizarPaginado();
     }
 
     @FXML
     private void irPaginaAnterior(ActionEvent event) {
+        if (pagina > 1) {
+            pagina--;
+        }
+        actualizarPaginado();
     }
 
     @FXML
     private void irPaginaSiguiente(ActionEvent event) {
+        int total = (int) Math.ceil((double) consolasFiltradas.size() / ITEMS_POR_PAGINA);
+        if (pagina < total) {
+            pagina++;
+        }
+        actualizarPaginado();
     }
 
     @FXML
     private void irUltimaPagina(ActionEvent event) {
+        pagina = (int) Math.ceil((double) consolasFiltradas.size() / ITEMS_POR_PAGINA);
+        actualizarPaginado();
     }
-    
 }

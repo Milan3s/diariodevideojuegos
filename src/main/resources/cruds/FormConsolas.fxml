@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormConsolasController">
+
+    <VBox spacing="10">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <GridPane hgap="15" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="75"/>
+            </columnConstraints>
+
+            <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtNombre" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Abreviatura:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtAbreviatura" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Año:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtAnio" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Fabricante:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtFabricante" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Generación:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtGeneracion" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Región:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtRegion" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <Label text="Tipo:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtTipo" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+            <Label text="Procesador:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtProcesador" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+            <Label text="Memoria:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtMemoria" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+            <Label text="Almacenamiento:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtAlmacenamiento" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+            <Label text="Fecha Lanzamiento:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dateFechaLanzamiento" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+
+            <Label text="Estado:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="comboEstado" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <HBox spacing="20">
+            <VBox spacing="10">
+                <Button text="Seleccionar Imagen..." onAction="#seleccionarImagen"/>
+                <ImageView fx:id="imgPreview" fitHeight="180" fitWidth="180" preserveRatio="true"/>
+            </VBox>
+
+            <Button text="Guardar" onAction="#guardarConsola"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

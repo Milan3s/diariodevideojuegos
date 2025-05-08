@@ -29,8 +29,8 @@ public class SidebarController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //handleInicio(); 
-        handleJuegos();
-        //handleConsolas();
+        //handleJuegos();
+        handleConsolas();
     }
 
     @FXML

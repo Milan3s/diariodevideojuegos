@@ -68,4 +68,22 @@ public class ComboDAO {
 
         return lista;
     }
+
+    public static ObservableList<Estado> cargarEstadosConsolas() {
+        ObservableList<Estado> lista = FXCollections.observableArrayList();
+        String sql = "SELECT id_estado, nombre FROM estados WHERE tipo = 'consola' ORDER BY nombre ASC";
+
+        try (Connection conn = DriverManager.getConnection(Conexion.getUrl()); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(new Estado(rs.getInt("id_estado"), rs.getString("nombre")));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
 }
