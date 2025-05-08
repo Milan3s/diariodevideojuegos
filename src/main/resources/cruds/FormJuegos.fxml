@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -42,7 +43,7 @@
         <TextField fx:id="txtModoJuego" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
         <Label styleClass="form-label" text="Fecha lanzamiento" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <DatePicker fx:id="dateFechaLanzamiento" prefHeight="54.0" prefWidth="159.0" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <DatePicker fx:id="dateFechaLanzamiento" prefHeight="39.0" prefWidth="159.0" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
         <Label styleClass="form-label" text="Estado" GridPane.columnIndex="2" GridPane.rowIndex="2" />
         <ComboBox fx:id="comboEstado" prefHeight="25.0" prefWidth="255.0" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="2" />
@@ -81,13 +82,22 @@
         </columnConstraints>
 
         <rowConstraints>
-            <RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints />
-            <RowConstraints /><RowConstraints />
+            <RowConstraints />
+            <RowConstraints maxHeight="44.0" minHeight="42.0" prefHeight="44.0" />
+            <RowConstraints maxHeight="39.0" minHeight="37.0" prefHeight="37.0" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
             <RowConstraints maxHeight="211.0" minHeight="125.0" prefHeight="130.0" />
             <RowConstraints maxHeight="298.0" minHeight="147.0" prefHeight="159.0" />
         </rowConstraints>
     </GridPane>
 
-    <Button fx:id="btnGuardar" layoutX="398.0" layoutY="693.0" onAction="#guardarJuego" styleClass="juegos-button" text="Guardar" />
+    <Button fx:id="btnGuardar" layoutX="396.0" layoutY="693.0" onAction="#guardarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Guardar">
+        <graphic>
+            <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
+        </graphic>
+    </Button>
+
 
 </AnchorPane>

@@ -32,10 +32,24 @@
 
     <!-- Botones -->
     <HBox layoutX="376.0" layoutY="120.0" spacing="10.0">
-        <Button onAction="#abrirModalAgregarJuego" prefWidth="105.0" styleClass="juegos-button" text="Añadir" />
-        <Button fx:id="btnEditar" onAction="#editarJuego" prefWidth="109.0" styleClass="juegos-button" text="Editar" />
-        <Button fx:id="btnEliminar" onAction="#eliminarJuego" prefWidth="116.0" styleClass="juegos-button" text="Eliminar" />
+        <Button onAction="#limpiarFiltros" prefWidth="120.0" styleClass="juegos-button" text="Limpiar">
+         <graphic>
+            <FontAwesomeIconView glyphName="ERASER" />
+         </graphic></Button>
+        <Button onAction="#abrirModalAgregarJuego" prefWidth="112.0" styleClass="juegos-button" text="Añadir">
+         <graphic>
+            <FontAwesomeIconView glyphName="PLUS" />
+         </graphic></Button>
+        <Button fx:id="btnEditar" onAction="#editarJuego" prefWidth="116.0" styleClass="juegos-button" text="Editar">
+         <graphic>
+            <FontAwesomeIconView glyphName="PENCIL" />
+         </graphic></Button>
+        <Button fx:id="btnEliminar" onAction="#eliminarJuego" prefWidth="116.0" styleClass="juegos-button" text="Eliminar">
+         <graphic>
+            <FontAwesomeIconView glyphName="TRASH" />
+         </graphic></Button>
     </HBox>
+
 
     <!-- Lista de juegos -->
     <ListView fx:id="listaJuegos" layoutX="30.0" layoutY="215.0" prefHeight="690.0" prefWidth="332.0" styleClass="lista-juegos" />
@@ -61,8 +75,14 @@
         <GridPane hgap="0" layoutX="269.0" layoutY="19.0" prefHeight="260.0" prefWidth="597.0" vgap="10">
             <rowConstraints>
                 <RowConstraints vgrow="NEVER" />
-                <RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints />
-                <RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
             </rowConstraints>
 
             <HBox spacing="10">
@@ -101,7 +121,9 @@
                 <Label styleClass="detalle-titulo" text="Consola :" />
                 <Label fx:id="lblConsola" styleClass="detalle-valor" />
             </HBox>
-            <columnConstraints><ColumnConstraints /></columnConstraints>
+            <columnConstraints>
+                <ColumnConstraints />
+            </columnConstraints>
         </GridPane>
 
         <VBox layoutX="6.0" layoutY="307.0" spacing="10">

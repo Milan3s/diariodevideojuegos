@@ -392,4 +392,13 @@ public class JuegosController implements Initializable {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
+    @FXML
+    private void limpiarFiltros(ActionEvent event) {
+        comboEstado.getSelectionModel().selectFirst();
+        comboConsola.getSelectionModel().selectFirst();
+        campoBusqueda.clear();
+        aplicarFiltros();
+    }
+
 }
