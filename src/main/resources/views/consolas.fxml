@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/consolas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ConsolasController">
 
     <Text fx:id="tituloConsolas" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Consolas" />
 
-    <!-- HBox con filtros y comboEstado -->
-    <HBox layoutX="40.0" layoutY="120.0" prefHeight="42.0" spacing="10.0">
-        <ComboBox fx:id="comboEstado" prefWidth="180.0" promptText="Estado" />
-    </HBox>
+    <!-- Filtro de estado y búsqueda -->
+    <HBox layoutX="40.0" layoutY="80.0" spacing="10.0" />
 
-    <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="120.0"  prefWidth="367.0" promptText="Buscar..." styleClass="combo-box-style" />
-
+    <!-- Botones de acción -->
     <HBox layoutX="412.0" layoutY="120.0" spacing="10.0">
         <Button fx:id="btnLimpiar" onAction="#limpiarFiltros" prefWidth="120.0" styleClass="consolas-button" text="Limpiar">
             <graphic><FontAwesomeIconView glyphName="ERASER" /></graphic>
@@ -32,8 +39,10 @@
         </Button>
     </HBox>
 
-    <ListView fx:id="listaConsolas" layoutX="39.0" layoutY="171.0" prefHeight="771.0" prefWidth="367.0" styleClass="lista-consolas" />
+    <!-- Lista de consolas -->
+    <ListView fx:id="listaConsolas" layoutX="39.0" layoutY="225.0" prefHeight="717.0" prefWidth="367.0" styleClass="lista-consolas" />
 
+    <!-- Controles de paginación -->
     <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
         <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
         <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
@@ -42,6 +51,7 @@
         <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
     </HBox>
 
+    <!-- Detalle de consola -->
     <AnchorPane layoutX="412.0" layoutY="171.0" prefHeight="806.0" prefWidth="923.0" styleClass="detalle-card">
         <VBox layoutX="22.0" layoutY="336.0" prefHeight="320.0" prefWidth="549.0" spacing="10">
             <StackPane prefHeight="324.0" prefWidth="552.0">
@@ -56,7 +66,7 @@
                 <ColumnConstraints percentWidth="50" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/>
+                <RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints />
             </rowConstraints>
 
             <!-- Columna 1 -->
@@ -112,4 +122,6 @@
             </HBox>
         </GridPane>
     </AnchorPane>
+     <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="171.0" prefWidth="367.0" promptText="Buscar..." styleClass="combo-box-style" />
+     <ComboBox fx:id="comboEstado" layoutX="39.0" layoutY="120.0" prefHeight="30.0" prefWidth="367.0" promptText="Estado" styleClass="combo-box-style" />
 </AnchorPane>
