@@ -30,6 +30,7 @@ public class SidebarController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         //handleInicio(); 
         handleJuegos();
+        //handleConsolas();
     }
 
     @FXML
