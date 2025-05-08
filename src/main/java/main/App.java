@@ -36,7 +36,7 @@ public class App extends Application {
 
     public static void mostrarPantallaPrincipal() {
         try {
-            FXMLLoader loader = new FXMLLoader(JuegosController.class.getResource("/views/Juegos.fxml"));
+            FXMLLoader loader = new FXMLLoader(JuegosController.class.getResource("/views/consolas.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
 

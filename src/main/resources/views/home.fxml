@@ -9,7 +9,7 @@
             stylesheets="@../styles/main.css">
 
     <left>
-        <fx:include source="/main/sidebar.fxml" />
+        <fx:include source="../main/sidebar.fxml" />
     </left>
 
     <center>
