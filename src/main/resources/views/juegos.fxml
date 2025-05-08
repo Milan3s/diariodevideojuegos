@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -22,16 +23,16 @@
     <Text fx:id="tituloJuegos" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Juegos" />
 
     <!-- Filtros -->
-    <HBox layoutX="33.0" layoutY="120.0" spacing="10.0">
-        <ComboBox fx:id="comboEstado" onAction="#filtrarJuegos" prefHeight="42.0" prefWidth="155.0" styleClass="combo-box-style" />
-        <ComboBox fx:id="comboConsola" onAction="#filtrarJuegos" prefHeight="42.0" prefWidth="161.0" styleClass="combo-box-style" />
+    <HBox layoutX="40.0" layoutY="120.0" prefHeight="42.0" prefWidth="374.0" spacing="10.0">
+        <ComboBox fx:id="comboEstado" onAction="#filtrarJuegos" prefHeight="42.0" prefWidth="167.0" styleClass="combo-box-style" />
+        <ComboBox fx:id="comboConsola" onAction="#filtrarJuegos" prefHeight="42.0" prefWidth="188.0" styleClass="combo-box-style" />
     </HBox>
 
     <!-- Buscador -->
-    <TextField fx:id="campoBusqueda" layoutX="30.0" layoutY="170.0" onKeyReleased="#filtrarJuegos" prefWidth="332.0" promptText="Buscar..." styleClass="combo-box-style" />
+    <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="170.0" onKeyReleased="#filtrarJuegos" prefWidth="367.0" promptText="Buscar..." styleClass="combo-box-style" />
 
     <!-- Botones -->
-    <HBox layoutX="376.0" layoutY="120.0" spacing="10.0">
+    <HBox layoutX="412.0" layoutY="120.0" spacing="10.0">
         <Button onAction="#limpiarFiltros" prefWidth="120.0" styleClass="juegos-button" text="Limpiar">
          <graphic>
             <FontAwesomeIconView glyphName="ERASER" />
@@ -52,10 +53,10 @@
 
 
     <!-- Lista de juegos -->
-    <ListView fx:id="listaJuegos" layoutX="30.0" layoutY="215.0" prefHeight="690.0" prefWidth="332.0" styleClass="lista-juegos" />
+    <ListView fx:id="listaJuegos" layoutX="39.0" layoutY="215.0" prefHeight="727.0" prefWidth="367.0" styleClass="lista-juegos" />
 
     <!-- Paginado clásico -->
-    <HBox layoutX="38.0" layoutY="912.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
+    <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
         <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
         <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
         <Label fx:id="paginaActual" styleClass="numeracion" text="1" />
@@ -64,7 +65,7 @@
     </HBox>
 
     <!-- Panel de detalles -->
-    <AnchorPane layoutX="376.0" layoutY="171.0" prefHeight="775.0" prefWidth="959.0" styleClass="detalle-card">
+    <AnchorPane layoutX="412.0" layoutY="171.0" prefHeight="806.0" prefWidth="923.0" styleClass="detalle-card">
         <VBox layoutX="6.0" layoutY="14.0" spacing="10">
             <StackPane prefHeight="239.0" prefWidth="216.0">
                 <ImageView fx:id="imgDetalle" fitHeight="239.0" fitWidth="216.0" preserveRatio="true" />
@@ -126,13 +127,16 @@
             </columnConstraints>
         </GridPane>
 
-        <VBox layoutX="6.0" layoutY="307.0" spacing="10">
-            <StackPane fx:id="videoContainer" prefHeight="314.0" prefWidth="350.0">
-                <MediaView fx:id="videoDetalle" fitHeight="350.0" fitWidth="550.0" preserveRatio="true" />
+        <VBox layoutX="6.0" layoutY="376.0" prefHeight="367.0" prefWidth="550.0">
+            <StackPane fx:id="videoContainer" prefHeight="314.0" prefWidth="580.0">
+                <MediaView fx:id="videoDetalle" fitHeight="400.0" fitWidth="580.0" preserveRatio="true" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="15.0" />
+               </StackPane.margin></MediaView>
                 <FontAwesomeIconView fx:id="iconoVideoNoDisponible" glyphName="BAN" styleClass="control-icon" visible="false" StackPane.alignment="CENTER" />
             </StackPane>
 
-            <HBox fx:id="controlesVideo" alignment="CENTER_LEFT" spacing="20" visible="false">
+            <HBox fx:id="controlesVideo" spacing="20" visible="true">
                 <FontAwesomeIconView glyphName="STOP" onMouseClicked="#detenerVideo" styleClass="control-icon" />
                 <FontAwesomeIconView glyphName="PAUSE" onMouseClicked="#pausarVideo" styleClass="control-icon" />
                 <FontAwesomeIconView glyphName="PLAY" onMouseClicked="#reproducirVideo" styleClass="control-icon" />
