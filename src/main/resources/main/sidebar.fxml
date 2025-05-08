@@ -32,6 +32,10 @@
                             prefWidth="180" styleClass="sidebar-button"
                             text="Inicio" />
                     
+                    <Button fx:id="btnConsolas" onAction="#handleConsolas"
+                            prefWidth="180" styleClass="sidebar-button"
+                            text="Consolas" />
+                                        
                     <Button fx:id="btnJuegos" onAction="#handleJuegos"
                             prefWidth="180" styleClass="sidebar-button"
                             text="Juegos" />
