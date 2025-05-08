@@ -28,6 +28,8 @@ public class InicioController implements Initializable {
     private Text txt_metas_total;
     @FXML
     private Text txt_seguidores_total;
+    @FXML
+    private GridPane gridMetasDetalle;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
