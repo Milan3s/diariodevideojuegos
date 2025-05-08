@@ -5,64 +5,81 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormConsolasController">
+<AnchorPane id="formularioConsola" fx:id="formularioConsola" prefHeight="780.0" prefWidth="884.0"
+            styleClass="formulario-base" stylesheets="@../styles/formconsolas.css"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.FormConsolasController">
 
-    <VBox spacing="10">
+    <GridPane fx:id="gridFormulario" hgap="40" layoutX="24.0" layoutY="29.0" prefWidth="857.0" vgap="15"
+              styleClass="form-grid">
         <padding>
             <Insets top="20" right="20" bottom="20" left="20"/>
         </padding>
 
-        <GridPane hgap="15" vgap="10">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="25"/>
-                <ColumnConstraints percentWidth="75"/>
-            </columnConstraints>
+        <!-- Columna izquierda -->
+        <Label text="Nombre" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtNombre" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-            <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtNombre" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Abreviatura" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtAbreviatura" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-            <Label text="Abreviatura:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtAbreviatura" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Año" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="txtAnio" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-            <Label text="Año:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtAnio" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Fabricante" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="txtFabricante" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-            <Label text="Fabricante:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtFabricante" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Generación" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="txtGeneracion" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-            <Label text="Generación:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtGeneracion" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Región" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <TextField fx:id="txtRegion" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
-            <Label text="Región:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtRegion" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label text="Características" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        <TextField fx:id="txtCaracteristicas" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
-            <Label text="Tipo:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtTipo" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <!-- Columna derecha -->
+        <Label text="Tipo" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtTipo" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
 
-            <Label text="Procesador:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtProcesador" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <Label text="Procesador" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtProcesador" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-            <Label text="Memoria:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtMemoria" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        <Label text="Memoria" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+        <TextField fx:id="txtMemoria" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
-            <Label text="Almacenamiento:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtAlmacenamiento" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        <Label text="Frecuencia (MHz)" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+        <TextField fx:id="txtFrecuencia" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
 
-            <Label text="Fecha Lanzamiento:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
-            <DatePicker fx:id="dateFechaLanzamiento" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+        <Label text="Almacenamiento" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+        <TextField fx:id="txtAlmacenamiento" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
 
-            <Label text="Estado:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
-            <ComboBox fx:id="comboEstado" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
-        </GridPane>
+        <Label text="Fecha Lanzamiento" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+        <DatePicker fx:id="dateFechaLanzamiento" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
 
-        <HBox spacing="20">
-            <VBox spacing="10">
-                <Button text="Seleccionar Imagen..." onAction="#seleccionarImagen"/>
-                <ImageView fx:id="imgPreview" fitHeight="180" fitWidth="180" preserveRatio="true"/>
-            </VBox>
+        <Label text="¿Tiene chip?" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+        <CheckBox fx:id="chkChip" GridPane.columnIndex="3" GridPane.rowIndex="6"/>
 
-            <Button text="Guardar" onAction="#guardarConsola"/>
-        </HBox>
-    </VBox>
+        <Label text="Estado" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+        <ComboBox fx:id="comboEstado" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+        <!-- Imagen -->
+        <Label text="Imagen" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+        <Button onAction="#seleccionarImagen" text="Seleccionar Imagen..." styleClass="juegos-button"
+                GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+        <Label text="Vista previa" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
+        <ImageView fx:id="imgPreview" fitHeight="150.0" fitWidth="250.0" preserveRatio="true"
+                   styleClass="form-image" GridPane.columnIndex="3" GridPane.rowIndex="8"/>
+
+        <columnConstraints>
+            <ColumnConstraints prefWidth="150"/>
+            <ColumnConstraints prefWidth="250"/>
+            <ColumnConstraints prefWidth="150"/>
+            <ColumnConstraints prefWidth="250"/>
+        </columnConstraints>
+    </GridPane>
+
+    <!-- Botón Guardar -->
+    <Button fx:id="btnGuardar" layoutX="382.0" layoutY="730.0" onAction="#guardarConsola"
+            prefWidth="120" prefHeight="34" styleClass="juegos-button" text="Guardar"/>
 </AnchorPane>

@@ -3,7 +3,6 @@ package controllers;
 import config.Conexion;
 import dao.ComboDAO;
 import dao.ConsolaDAO;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import models.Consola;
 import models.Estado;
 
@@ -22,12 +23,26 @@ import java.util.ResourceBundle;
 
 public class FormConsolasController implements Initializable {
 
-    @FXML private TextField txtNombre, txtAbreviatura, txtAnio, txtFabricante, txtGeneracion,
-            txtRegion, txtTipo, txtProcesador, txtMemoria, txtAlmacenamiento, txtFrecuencia, txtCaracteristicas;
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtAbreviatura;
+    @FXML private TextField txtAnio;
+    @FXML private TextField txtFabricante;
+    @FXML private TextField txtGeneracion;
+    @FXML private TextField txtRegion;
+    @FXML private TextField txtTipo;
+    @FXML private TextField txtProcesador;
+    @FXML private TextField txtMemoria;
+    @FXML private TextField txtAlmacenamiento;
+    @FXML private TextField txtFrecuencia;
+    @FXML private TextField txtCaracteristicas;
+
     @FXML private DatePicker dateFechaLanzamiento;
     @FXML private ComboBox<Estado> comboEstado;
     @FXML private CheckBox chkChip;
     @FXML private ImageView imgPreview;
+    @FXML private AnchorPane formularioConsola;
+    @FXML private GridPane gridFormulario;
+    @FXML private Button btnGuardar;
 
     private File imagenSeleccionada;
     private Consola consolaActual;
@@ -61,9 +76,10 @@ public class FormConsolasController implements Initializable {
 
     public void cargarConsolaParaEditar(Consola consola) {
         consolaActual = consola;
+
         txtNombre.setText(consola.getNombre());
         txtAbreviatura.setText(consola.getAbreviatura());
-        txtAnio.setText(consola.getAnio() != null ? String.valueOf(consola.getAnio()) : "");
+        txtAnio.setText(consola.getAnio() != null ? consola.getAnio().toString() : "");
         txtFabricante.setText(consola.getFabricante());
         txtGeneracion.setText(consola.getGeneracion());
         txtRegion.setText(consola.getRegion());
@@ -74,9 +90,11 @@ public class FormConsolasController implements Initializable {
         txtFrecuencia.setText(consola.getFrecuenciaMHz() != null ? consola.getFrecuenciaMHz().toString() : "");
         txtCaracteristicas.setText(consola.getCaracteristicas());
         chkChip.setSelected(consola.tieneChip());
+
         if (consola.getFechaLanzamiento() != null) {
             dateFechaLanzamiento.setValue(java.time.LocalDate.parse(consola.getFechaLanzamiento()));
         }
+
         comboEstado.getSelectionModel().select(consola.getEstado());
 
         if (consola.getImagen() != null) {
@@ -95,7 +113,7 @@ public class FormConsolasController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Imágenes", "*.jpg", "*.jpeg", "*.png")
         );
-        File file = fileChooser.showOpenDialog(new Stage());
+        File file = fileChooser.showOpenDialog(formularioConsola.getScene().getWindow());
         if (file != null) {
             imagenSeleccionada = file;
             imgPreview.setImage(new Image(file.toURI().toString()));
@@ -105,24 +123,24 @@ public class FormConsolasController implements Initializable {
     @FXML
     private void guardarConsola(ActionEvent event) {
         try {
-            String nombre = txtNombre.getText();
-            String abreviatura = txtAbreviatura.getText();
+            String nombre = txtNombre.getText().trim();
+            String abreviatura = txtAbreviatura.getText().trim();
             Integer anio = txtAnio.getText().isEmpty() ? null : Integer.parseInt(txtAnio.getText());
-            String fabricante = txtFabricante.getText();
-            String generacion = txtGeneracion.getText();
-            String region = txtRegion.getText();
-            String tipo = txtTipo.getText();
-            String procesador = txtProcesador.getText();
-            String memoria = txtMemoria.getText();
-            String almacenamiento = txtAlmacenamiento.getText();
+            String fabricante = txtFabricante.getText().trim();
+            String generacion = txtGeneracion.getText().trim();
+            String region = txtRegion.getText().trim();
+            String tipo = txtTipo.getText().trim();
+            String procesador = txtProcesador.getText().trim();
+            String memoria = txtMemoria.getText().trim();
+            String almacenamiento = txtAlmacenamiento.getText().trim();
             Double frecuencia = txtFrecuencia.getText().isEmpty() ? null : Double.parseDouble(txtFrecuencia.getText());
-            String caracteristicas = txtCaracteristicas.getText();
+            String caracteristicas = txtCaracteristicas.getText().trim();
             boolean chip = chkChip.isSelected();
-            String fechaLanzamiento = dateFechaLanzamiento.getValue() != null ?
-                    dateFechaLanzamiento.getValue().format(DateTimeFormatter.ISO_DATE) : null;
+            String fechaLanzamiento = dateFechaLanzamiento.getValue() != null
+                    ? dateFechaLanzamiento.getValue().format(DateTimeFormatter.ISO_DATE) : null;
             Estado estado = comboEstado.getValue();
 
-            String imagenNombre = consolaActual != null ? consolaActual.getImagen() : null;
+            String imagenNombre = (consolaActual != null) ? consolaActual.getImagen() : null;
             if (imagenSeleccionada != null) {
                 imagenNombre = Conexion.guardarImagen(imagenSeleccionada);
             }
@@ -141,13 +159,15 @@ public class FormConsolasController implements Initializable {
             } else {
                 mostrarAlerta("No se pudo guardar la consola.");
             }
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Año o Frecuencia no válidos. Deben ser números.");
         } catch (Exception e) {
             mostrarAlerta("Error al guardar: " + e.getMessage());
         }
     }
 
     private void cerrarVentana() {
-        Stage stage = (Stage) txtNombre.getScene().getWindow();
+        Stage stage = (Stage) formularioConsola.getScene().getWindow();
         stage.close();
     }
 
