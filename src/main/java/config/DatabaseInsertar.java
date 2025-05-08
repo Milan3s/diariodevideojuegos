@@ -12,7 +12,7 @@ public class DatabaseInsertar {
         try (Connection conn = Conexion.obtenerConexion()) {
             if (conn != null) {
                 // =========================
-                // INSERTAR ESTADOS UNIFICADOS
+                // ESTADOS
                 // =========================
                 String sqlEstados = "INSERT INTO estados (tipo, nombre) VALUES "
                         + "('juego', 'Pendiente'), "
@@ -25,28 +25,27 @@ public class DatabaseInsertar {
                         + "('moderador', 'Activo'), "
                         + "('moderador', 'Inactivo'), "
                         + "('moderador', 'En revisión'), "
-                        + "('moderador', 'Dado de baja');";
+                        + "('moderador', 'Dado de baja'), "
+                        + "('consola', 'Con chip');";
 
                 // =========================
                 // DIFICULTADES DE LOGROS
                 // =========================
                 String sqlDificultades = "INSERT INTO dificultades_logros (nombre) VALUES "
-                        + "('Fácil'), "
-                        + "('Media'), "
-                        + "('Difícil'), "
-                        + "('Extrema');";
+                        + "('Fácil'), ('Media'), ('Difícil'), ('Extrema');";
 
                 // =========================
-                // CONSOLAS
+                // CONSOLAS (NUEVOS CAMPOS)
                 // =========================
-                String sqlConsolas = "INSERT INTO consolas (nombre, abreviatura, anio, fabricante, generacion, region, tipo, procesador, memoria, almacenamiento, fecha_lanzamiento, imagen, id_estado) VALUES "
-                        + "('Atari 2600', 'AT2600', 1977, 'Atari', 'Primera', 'Global', 'Sobremesa', 'Custom MOS 6507', '128 bytes RAM', 'Cartridge', '1977-09-11', 'tv-atari.png', 1), "
-                        + "('Neo Geo', 'NG', 1990, 'SNK', 'Cuarta', 'Global', 'Arcade/Sobremesa', 'Motorola 68000', '64 KB RAM', 'Cartridge', '1990-04-26', 'tv-neo-geo.png', 1), "
-                        + "('Super Nintendo Entertainment System', 'SNES', 1990, 'Nintendo', 'Cuarta', 'Global', 'Sobremesa', 'Ricoh 5A22', '128 KB RAM', 'Cartridge', '1990-08-23', 'tv-snes.png', 1), "
-                        + "('Sega Saturn', 'SS', 1994, 'Sega', 'Quinta', 'Global', 'Sobremesa', 'SH-2', '2 MB RAM', 'CD-ROM', '1994-11-22', 'tv-saturn.png', 1), "
-                        + "('Nintendo 64', 'N64', 1996, 'Nintendo', 'Sexta', 'Global', 'Sobremesa', 'MIPS R4300i', '4 MB RAM', 'Cartridge', '1996-09-29', 'tv-n64.png', 1), "
-                        + "('PlayStation 2', 'PS2', 2000, 'Sony', 'Sexta', 'Global', 'Sobremesa', 'Emotion Engine', '32 MB RAM', 'DVD-ROM', '2000-03-04', 'tv-ps2.png', 1), "
-                        + "('Nintendo Switch', 'NS', 2017, 'Nintendo', 'Octava', 'Global', 'Híbrida', 'NVIDIA Tegra X1', '4 GB RAM', '32 GB NAND', '2017-03-03', 'tv-switch.png', 1);";
+                String sqlConsolas = "INSERT INTO consolas (nombre, abreviatura, anio, fabricante, generacion, region, tipo, "
+                        + "procesador, memoria, almacenamiento, fecha_lanzamiento, imagen, id_estado, frecuencia_mhz, chip, caracteristicas) VALUES "
+                        + "('Atari 2600', 'AT2600', 1977, 'Atari', 'Primera', 'Global', 'Sobremesa', 'Custom MOS 6507', '128 bytes RAM', 'Cartridge', '1977-09-11', 'tv-atari.png', 12, 1.19, 0, 'Poca memoria, gráficos sencillos'), "
+                        + "('Neo Geo', 'NG', 1990, 'SNK', 'Cuarta', 'Global', 'Arcade/Sobremesa', 'Motorola 68000', '64 KB RAM', 'Cartridge', '1990-04-26', 'tv-neo-geo.png', 12, 12.0, 0, 'Excelente para juegos de lucha'), "
+                        + "('Super Nintendo Entertainment System', 'SNES', 1990, 'Nintendo', 'Cuarta', 'Global', 'Sobremesa', 'Ricoh 5A22', '128 KB RAM', 'Cartridge', '1990-08-23', 'tv-snes.png', 12, 3.58, 1, 'Chip de sonido avanzado'), "
+                        + "('Sega Saturn', 'SS', 1994, 'Sega', 'Quinta', 'Global', 'Sobremesa', 'SH-2', '2 MB RAM', 'CD-ROM', '1994-11-22', 'tv-saturn.png', 13, 28.63, 1, 'Difícil de programar pero potente'), "
+                        + "('Nintendo 64', 'N64', 1996, 'Nintendo', 'Sexta', 'Global', 'Sobremesa', 'MIPS R4300i', '4 MB RAM', 'Cartridge', '1996-09-29', 'tv-n64.png', 12, 93.75, 1, 'Con expansión RAM opcional'), "
+                        + "('PlayStation 2', 'PS2', 2000, 'Sony', 'Sexta', 'Global', 'Sobremesa', 'Emotion Engine', '32 MB RAM', 'DVD-ROM', '2000-03-04', 'tv-ps2.png', 12, 294.91, 1, 'La más vendida de la historia'), "
+                        + "('Nintendo Switch', 'NS', 2017, 'Nintendo', 'Octava', 'Global', 'Híbrida', 'NVIDIA Tegra X1', '4 GB RAM', '32 GB NAND', '2017-03-03', 'tv-switch.png', 12, 1020.0, 0, 'Portátil y de sobremesa a la vez');";
 
                 // =========================
                 // JUEGOS
@@ -61,7 +60,7 @@ public class DatabaseInsertar {
                         + "('Chrono Trigger', 'Viajes en el tiempo en un RPG clásico', 'Square', 'Square', 'RPG', 'Un jugador', '1995-03-11', 3, 0, 'chrono_trigger.jpg', 'chrono_trigger.mp4');";
 
                 // =========================
-                // RELACIÓN JUEGOS - CONSOLAS
+                // JUEGOS - CONSOLAS
                 // =========================
                 String sqlJuegosConsolas = "INSERT INTO juegos_consolas (id_juego, id_consola) VALUES "
                         + "(1, 5), (2, 6), (3, 3), (4, 4), (5, 4), (6, 7), (7, 3);";
@@ -98,10 +97,11 @@ public class DatabaseInsertar {
                 // =========================
                 // SEGUIDORES
                 // =========================
-                String sqlSeguidores = "INSERT INTO seguidores (cantidad) VALUES "
-                        + "(100), (250);";
+                String sqlSeguidores = "INSERT INTO seguidores (cantidad) VALUES (100), (250);";
 
-                // Ejecutar todas las consultas
+                // =========================
+                // EJECUCIÓN
+                // =========================
                 conn.createStatement().execute(sqlEstados);
                 conn.createStatement().execute(sqlDificultades);
                 conn.createStatement().execute(sqlConsolas);
@@ -113,12 +113,10 @@ public class DatabaseInsertar {
                 conn.createStatement().execute(sqlMetasTwitch);
                 conn.createStatement().execute(sqlSeguidores);
 
-                // Mostrar alerta de éxito
                 Alert alert = new Alert(AlertType.INFORMATION, "Datos insertados correctamente.", ButtonType.OK);
                 alert.showAndWait();
             }
         } catch (SQLException e) {
-            // Mostrar error si ocurre
             Alert alert = new Alert(AlertType.ERROR, "Error al insertar los datos: " + e.getMessage(), ButtonType.OK);
             alert.showAndWait();
             e.printStackTrace();

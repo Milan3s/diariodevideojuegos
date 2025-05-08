@@ -42,7 +42,10 @@ public class ConsolaDAO {
                     rs.getString("almacenamiento"),
                     rs.getString("fecha_lanzamiento"),
                     rs.getString("imagen"),
-                    estado
+                    estado,
+                    rs.getObject("frecuencia_mhz") != null ? rs.getDouble("frecuencia_mhz") : null,
+                    rs.getBoolean("chip"),
+                    rs.getString("caracteristicas")
                 );
                 consolas.add(consola);
             }
@@ -56,21 +59,17 @@ public class ConsolaDAO {
 
     public boolean insertar(Consola consola) {
         String sql = "INSERT INTO consolas (nombre, abreviatura, anio, fabricante, generacion, region, tipo, " +
-                     "procesador, memoria, almacenamiento, fecha_lanzamiento, imagen, id_estado) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                     "procesador, memoria, almacenamiento, fecha_lanzamiento, imagen, id_estado, " +
+                     "frecuencia_mhz, chip, caracteristicas) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(Conexion.getUrl());
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, consola.getNombre());
             stmt.setString(2, consola.getAbreviatura());
-
-            if (consola.getAnio() != null) {
-                stmt.setInt(3, consola.getAnio());
-            } else {
-                stmt.setNull(3, Types.INTEGER);
-            }
-
+            if (consola.getAnio() != null) stmt.setInt(3, consola.getAnio());
+            else stmt.setNull(3, Types.INTEGER);
             stmt.setString(4, consola.getFabricante());
             stmt.setString(5, consola.getGeneracion());
             stmt.setString(6, consola.getRegion());
@@ -80,12 +79,12 @@ public class ConsolaDAO {
             stmt.setString(10, consola.getAlmacenamiento());
             stmt.setString(11, consola.getFechaLanzamiento());
             stmt.setString(12, consola.getImagen());
-
-            if (consola.getEstado() != null) {
-                stmt.setInt(13, consola.getEstado().getId());
-            } else {
-                stmt.setNull(13, Types.INTEGER);
-            }
+            if (consola.getEstado() != null) stmt.setInt(13, consola.getEstado().getId());
+            else stmt.setNull(13, Types.INTEGER);
+            if (consola.getFrecuenciaMHz() != null) stmt.setDouble(14, consola.getFrecuenciaMHz());
+            else stmt.setNull(14, Types.REAL);
+            stmt.setBoolean(15, consola.tieneChip());
+            stmt.setString(16, consola.getCaracteristicas());
 
             return stmt.executeUpdate() > 0;
 
@@ -99,20 +98,15 @@ public class ConsolaDAO {
     public boolean actualizar(Consola consola) {
         String sql = "UPDATE consolas SET nombre=?, abreviatura=?, anio=?, fabricante=?, generacion=?, " +
                      "region=?, tipo=?, procesador=?, memoria=?, almacenamiento=?, fecha_lanzamiento=?, " +
-                     "imagen=?, id_estado=? WHERE id_consola=?";
+                     "imagen=?, id_estado=?, frecuencia_mhz=?, chip=?, caracteristicas=? WHERE id_consola=?";
 
         try (Connection conn = DriverManager.getConnection(Conexion.getUrl());
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, consola.getNombre());
             stmt.setString(2, consola.getAbreviatura());
-
-            if (consola.getAnio() != null) {
-                stmt.setInt(3, consola.getAnio());
-            } else {
-                stmt.setNull(3, Types.INTEGER);
-            }
-
+            if (consola.getAnio() != null) stmt.setInt(3, consola.getAnio());
+            else stmt.setNull(3, Types.INTEGER);
             stmt.setString(4, consola.getFabricante());
             stmt.setString(5, consola.getGeneracion());
             stmt.setString(6, consola.getRegion());
@@ -122,14 +116,13 @@ public class ConsolaDAO {
             stmt.setString(10, consola.getAlmacenamiento());
             stmt.setString(11, consola.getFechaLanzamiento());
             stmt.setString(12, consola.getImagen());
-
-            if (consola.getEstado() != null) {
-                stmt.setInt(13, consola.getEstado().getId());
-            } else {
-                stmt.setNull(13, Types.INTEGER);
-            }
-
-            stmt.setInt(14, consola.getId());
+            if (consola.getEstado() != null) stmt.setInt(13, consola.getEstado().getId());
+            else stmt.setNull(13, Types.INTEGER);
+            if (consola.getFrecuenciaMHz() != null) stmt.setDouble(14, consola.getFrecuenciaMHz());
+            else stmt.setNull(14, Types.REAL);
+            stmt.setBoolean(15, consola.tieneChip());
+            stmt.setString(16, consola.getCaracteristicas());
+            stmt.setInt(17, consola.getId());
 
             return stmt.executeUpdate() > 0;
 

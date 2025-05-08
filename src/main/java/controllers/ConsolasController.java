@@ -49,13 +49,25 @@ public class ConsolasController implements Initializable {
     @FXML
     private FontAwesomeIconView iconoImagenNoDisponible;
     @FXML
-    private Label lblNombre, lblAbreviatura, lblAnio, lblFabricante, lblGeneracion, lblRegion, lblTipo, lblEstado;
+    private Label lblNombre;
+    @FXML
+    private Label lblAbreviatura;
+    @FXML
+    private Label lblAnio, lblFabricante, lblGeneracion, lblRegion, lblTipo, lblEstado;
 
     private ObservableList<Consola> todasLasConsolas = FXCollections.observableArrayList();
     private ObservableList<Consola> consolasFiltradas = FXCollections.observableArrayList();
     private static final int ITEMS_POR_PAGINA = 30;
     private int pagina = 1;
     private Consola consolaSeleccionada;
+    @FXML
+    private Label lblProcesador;
+    @FXML
+    private Label lblMemoria;
+    @FXML
+    private Label lblFrecuencia;
+    @FXML
+    private Label lblTieneChip;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -145,6 +157,11 @@ public class ConsolasController implements Initializable {
         lblRegion.setText(consola.getRegion());
         lblTipo.setText(consola.getTipo());
 
+        lblProcesador.setText(consola.getProcesador());
+        lblMemoria.setText(consola.getMemoria());
+        lblFrecuencia.setText(consola.getFrecuenciaMHz() != null ? consola.getFrecuenciaMHz() + " MHz" : "No disponible");
+        lblTieneChip.setText(consola.tieneChip() ? "Sí" : "No");
+
         if (consola.getEstado() != null && consola.getEstado().getNombre() != null) {
             lblEstado.setText(consola.getEstado().getNombre());
         } else {
@@ -170,16 +187,18 @@ public class ConsolasController implements Initializable {
         lblRegion.setText("");
         lblTipo.setText("");
         lblEstado.setText("");
+        lblProcesador.setText("");
+        lblMemoria.setText("");
+        lblFrecuencia.setText("");
+        lblTieneChip.setText("");
         imgDetalle.setImage(null);
         iconoImagenNoDisponible.setVisible(false);
     }
 
-    @FXML
     private void filtrarConsolas(ActionEvent event) {
         aplicarFiltros();
     }
 
-    @FXML
     private void filtrarConsolas(KeyEvent event) {
         aplicarFiltros();
     }

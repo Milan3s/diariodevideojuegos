@@ -16,12 +16,15 @@ public class Consola {
     private String fechaLanzamiento;
     private String imagen;
     private Estado estado;
+    private Double frecuenciaMHz;
+    private boolean chip;
+    private String caracteristicas;
 
     // Constructor completo
     public Consola(int id, String nombre, String abreviatura, Integer anio, String fabricante,
-            String generacion, String region, String tipo, String procesador,
-            String memoria, String almacenamiento, String fechaLanzamiento,
-            String imagen, Estado estado) {
+                   String generacion, String region, String tipo, String procesador,
+                   String memoria, String almacenamiento, String fechaLanzamiento,
+                   String imagen, Estado estado, Double frecuenciaMHz, boolean chip, String caracteristicas) {
         this.id = id;
         this.nombre = nombre;
         this.abreviatura = abreviatura;
@@ -36,14 +39,17 @@ public class Consola {
         this.fechaLanzamiento = fechaLanzamiento;
         this.imagen = imagen;
         this.estado = estado;
+        this.frecuenciaMHz = frecuenciaMHz;
+        this.chip = chip;
+        this.caracteristicas = caracteristicas;
     }
 
     // Constructor mínimo
     public Consola(int id, String nombre, String abreviatura) {
-        this(id, nombre, abreviatura, null, null, null, null, null, null, null, null, null, null, null);
+        this(id, nombre, abreviatura, null, null, null, null, null, null,
+             null, null, null, null, null, null, false, null);
     }
 
-    // Getters y setters
     public int getId() {
         return id;
     }
@@ -154,6 +160,30 @@ public class Consola {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
+    }
+
+    public Double getFrecuenciaMHz() {
+        return frecuenciaMHz;
+    }
+
+    public void setFrecuenciaMHz(Double frecuenciaMHz) {
+        this.frecuenciaMHz = frecuenciaMHz;
+    }
+
+    public boolean tieneChip() {
+        return chip;
+    }
+
+    public void setChip(boolean chip) {
+        this.chip = chip;
+    }
+
+    public String getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public void setCaracteristicas(String caracteristicas) {
+        this.caracteristicas = caracteristicas;
     }
 
     @Override
