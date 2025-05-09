@@ -25,12 +25,16 @@ public class SidebarController implements Initializable {
     private Button btnJuegos;
     @FXML
     private Button btnConsolas;
+    @FXML
+    private Button btnLogros;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //handleInicio(); 
         //handleJuegos();
-        handleConsolas();
+        //handleConsolas();
+        handleLogros();
+        
     }
 
     @FXML
@@ -57,6 +61,16 @@ public class SidebarController implements Initializable {
     private void handleConsolas() {
         try {
             Node node = FXMLLoader.load(getClass().getResource("/views/consolas.fxml"));
+            contentArea.getChildren().setAll(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLogros() {
+         try {
+            Node node = FXMLLoader.load(getClass().getResource("/views/logros.fxml"));
             contentArea.getChildren().setAll(node);
         } catch (IOException e) {
             e.printStackTrace();

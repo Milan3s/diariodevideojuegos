@@ -8,37 +8,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600" prefWidth="800" styleClass="root"
-            stylesheets="@../styles/sidebar.css"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.SidebarController">
+<AnchorPane prefHeight="600" prefWidth="800" styleClass="root" stylesheets="@../styles/sidebar.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SidebarController">
 
     <children>
-        <BorderPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
-                    AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <BorderPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
             <!-- Sidebar lateral -->
             <left>
-                <VBox fx:id="sidebar" alignment="TOP_CENTER" prefWidth="200"
-                      spacing="15" styleClass="sidebar">
+                <VBox fx:id="sidebar" alignment="TOP_CENTER" prefWidth="200" spacing="15" styleClass="sidebar">
                     <padding>
-                        <Insets top="20" bottom="10" left="10" right="10" />
+                        <Insets bottom="10" left="10" right="10" top="20" />
                     </padding>
 
                     <Text styleClass="sidebar-title" text="Menú" />
 
-                    <Button fx:id="btnInicio" onAction="#handleInicio"
-                            prefWidth="180" styleClass="sidebar-button"
-                            text="Inicio" />
+                    <Button fx:id="btnInicio" onAction="#handleInicio" prefWidth="180" styleClass="sidebar-button" text="Inicio" />
                     
-                    <Button fx:id="btnConsolas" onAction="#handleConsolas"
-                            prefWidth="180" styleClass="sidebar-button"
-                            text="Consolas" />
+                    <Button fx:id="btnConsolas" onAction="#handleConsolas" prefWidth="180" styleClass="sidebar-button" text="Consolas" />
                                         
-                    <Button fx:id="btnJuegos" onAction="#handleJuegos"
-                            prefWidth="180" styleClass="sidebar-button"
-                            text="Juegos" />
+                    <Button fx:id="btnJuegos" onAction="#handleJuegos" prefWidth="180" styleClass="sidebar-button" text="Juegos" />
+               <Button fx:id="btnLogros" onAction="#handleLogros" prefWidth="180" styleClass="sidebar-button" text="Logros" />
 
                 </VBox>
             </left>
@@ -50,4 +39,3 @@
         </BorderPane>
     </children>
 </AnchorPane>
-
