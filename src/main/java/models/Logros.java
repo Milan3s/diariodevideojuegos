@@ -171,7 +171,7 @@ public class Logros {
 
     @Override
     public String toString() {
-        String consolaStr = (consola != null && consola.getNombre() != null) ? consola.getNombre() : "";
-        return (nombre != null ? nombre : "Logro sin nombre") + (consolaStr.isEmpty() ? "" : " (" + consolaStr + ")");
+        return nombre;
     }
+
 }

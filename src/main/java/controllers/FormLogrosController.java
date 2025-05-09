@@ -130,7 +130,9 @@ public class FormLogrosController implements Initializable {
 
     @FXML
     private void guardarLogro(javafx.event.ActionEvent event) {
-        if (txtNombre.getText().isEmpty()) {
+        String nombre = txtNombre.getText() != null ? txtNombre.getText().trim() : "";
+
+        if (nombre.isEmpty()) {
             mostrarAlerta("El nombre no puede estar vacío.");
             return;
         }
@@ -138,8 +140,8 @@ public class FormLogrosController implements Initializable {
         Logros logro = (logroActual != null) ? logroActual : new Logros();
 
         try {
-            logro.setNombre(txtNombre.getText().trim());
-            logro.setDescripcion(txtDescripcion.getText().trim());
+            logro.setNombre(nombre); // ← ESTO FALTABA
+            logro.setDescripcion(txtDescripcion.getText());
             logro.setHorasEstimadas(parseEntero(txtHoras.getText()));
             logro.setIntentos(parseEntero(txtIntentos.getText()));
             logro.setCreditos(parseEntero(txtCreditos.getText()));
@@ -159,26 +161,26 @@ public class FormLogrosController implements Initializable {
             logro.setConsola(comboConsola.getValue());
             logro.setDificultad(comboDificultad.getValue());
 
-            if (logroActual != null) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirmar Edición");
-                alert.setHeaderText("¿Deseas sobrescribir los datos del logro?");
-                alert.setContentText("Esta acción reemplazará la información existente.");
-
-                if (alert.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
-                    return;
-                }
-            }
-
             LogrosDAO dao = new LogrosDAO();
-            boolean exito = (logroActual != null)
-                    ? dao.actualizarLogro(logro)
-                    : dao.insertarLogro(logro);
 
-            if (exito) {
-                cerrarVentana();
+            if (logroActual != null) {
+                if (mostrarConfirmacionEdicion()) {
+                    boolean exito = dao.actualizarLogro(logro);
+                    if (exito) {
+                        cerrarVentana();
+                    } else {
+                        mostrarAlerta("No se pudo actualizar el logro.");
+                    }
+                }
             } else {
-                mostrarAlerta("No se pudo guardar el logro.");
+                Integer idInsertado = dao.insertarLogroYDevolverId(logro);
+                if (idInsertado != null) {
+                    logro.setId(idInsertado);
+                    formularioLogros.setUserData(logro);
+                    cerrarVentana();
+                } else {
+                    mostrarAlerta("No se pudo insertar el logro.");
+                }
             }
 
         } catch (NumberFormatException e) {
@@ -186,9 +188,17 @@ public class FormLogrosController implements Initializable {
         }
     }
 
+    private boolean mostrarConfirmacionEdicion() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Edición");
+        alert.setHeaderText("¿Deseas sobrescribir los datos del logro?");
+        alert.setContentText("Esta acción reemplazará la información existente.");
+        return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
+    }
+
     private int parseEntero(String texto) {
         try {
-            return Integer.parseInt(texto.trim());
+            return (texto == null || texto.trim().isEmpty()) ? 0 : Integer.parseInt(texto.trim());
         } catch (NumberFormatException e) {
             return 0;
         }

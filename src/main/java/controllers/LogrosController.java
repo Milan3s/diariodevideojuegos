@@ -178,7 +178,7 @@ public class LogrosController implements Initializable {
             Parent root = loader.load();
 
             FormLogrosController controller = loader.getController();
-            controller.limpiarFormulario(); // método que debes implementar en ese controlador
+            controller.limpiarFormulario();
 
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
@@ -187,7 +187,15 @@ public class LogrosController implements Initializable {
             modal.setResizable(false);
             modal.showAndWait();
 
+            // Recargar logros
             cargarLogros();
+
+            // Obtener el logro insertado desde el formulario
+            Logros nuevoLogro = (Logros) root.getUserData();
+            if (nuevoLogro != null) {
+                seleccionarLogroPorId(nuevoLogro.getId());
+            }
+
         } catch (IOException e) {
             mostrarError("Error al abrir el formulario de nuevo logro", e);
         }
@@ -199,6 +207,8 @@ public class LogrosController implements Initializable {
             mostrarAlerta("Seleccione un logro para editar.");
             return;
         }
+
+        int idEditado = logroSeleccionado.getId();
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormLogros.fxml"));
@@ -214,7 +224,9 @@ public class LogrosController implements Initializable {
             modal.setResizable(false);
             modal.showAndWait();
 
-            cargarLogros();
+            cargarLogros();  // recarga la lista completa
+            seleccionarLogroPorId(idEditado);  // selecciona el logro que fue editado
+
         } catch (IOException e) {
             mostrarError("Error al abrir el formulario de edición", e);
         }
@@ -279,6 +291,22 @@ public class LogrosController implements Initializable {
     private void irUltimaPagina(ActionEvent event) {
         pagina = (int) Math.ceil((double) logrosFiltrados.size() / ITEMS_POR_PAGINA);
         actualizarPaginado();
+    }
+
+    private void seleccionarLogroPorId(int id) {
+        for (int i = 0; i < logrosFiltrados.size(); i++) {
+            if (logrosFiltrados.get(i).getId() == id) {
+                int paginaLogro = (i / ITEMS_POR_PAGINA) + 1;
+                pagina = paginaLogro;
+                actualizarPaginado();
+
+                int indiceEnPagina = i % ITEMS_POR_PAGINA;
+                listaLogros.getSelectionModel().select(indiceEnPagina);
+                listaLogros.scrollTo(indiceEnPagina);
+                mostrarDetalle(null);
+                break;
+            }
+        }
     }
 
     private void mostrarAlerta(String mensaje) {
