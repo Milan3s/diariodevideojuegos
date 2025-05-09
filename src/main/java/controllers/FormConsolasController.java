@@ -24,6 +24,8 @@ import java.util.ResourceBundle;
 public class FormConsolasController implements Initializable {
 
     private Runnable onGuardarCallback;
+    @FXML
+    private Button btnCancelar;
 
     public void setOnGuardarCallback(Runnable callback) {
         this.onGuardarCallback = callback;
@@ -216,5 +218,14 @@ public class FormConsolasController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void cancelarConsola(ActionEvent event) {
+        // Obtener el botón que lanzó el evento
+        Button btn = (Button) event.getSource();
+        // Obtener la ventana (Stage) y cerrarla
+        Stage stage = (Stage) btn.getScene().getWindow();
+        stage.close();
     }
 }

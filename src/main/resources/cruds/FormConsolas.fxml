@@ -90,11 +90,16 @@
     </GridPane>
 
     <!-- Botón Guardar -->
-    <Button fx:id="btnGuardar" layoutX="383.0" layoutY="610.0" onAction="#guardarConsola" prefHeight="34" prefWidth="140" styleClass="consolas-button">
+    <Button fx:id="btnGuardar" layoutX="316.0" layoutY="608.0" onAction="#guardarConsola" prefHeight="34" prefWidth="140" styleClass="consolas-button">
         <graphic>
             <FontAwesomeIconView glyphName="SAVE" size="16" />
         </graphic>
         <text>Guardar</text>
     </Button>
+   <Button fx:id="btnCancelar" layoutX="466.0" layoutY="608.0" onAction="#cancelarConsola" prefHeight="34" prefWidth="140" styleClass="consolas-button" text="Cancelar">
+      <graphic>
+         <FontAwesomeIconView glyphName="CLOSE" size="16" />
+      </graphic>
+   </Button>
 
 </AnchorPane>

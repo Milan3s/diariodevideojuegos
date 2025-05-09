@@ -34,6 +34,8 @@ public class FormJuegosController implements Initializable {
 
     private Juego juegoGuardado;
     private Runnable onGuardarCallback; // NUEVO
+    @FXML
+    private Button btnCancelar;
 
     public void setOnGuardarCallback(Runnable callback) { // NUEVO
         this.onGuardarCallback = callback;
@@ -287,5 +289,14 @@ public class FormJuegosController implements Initializable {
                 AppLogger.severe("Error al guardar el video.");
             }
         }
+    }
+
+    @FXML
+    private void cancelarJuego(ActionEvent event) {
+        // Obtener el botón que lanzó el evento
+        Button btn = (Button) event.getSource();
+        // Obtener la ventana (Stage) y cerrarla
+        Stage stage = (Stage) btn.getScene().getWindow();
+        stage.close();
     }
 }

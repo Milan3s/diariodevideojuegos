@@ -1,38 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.FormModeradorController">
-    <VBox spacing="15.0" alignment="TOP_CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
-        <Label text="Formulario Moderador" styleClass="inicio-titulo"/>
+<AnchorPane fx:id="formularioModerador" prefHeight="331.0" prefWidth="622.0" styleClass="formulario-base" stylesheets="@../styles/formoderador.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormModeradorController">
 
-        <GridPane hgap="10" vgap="10">
-            <columnConstraints>
-                <ColumnConstraints minWidth="100.0" halignment="RIGHT"/>
-                <ColumnConstraints minWidth="200.0" halignment="LEFT"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
+    <GridPane fx:id="gridFormulario" hgap="20" layoutX="30" layoutY="30" prefHeight="174.0" prefWidth="510.0" styleClass="form-grid" vgap="15">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
 
-            <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtNombre" promptText="Nombre del moderador" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <columnConstraints>
+            <ColumnConstraints minWidth="150.0" />
+            <ColumnConstraints minWidth="300.0" />
+        </columnConstraints>
 
-            <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtEmail" promptText="Correo electrónico" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
 
-            <Label text="Estado:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <ComboBox fx:id="comboEstado" promptText="Seleccione estado" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-        </GridPane>
+        <Label styleClass="form-label" text="Nombre" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="txtNombre" promptText="Nombre del moderador" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="btnGuardar" text="Guardar" onAction="#guardarModerador" styleClass="moderador-button"/>
-            <Button fx:id="btnCancelar" text="Cancelar" onAction="#cancelar" styleClass="moderador-button"/>
-        </HBox>
-    </VBox>
+        <Label styleClass="form-label" text="Email" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="txtEmail" promptText="Correo electrónico" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <Label styleClass="form-label" text="Estado" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <ComboBox fx:id="comboEstado" prefHeight="44.0" prefWidth="300.0" promptText="Seleccione estado" styleClass="combo-box-style" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    </GridPane>
+
+     <Button fx:id="btnCancelar" layoutX="330.0" layoutY="251.0" onAction="#cancelar" styleClass="moderador-button" text="Cancelar">
+         <graphic>
+             <FontAwesomeIconView glyphName="TIMES" styleClass="control-icon" />
+         </graphic>
+     </Button>
+
+     <Button fx:id="btnGuardar" layoutX="156.0" layoutY="251.0" onAction="#guardarModerador" styleClass="moderador-button" text="Guardar">
+         <graphic>
+             <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
+         </graphic>
+     </Button>
 </AnchorPane>

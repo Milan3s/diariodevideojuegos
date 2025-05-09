@@ -14,6 +14,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
@@ -56,6 +57,8 @@ public class FormLogrosController implements Initializable {
     private AnchorPane formularioLogros;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    @FXML
+    private Button btnCancelar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -215,5 +218,14 @@ public class FormLogrosController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void cancearLogro(ActionEvent event) {
+        // Obtener el botón que lanzó el evento
+        Button btn = (Button) event.getSource();
+        // Obtener la ventana (Stage) y cerrarla
+        Stage stage = (Stage) btn.getScene().getWindow();
+        stage.close();
     }
 }

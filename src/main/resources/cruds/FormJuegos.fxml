@@ -93,11 +93,16 @@
         </rowConstraints>
     </GridPane>
 
-    <Button fx:id="btnGuardar" layoutX="396.0" layoutY="693.0" onAction="#guardarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Guardar">
+    <Button fx:id="btnGuardar" layoutX="318.0" layoutY="690.0" onAction="#guardarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Guardar">
         <graphic>
             <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
         </graphic>
     </Button>
+   <Button fx:id="btnCancelar" layoutX="446.0" layoutY="690.0" onAction="#cancelarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Cancelar">
+      <graphic>
+         <FontAwesomeIconView glyphName="CLOSE" styleClass="control-icon" />
+      </graphic>
+   </Button>
 
 
 </AnchorPane>

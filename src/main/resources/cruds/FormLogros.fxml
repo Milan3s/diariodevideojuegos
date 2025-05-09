@@ -55,7 +55,7 @@
         <ComboBox fx:id="comboEstado" prefHeight="44.0" prefWidth="228.0" promptText="Selecciona un estado" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="4" />
 
         <Label styleClass="label-logros" text="Dificultad" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-        <ComboBox fx:id="comboDificultad" promptText="Selecciona dificultad (opcional)" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+        <ComboBox fx:id="comboDificultad" prefHeight="44.0" prefWidth="226.0" promptText="Selecciona dificultad (opcional)" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="5" />
 
         <Label styleClass="label-logros" text="Consola" GridPane.columnIndex="2" GridPane.rowIndex="6" />
         <ComboBox fx:id="comboConsola" prefHeight="44.0" prefWidth="227.0" promptText="Selecciona consola" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="6" />
@@ -73,10 +73,15 @@
     </GridPane>
 
     <!-- Botón Guardar -->
-    <Button fx:id="btnGuardar" layoutX="383.0" layoutY="496.0" onAction="#guardarLogro" prefHeight="34" prefWidth="140" styleClass="logros-button">
+    <Button fx:id="btnGuardar" layoutX="314.0" layoutY="492.0" onAction="#guardarLogro" prefHeight="34" prefWidth="140" styleClass="logros-button">
         <graphic>
             <FontAwesomeIconView glyphName="SAVE" size="16" />
         </graphic>
         <text>Guardar</text>
     </Button>
+   <Button fx:id="btnCancelar" layoutX="469.0" layoutY="492.0" onAction="#cancearLogro" prefHeight="34" prefWidth="140" styleClass="logros-button" text="Cancelar">
+      <graphic>
+         <FontAwesomeIconView glyphName="CLOSE" size="16" />
+      </graphic>
+   </Button>
 </AnchorPane>

@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 
 public class FormModeradorController implements Initializable {
 
@@ -34,6 +36,10 @@ public class FormModeradorController implements Initializable {
     private Runnable onGuardarCallback; // NUEVO
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    @FXML
+    private AnchorPane formularioModerador;
+    @FXML
+    private GridPane gridFormulario;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
