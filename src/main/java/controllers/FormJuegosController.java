@@ -32,6 +32,12 @@ import javafx.util.StringConverter;
 
 public class FormJuegosController implements Initializable {
 
+    private Juego juegoGuardado;
+
+    public Juego getJuegoGuardado() {
+        return juegoGuardado;
+    }
+
     @FXML
     private TextField txtNombre, txtDescripcion, txtDesarrollador, txtEditor, txtGenero, txtModoJuego;
     @FXML
@@ -91,9 +97,7 @@ public class FormJuegosController implements Initializable {
     private void seleccionarImagen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar Imagen del Juego");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Archivos de imagen", "*.png", "*.jpg", "*.jpeg", "*.gif")
-        );
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos de imagen", "*.png", "*.jpg", "*.jpeg", "*.gif"));
 
         File archivo = fileChooser.showOpenDialog(null);
         if (archivo != null) {
@@ -112,18 +116,17 @@ public class FormJuegosController implements Initializable {
             return;
         }
 
-        String descripcion = txtDescripcion.getText().trim();
-        String desarrollador = txtDesarrollador.getText().trim();
-        String editor = txtEditor.getText().trim();
-        String genero = txtGenero.getText().trim();
-        String modoJuego = txtModoJuego.getText().trim();
-        String fechaLanzamiento = (dateFechaLanzamiento.getValue() != null)
-                ? dateFechaLanzamiento.getValue().format(formatter)
-                : null;
-
-        Estado estadoSeleccionado = comboEstado.getValue();
-        Consola consolaSeleccionada = comboConsola.getValue();
-        boolean recomendado = radioSi.isSelected();
+        Juego juego = new Juego();
+        juego.setNombre(nombre);
+        juego.setDescripcion(txtDescripcion.getText().trim());
+        juego.setDesarrollador(txtDesarrollador.getText().trim());
+        juego.setEditor(txtEditor.getText().trim());
+        juego.setGenero(txtGenero.getText().trim());
+        juego.setModoJuego(txtModoJuego.getText().trim());
+        juego.setFechaLanzamiento((dateFechaLanzamiento.getValue() != null) ? dateFechaLanzamiento.getValue().format(formatter) : null);
+        juego.setEstado(comboEstado.getValue());
+        juego.setConsola(comboConsola.getValue());
+        juego.setEsRecomendado(radioSi.isSelected());
 
         String nombreImagen = null;
         if (imagenSeleccionada != null) {
@@ -136,6 +139,7 @@ public class FormJuegosController implements Initializable {
         } else if (juegoEditando != null) {
             nombreImagen = juegoEditando.getImagen();
         }
+        juego.setImagen(nombreImagen);
 
         String nombreVideo = null;
         if (mediaPreview.getMediaPlayer() != null) {
@@ -147,19 +151,6 @@ public class FormJuegosController implements Initializable {
                 AppLogger.severe("Error al decodificar el nombre del video: " + e.getMessage());
             }
         }
-
-        Juego juego = new Juego();
-        juego.setNombre(nombre);
-        juego.setDescripcion(descripcion);
-        juego.setDesarrollador(desarrollador);
-        juego.setEditor(editor);
-        juego.setGenero(genero);
-        juego.setModoJuego(modoJuego);
-        juego.setFechaLanzamiento(fechaLanzamiento);
-        juego.setEstado(estadoSeleccionado);
-        juego.setConsola(consolaSeleccionada);
-        juego.setEsRecomendado(recomendado);
-        juego.setImagen(nombreImagen);
         juego.setVideo(nombreVideo);
 
         JuegoDAO dao = new JuegoDAO();
@@ -167,6 +158,7 @@ public class FormJuegosController implements Initializable {
 
         if (juegoEditando == null) {
             exito = dao.insertarJuego(juego);
+            if (exito) juegoGuardado = juego;
         } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Editar Juego");
@@ -177,6 +169,7 @@ public class FormJuegosController implements Initializable {
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 juego.setId(juegoEditando.getId());
                 exito = dao.actualizarJuego(juego);
+                if (exito) juegoGuardado = juego;
             }
         }
 
@@ -210,11 +203,20 @@ public class FormJuegosController implements Initializable {
         txtEditor.setText(juegoSeleccionado.getEditor());
         txtGenero.setText(juegoSeleccionado.getGenero());
         txtModoJuego.setText(juegoSeleccionado.getModoJuego());
-        dateFechaLanzamiento.setValue(
-                (juegoSeleccionado.getFechaLanzamiento() != null && !juegoSeleccionado.getFechaLanzamiento().isEmpty())
-                        ? LocalDate.parse(juegoSeleccionado.getFechaLanzamiento(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                        : null
-        );
+
+        if (juegoSeleccionado.getFechaLanzamiento() != null && !juegoSeleccionado.getFechaLanzamiento().isEmpty()) {
+            String fecha = juegoSeleccionado.getFechaLanzamiento();
+            try {
+                dateFechaLanzamiento.setValue(LocalDate.parse(fecha, formatter));
+            } catch (Exception ex1) {
+                try {
+                    dateFechaLanzamiento.setValue(LocalDate.parse(fecha, DateTimeFormatter.ISO_LOCAL_DATE));
+                } catch (Exception ex2) {
+                    AppLogger.warning("Formato de fecha inválido: " + fecha);
+                    dateFechaLanzamiento.setValue(null);
+                }
+            }
+        }
 
         comboEstado.setValue(juegoSeleccionado.getEstado());
         comboConsola.setValue(juegoSeleccionado.getConsola());
@@ -223,6 +225,7 @@ public class FormJuegosController implements Initializable {
             File imageFile = new File(Conexion.imagenesPath, juegoSeleccionado.getImagen());
             if (imageFile.exists()) {
                 imgPreview.setImage(new Image(imageFile.toURI().toString()));
+                imagenSeleccionada = imageFile;
             }
         }
 
