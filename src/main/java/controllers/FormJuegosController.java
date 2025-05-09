@@ -33,6 +33,11 @@ import javafx.util.StringConverter;
 public class FormJuegosController implements Initializable {
 
     private Juego juegoGuardado;
+    private Runnable onGuardarCallback; // NUEVO
+
+    public void setOnGuardarCallback(Runnable callback) { // NUEVO
+        this.onGuardarCallback = callback;
+    }
 
     public Juego getJuegoGuardado() {
         return juegoGuardado;
@@ -158,23 +163,29 @@ public class FormJuegosController implements Initializable {
 
         if (juegoEditando == null) {
             exito = dao.insertarJuego(juego);
-            if (exito) juegoGuardado = juego;
+            if (exito) {
+                juegoGuardado = juego;
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Editar Juego");
             alert.setHeaderText("¿Desea sobrescribir los datos del juego?");
             alert.setContentText("Se reemplazarán los datos actuales por los nuevos.");
-
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 juego.setId(juegoEditando.getId());
                 exito = dao.actualizarJuego(juego);
-                if (exito) juegoGuardado = juego;
+                if (exito) {
+                    juegoGuardado = juego;
+                }
             }
         }
 
         if (exito) {
             mostrarAlerta("Juego guardado correctamente.");
+            if (onGuardarCallback != null) { // EJECUTA CALLBACK
+                onGuardarCallback.run();
+            }
             cerrarVentana();
         } else {
             mostrarAlerta("Error al guardar el juego.");
