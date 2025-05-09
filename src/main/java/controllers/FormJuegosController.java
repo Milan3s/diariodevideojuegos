@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.scene.layout.AnchorPane;
@@ -30,41 +31,21 @@ import javafx.util.StringConverter;
 public class FormJuegosController implements Initializable {
 
     @FXML
-    private TextField txtNombre;
-    @FXML
-    private TextField txtDescripcion;
-    @FXML
-    private TextField txtDesarrollador;
-    @FXML
-    private TextField txtEditor;
-    @FXML
-    private TextField txtGenero;
-    @FXML
-    private TextField txtModoJuego;
-
+    private TextField txtNombre, txtDescripcion, txtDesarrollador, txtEditor, txtGenero, txtModoJuego;
     @FXML
     private DatePicker dateFechaLanzamiento;
     @FXML
     private ComboBox<Estado> comboEstado;
     @FXML
     private ComboBox<Consola> comboConsola;
-
     @FXML
-    private RadioButton radioSi;
-    @FXML
-    private RadioButton radioNo;
-
+    private RadioButton radioSi, radioNo;
     @FXML
     private ToggleGroup grupoRecomendado;
-
     @FXML
-    private MediaView mediaPreview; // Solo el MediaView, sin ImageView para el overlay
-
+    private MediaView mediaPreview;
     @FXML
-    private ImageView imgPreview; // ImageView para mostrar la previsualización de la imagen
-
-    private File imagenSeleccionada;
-    private Juego juegoEditando;
+    private ImageView imgPreview;
     @FXML
     private AnchorPane formularioJuego;
     @FXML
@@ -72,36 +53,35 @@ public class FormJuegosController implements Initializable {
     @FXML
     private Button btnGuardar;
 
+    private File imagenSeleccionada;
+    private Juego juegoEditando;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configuración del grupo de RadioButtons
         grupoRecomendado = new ToggleGroup();
         radioSi.setToggleGroup(grupoRecomendado);
         radioNo.setToggleGroup(grupoRecomendado);
-        radioSi.setSelected(true); // Se selecciona "Sí" por defecto
+        radioSi.setSelected(true);
 
-        // Cargar datos en ComboBoxes
         comboEstado.setItems(ComboDAO.cargarEstadosPorTipo("juego"));
-        comboEstado.setPromptText("Seleccione uno...");
-
         comboConsola.setItems(ComboDAO.cargarConsolas());
-        comboConsola.setPromptText("Seleccione una...");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        comboEstado.setPromptText("Seleccione uno...");
+        comboConsola.setPromptText("Seleccione una...");
 
         dateFechaLanzamiento.setConverter(new StringConverter<>() {
             @Override
-            public String toString(java.time.LocalDate date) {
+            public String toString(LocalDate date) {
                 return (date != null) ? formatter.format(date) : "";
             }
 
             @Override
-            public java.time.LocalDate fromString(String string) {
-                return (string != null && !string.isEmpty()) ? java.time.LocalDate.parse(string, formatter) : null;
+            public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
             }
         });
 
-        // Agregar log para depuración
         AppLogger.info("Formulario de juegos inicializado correctamente.");
     }
 
@@ -109,7 +89,6 @@ public class FormJuegosController implements Initializable {
     private void seleccionarImagen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar Imagen del Juego");
-
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Archivos de imagen", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
@@ -117,15 +96,13 @@ public class FormJuegosController implements Initializable {
         File archivo = fileChooser.showOpenDialog(null);
         if (archivo != null) {
             imagenSeleccionada = archivo;
-            // Actualiza la vista previa de la imagen seleccionada si es necesario
-            imgPreview.setImage(new Image(archivo.toURI().toString()));  // Mostrar la imagen seleccionada en imgPreview
+            imgPreview.setImage(new Image(archivo.toURI().toString()));
             AppLogger.info("Imagen seleccionada: " + archivo.getAbsolutePath());
         }
     }
 
     @FXML
     private void guardarJuego(ActionEvent event) {
-        // Validaciones mínimas: solo el campo "Nombre" es obligatorio
         String nombre = txtNombre.getText().trim();
         if (nombre.isEmpty()) {
             mostrarAlerta("El nombre no puede estar vacío.");
@@ -133,7 +110,6 @@ public class FormJuegosController implements Initializable {
             return;
         }
 
-        // Validar estado y consola
         Estado estadoSeleccionado = comboEstado.getValue();
         Consola consolaSeleccionada = comboConsola.getValue();
         if (estadoSeleccionado == null) {
@@ -147,46 +123,40 @@ public class FormJuegosController implements Initializable {
             return;
         }
 
-        // Captura de datos
         String descripcion = txtDescripcion.getText().trim();
         String desarrollador = txtDesarrollador.getText().trim();
         String editor = txtEditor.getText().trim();
         String genero = txtGenero.getText().trim();
         String modoJuego = txtModoJuego.getText().trim();
         String fechaLanzamiento = (dateFechaLanzamiento.getValue() != null)
-                ? dateFechaLanzamiento.getValue().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                ? dateFechaLanzamiento.getValue().format(formatter)
                 : null;
 
-        boolean recomendado = radioSi.isSelected();  // "Sí" es true, "No" es false
+        boolean recomendado = radioSi.isSelected();
 
-        // Mantener la imagen existente si no se selecciona una nueva
         String nombreImagen = null;
         if (imagenSeleccionada != null) {
-            // Utilizar la clase Conexion para guardar la nueva imagen si se seleccionó
-            nombreImagen = Conexion.guardarImagen(imagenSeleccionada); // Guardamos la imagen en la carpeta
+            nombreImagen = Conexion.guardarImagen(imagenSeleccionada);
             if (nombreImagen == null) {
                 mostrarAlerta("Error al guardar la imagen.");
                 AppLogger.severe("Error al guardar la imagen seleccionada.");
                 return;
             }
         } else if (juegoEditando != null) {
-            // Si no se selecciona una nueva imagen, mantener la imagen original
             nombreImagen = juegoEditando.getImagen();
         }
 
-        // Video
         String nombreVideo = null;
         if (mediaPreview.getMediaPlayer() != null) {
-            nombreVideo = mediaPreview.getMediaPlayer().getMedia().getSource();  // Esto te dará la URL completa
-            nombreVideo = new File(nombreVideo).getName();  // Solo obtener el nombre del archivo
+            nombreVideo = mediaPreview.getMediaPlayer().getMedia().getSource();
+            nombreVideo = new File(nombreVideo).getName();
             try {
-                nombreVideo = URLDecoder.decode(nombreVideo, "UTF-8");  // Decodificar para reemplazar %20 por espacios
+                nombreVideo = URLDecoder.decode(nombreVideo, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 AppLogger.severe("Error al decodificar el nombre del video: " + e.getMessage());
             }
         }
 
-        // Crear el objeto Juego
         Juego juego = new Juego();
         juego.setNombre(nombre);
         juego.setDescripcion(descripcion);
@@ -198,28 +168,18 @@ public class FormJuegosController implements Initializable {
         juego.setEstado(estadoSeleccionado);
         juego.setConsola(consolaSeleccionada);
         juego.setEsRecomendado(recomendado);
-        juego.setImagen(nombreImagen); // Guardar solo el nombre de la imagen
-        juego.setVideo(nombreVideo);  // Guardar nombre de video
+        juego.setImagen(nombreImagen);
+        juego.setVideo(nombreVideo);
 
         JuegoDAO dao = new JuegoDAO();
         boolean exito;
         if (juegoEditando == null) {
-            // Nuevo juego, insertar
             exito = dao.insertarJuego(juego);
         } else {
-            // Editar juego existente
             juego.setId(juegoEditando.getId());
-            exito = dao.actualizarJuego(juego);  // Implementar este método en JuegoDAO
+            exito = dao.actualizarJuego(juego);
         }
 
-        if (exito) {
-            mostrarAlerta("Juego guardado correctamente.");
-            AppLogger.info("Juego guardado correctamente: " + nombre);
-            limpiarFormulario();
-        } else {
-            mostrarAlerta("Error al guardar el juego.");
-            AppLogger.severe("Error al guardar el juego: " + nombre);
-        }
     }
 
     void limpiarFormulario() {
@@ -232,10 +192,9 @@ public class FormJuegosController implements Initializable {
         dateFechaLanzamiento.setValue(null);
         comboEstado.getSelectionModel().clearSelection();
         comboConsola.getSelectionModel().clearSelection();
-        grupoRecomendado.selectToggle(radioSi); // Seleccionar "Sí" por defecto
+        grupoRecomendado.selectToggle(radioSi);
         imagenSeleccionada = null;
-        mediaPreview.setMediaPlayer(null);  // Limpiar el video
-
+        mediaPreview.setMediaPlayer(null);
         AppLogger.info("Formulario de juego limpiado.");
     }
 
@@ -247,88 +206,73 @@ public class FormJuegosController implements Initializable {
         alert.showAndWait();
     }
 
-    // Método que llena el formulario con los datos de un juego seleccionado para editar    
-    // Método que llena el formulario con los datos de un juego seleccionado para editar
     public void cargarJuegoParaEditar(Juego juegoSeleccionado) {
         juegoEditando = juegoSeleccionado;
 
-        // Llenar los campos con los valores del juego seleccionado
         txtNombre.setText(juegoSeleccionado.getNombre());
         txtDescripcion.setText(juegoSeleccionado.getDescripcion());
         txtDesarrollador.setText(juegoSeleccionado.getDesarrollador());
         txtEditor.setText(juegoSeleccionado.getEditor());
         txtGenero.setText(juegoSeleccionado.getGenero());
         txtModoJuego.setText(juegoSeleccionado.getModoJuego());
-        dateFechaLanzamiento.setValue(juegoSeleccionado.getFechaLanzamiento() != null
-                ? java.time.LocalDate.parse(juegoSeleccionado.getFechaLanzamiento())
-                : null);
+        dateFechaLanzamiento.setValue(
+                (juegoSeleccionado.getFechaLanzamiento() != null && !juegoSeleccionado.getFechaLanzamiento().isEmpty())
+                ? LocalDate.parse(juegoSeleccionado.getFechaLanzamiento(), formatter)
+                : null
+        );
 
-        // Configurar estado y consola
         comboEstado.setValue(juegoSeleccionado.getEstado());
         comboConsola.setValue(juegoSeleccionado.getConsola());
 
-        // Configurar imagen si existe
         if (juegoSeleccionado.getImagen() != null && !juegoSeleccionado.getImagen().isEmpty()) {
             File imageFile = new File(Conexion.imagenesPath, juegoSeleccionado.getImagen());
             if (imageFile.exists()) {
-                imgPreview.setImage(new Image(imageFile.toURI().toString())); // Mostrar la imagen en el ImageView
+                imgPreview.setImage(new Image(imageFile.toURI().toString()));
             }
         }
 
-        // Configurar el video si existe
         if (juegoSeleccionado.getVideo() != null && !juegoSeleccionado.getVideo().isEmpty()) {
             File videoFile = new File(Conexion.videosPath, juegoSeleccionado.getVideo());
             if (videoFile.exists()) {
-                // Crear un nuevo MediaPlayer con el video seleccionado
                 javafx.scene.media.Media media = new javafx.scene.media.Media(videoFile.toURI().toString());
                 javafx.scene.media.MediaPlayer mediaPlayer = new javafx.scene.media.MediaPlayer(media);
                 mediaPreview.setMediaPlayer(mediaPlayer);
-                mediaPlayer.setAutoPlay(false); // No reproducir automáticamente al cargar el video
-
-                // Aquí puedes añadir controles, como la opción de reproducir el video si es necesario.
+                mediaPlayer.setAutoPlay(false);
                 AppLogger.info("Video cargado correctamente: " + videoFile.getAbsolutePath());
             } else {
                 AppLogger.warning("El archivo de video no existe: " + videoFile.getAbsolutePath());
             }
         } else {
-            mediaPreview.setMediaPlayer(null);  // Limpiar el MediaPlayer si no hay video
+            mediaPreview.setMediaPlayer(null);
         }
 
-        // Configurar el estado del radio button
-        if (juegoSeleccionado.isEsRecomendado()) {
-            radioSi.setSelected(true);
-        } else {
-            radioNo.setSelected(true);
-        }
+        radioSi.setSelected(juegoSeleccionado.isEsRecomendado());
+        radioNo.setSelected(!juegoSeleccionado.isEsRecomendado());
     }
 
     @FXML
     private void seleccionarVideo(ActionEvent event) {
-        // Usar FileChooser para seleccionar el archivo de video
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos de Video", "*.mp4", "*.avi", "*.mov"));
 
         File archivo = fileChooser.showOpenDialog(null);
         if (archivo != null) {
-            // Decodificar el nombre del archivo si contiene caracteres codificados
-            String nombreVideo = archivo.getName();  // Nombre del archivo, con %20 para los espacios
-
+            String nombreVideo = archivo.getName();
             try {
-                // Decodificar el nombre del archivo (reemplazar '%20' por espacio)
                 nombreVideo = URLDecoder.decode(nombreVideo, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 AppLogger.severe("Error al decodificar el nombre del video: " + e.getMessage());
             }
 
-            // Guardamos el video en el disco y obtenemos el nombre del archivo
             if (Conexion.guardarVideo(archivo) != null) {
-                // Actualizamos la vista previa del video
                 mediaPreview.setMediaPlayer(new javafx.scene.media.MediaPlayer(
                         new javafx.scene.media.Media(archivo.toURI().toString())
                 ));
                 AppLogger.info("Video seleccionado: " + archivo.getAbsolutePath());
-                // Guardamos el nombre del video en el juego
-                juegoEditando.setVideo(nombreVideo);  // Asignar el nombre del video al objeto Juego
+
+                if (juegoEditando != null) {
+                    juegoEditando.setVideo(nombreVideo);
+                }
             } else {
                 mostrarAlerta("Error al guardar el video.");
                 AppLogger.severe("Error al guardar el video.");

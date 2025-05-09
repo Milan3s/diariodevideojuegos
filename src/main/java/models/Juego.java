@@ -10,15 +10,13 @@ public class Juego {
     private String genero;
     private String modoJuego;
     private String fechaLanzamiento;
-    private Estado estado;  // Se cambió a Estado
+    private Estado estado;
     private boolean esRecomendado;
     private String imagen;
-    private Consola consola; // Se cambió a Consola
-    private String nombreConsola; // Nuevo campo para almacenar el nombre formateado
-    
-    // Nuevos campos para video y overlay
-    private String video; // Ruta del video
-    private String overlay; // Ruta del overlay
+    private Consola consola;
+    private String nombreConsola; // Nombre formateado: "Juego (Consola)"
+    private String video;
+    private String overlay;
 
     // Constructores
     public Juego() {
@@ -33,7 +31,7 @@ public class Juego {
         this.nombre = nombre;
     }
 
-    // Getters y setters
+    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -130,7 +128,6 @@ public class Juego {
         this.consola = consola;
     }
 
-    // Nuevo getter y setter para el campo nombreConsola
     public String getNombreConsola() {
         return nombreConsola;
     }
@@ -139,7 +136,6 @@ public class Juego {
         this.nombreConsola = nombreConsola;
     }
 
-    // Nuevos getters y setters para video y overlay
     public String getVideo() {
         return video;
     }
@@ -158,7 +154,7 @@ public class Juego {
 
     @Override
     public String toString() {
-        // Concatenamos el nombre del juego con el nombre de la consola entre paréntesis
-        return nombre + " (" + consola.getNombre() + ")";
+        String consolaStr = (consola != null && consola.getNombre() != null) ? consola.getNombre() : "Sin consola";
+        return (nombre != null ? nombre : "Juego sin nombre") + " (" + consolaStr + ")";
     }
 }

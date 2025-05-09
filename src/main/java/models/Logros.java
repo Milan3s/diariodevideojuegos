@@ -48,6 +48,7 @@ public class Logros {
         this.consola = consola;
     }
 
+    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -170,6 +171,7 @@ public class Logros {
 
     @Override
     public String toString() {
-        return nombre + " (" + juego.getNombre() + ")";
+        String consolaStr = (consola != null && consola.getNombre() != null) ? consola.getNombre() : "";
+        return (nombre != null ? nombre : "Logro sin nombre") + (consolaStr.isEmpty() ? "" : " (" + consolaStr + ")");
     }
 }

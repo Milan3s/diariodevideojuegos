@@ -1,0 +1,76 @@
+/* Fondo general del formulario */
+.formulario-logros {
+    -fx-background-color: white;
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+}
+
+/* Grid del formulario */
+.grid-logros {
+    -fx-background-color: transparent;
+}
+
+/* Etiquetas del formulario */
+.label-logros {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* Campos de entrada comunes */
+.input-logros, .input-logros .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-padding: 6px;
+}
+
+/* Estilo para ComboBox específicamente */
+.combo-box .list-cell {
+    -fx-text-fill: black;
+    -fx-background-color: white;
+}
+
+/* DatePicker (igual que en consolas) */
+.date-picker .arrow-button {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 0 0 0 1px;
+}
+.date-picker .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+/* Botón de guardar estilo logros */
+.logros-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 16px;
+    -fx-cursor: hand;
+}
+.logros-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.logros-button .fontawesome-icon-view {
+    -fx-fill: black;
+    -fx-padding: 0 6px 0 0;
+}
+
+/* ComboBox dropdown */
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+}
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: black;
+}

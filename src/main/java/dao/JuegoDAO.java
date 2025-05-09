@@ -112,20 +112,29 @@ public class JuegoDAO {
                 juego.setModoJuego(rs.getString("modo_juego"));
                 juego.setFechaLanzamiento(rs.getString("fecha_lanzamiento"));
                 juego.setEsRecomendado(rs.getBoolean("es_recomendado"));
-                juego.setImagen(rs.getString("imagen")); // Solo el nombre de la imagen
-                juego.setVideo(rs.getString("video")); // Obtener el video directamente desde la tabla juegos
+                juego.setImagen(rs.getString("imagen"));
+                juego.setVideo(rs.getString("video"));
 
-                // Relacionados con Estado y Consola
-                Estado estado = new Estado(rs.getInt("id_estado"), rs.getString("nombre_estado"));
-                Consola consola = new Consola(
-                        rs.getInt("id_consola"),
-                        rs.getString("nombre_consola"),
-                        rs.getString("abreviatura_consola")
+                // Estado
+                Estado estado = new Estado(
+                        rs.getInt("id_estado"),
+                        rs.getString("nombre_estado")
                 );
-
                 juego.setEstado(estado);
-                juego.setConsola(consola);
-                juego.setNombreConsola(rs.getString("juego_consola"));
+
+                // Consola (solo si el nombre no es null)
+                if (rs.getString("nombre_consola") != null) {
+                    Consola consola = new Consola(
+                            rs.getInt("id_consola"),
+                            rs.getString("nombre_consola"),
+                            rs.getString("abreviatura_consola")
+                    );
+                    juego.setConsola(consola);
+                    juego.setNombreConsola(rs.getString("juego_consola"));
+                } else {
+                    juego.setConsola(null); // por si acaso
+                    juego.setNombreConsola(juego.getNombre());
+                }
 
                 lista.add(juego);
             }
@@ -283,4 +292,5 @@ public class JuegoDAO {
 
         return false;
     }
+
 }

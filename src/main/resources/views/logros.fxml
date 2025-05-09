@@ -16,7 +16,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/logros.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LogrosController">
+<AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/logros.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controllers.LogrosController">
 
     <Text fx:id="tituloLogros" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Logros" />
 

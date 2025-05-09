@@ -1,5 +1,6 @@
 package controllers;
 
+import config.Conexion;
 import dao.ComboDAO;
 import dao.LogrosDAO;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -7,115 +8,126 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import models.Estado;
 import models.Logros;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class LogrosController implements Initializable {
 
+    @FXML private Text tituloLogros;
+    @FXML private ComboBox<Estado> comboEstado;
+    @FXML private TextField campoBusqueda;
+    @FXML private Button btnLimpiar, btnAgregar, btnEditar, btnEliminar;
+    @FXML private ListView<Logros> listaLogros;
+    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML private Label paginaActual;
+    @FXML private ImageView imgBoxart;
+    @FXML private Label lblNombre, lblDescripcion, lblJuego, lblConsola, lblEstado,
+            lblDificultad, lblHoras, lblIntentos, lblPuntuacion, lblCreditos;
+    @FXML private FontAwesomeIconView iconoImagenNoDisponible;
+
     private final LogrosDAO logrosDAO = new LogrosDAO();
+    private final ObservableList<Logros> logrosOriginales = FXCollections.observableArrayList();
+    private final ObservableList<Logros> logrosFiltrados = FXCollections.observableArrayList();
 
-    @FXML
-    private Text tituloLogros;
-    @FXML
-    private ComboBox<Estado> comboEstado;
-    @FXML
-    private TextField campoBusqueda;
-    @FXML
-    private Button btnLimpiar;
-    @FXML
-    private Button btnAgregar;
-    @FXML
-    private Button btnEditar;
-    @FXML
-    private Button btnEliminar;
-    @FXML
-    private ListView<Logros> listaLogros;
-    @FXML
-    private Button btnPrimero;
-    @FXML
-    private Button btnAnterior;
-    @FXML
-    private Label paginaActual;
-    @FXML
-    private Button btnSiguiente;
-    @FXML
-    private Button btnUltimo;
-    @FXML
-    private ImageView imgBoxart;
-    @FXML
-    private Label lblNombre;
-    @FXML
-    private Label lblDescripcion;
-    @FXML
-    private Label lblJuego;
-    @FXML
-    private Label lblConsola;
-    @FXML
-    private Label lblEstado;
-    @FXML
-    private Label lblDificultad;
-    @FXML
-    private Label lblHoras;
-    @FXML
-    private Label lblIntentos;
-    @FXML
-    private Label lblPuntuacion;
-    @FXML
-    private Label lblCreditos;
-    @FXML
-    private FontAwesomeIconView iconoImagenNoDisponible;
-
-    private ObservableList<Logros> logrosOriginales = FXCollections.observableArrayList();
+    private static final int ITEMS_POR_PAGINA = 30;
+    private int pagina = 1;
+    private Logros logroSeleccionado;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cargarComboEstado();
+        comboEstado.setOnAction(this::filtrarLogros);
+        campoBusqueda.setOnKeyReleased(this::filtrarLogros);
+
         cargarLogros();
         listaLogros.setOnMouseClicked(this::mostrarDetalle);
     }
 
     private void cargarComboEstado() {
-        comboEstado.setItems(ComboDAO.cargarEstadosPorTipo("logro"));
+        ObservableList<Estado> estados = ComboDAO.cargarEstadosPorTipo("logro");
+        estados.add(0, new Estado(-1, "Todos"));
+        comboEstado.setItems(estados);
+        comboEstado.getSelectionModel().selectFirst();
     }
 
     private void cargarLogros() {
-        logrosOriginales = FXCollections.observableArrayList(logrosDAO.obtenerLogros());
-        listaLogros.setItems(logrosOriginales);
-        if (!logrosOriginales.isEmpty()) {
+        logrosOriginales.setAll(logrosDAO.obtenerLogros());
+        aplicarFiltros();
+    }
+
+    private void aplicarFiltros() {
+        String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
+        Estado estadoSel = comboEstado.getSelectionModel().getSelectedItem();
+
+        logrosFiltrados.setAll(logrosOriginales.stream()
+                .filter(l -> texto.isEmpty() || l.getNombre().toLowerCase().contains(texto))
+                .filter(l -> estadoSel == null || estadoSel.getId() == -1 || (l.getEstado() != null && l.getEstado().getId() == estadoSel.getId()))
+                .collect(Collectors.toList()));
+
+        pagina = 1;
+        actualizarPaginado();
+    }
+
+    private void actualizarPaginado() {
+        int desde = (pagina - 1) * ITEMS_POR_PAGINA;
+        int hasta = Math.min(desde + ITEMS_POR_PAGINA, logrosFiltrados.size());
+
+        if (desde > hasta) desde = 0;
+        listaLogros.setItems(FXCollections.observableArrayList(logrosFiltrados.subList(desde, hasta)));
+
+        if (!listaLogros.getItems().isEmpty()) {
             listaLogros.getSelectionModel().selectFirst();
             mostrarDetalle(null);
+        } else {
+            limpiarDetalle();
         }
+
+        paginaActual.setText(String.valueOf(pagina));
+    }
+
+    private void filtrarLogros(ActionEvent e) {
+        aplicarFiltros();
+    }
+
+    private void filtrarLogros(KeyEvent e) {
+        aplicarFiltros();
     }
 
     private void mostrarDetalle(MouseEvent event) {
-        Logros logro = listaLogros.getSelectionModel().getSelectedItem();
-        if (logro == null) {
-            return;
-        }
+        logroSeleccionado = listaLogros.getSelectionModel().getSelectedItem();
+        if (logroSeleccionado == null) return;
 
-        lblNombre.setText(logro.getNombre());
-        lblDescripcion.setText(logro.getDescripcion());
-        lblJuego.setText(logro.getJuego() != null ? logro.getJuego().getNombre() : "");
-        lblConsola.setText(logro.getConsola() != null ? logro.getConsola().getNombre() : "");
-        lblEstado.setText(logro.getEstado() != null ? logro.getEstado().getNombre() : "");
-        lblDificultad.setText(logro.getDificultad() != null ? logro.getDificultad().getNombre() : "Sin dificultad");
-        lblHoras.setText(String.valueOf(logro.getHorasEstimadas()));
-        lblIntentos.setText(String.valueOf(logro.getIntentos()));
-        lblPuntuacion.setText(String.valueOf(logro.getPuntuacion()));
-        lblCreditos.setText(String.valueOf(logro.getCreditos()));
+        lblNombre.setText(logroSeleccionado.getNombre());
+        lblDescripcion.setText(logroSeleccionado.getDescripcion());
+        lblJuego.setText(logroSeleccionado.getJuego() != null ? logroSeleccionado.getJuego().getNombre() : "");
+        lblConsola.setText(logroSeleccionado.getConsola() != null ? logroSeleccionado.getConsola().getNombre() : "");
+        lblEstado.setText(logroSeleccionado.getEstado() != null ? logroSeleccionado.getEstado().getNombre() : "");
+        lblDificultad.setText(logroSeleccionado.getDificultad() != null ? logroSeleccionado.getDificultad().getNombre() : "Sin dificultad");
+        lblHoras.setText(String.valueOf(logroSeleccionado.getHorasEstimadas()));
+        lblIntentos.setText(String.valueOf(logroSeleccionado.getIntentos()));
+        lblPuntuacion.setText(String.valueOf(logroSeleccionado.getPuntuacion()));
+        lblCreditos.setText(String.valueOf(logroSeleccionado.getCreditos()));
 
-        if (logro.getJuego() != null && logro.getJuego().getImagen() != null) {
-            File imgFile = new File(config.Conexion.imagenesPath + File.separator + logro.getJuego().getImagen());
+        if (logroSeleccionado.getJuego() != null && logroSeleccionado.getJuego().getImagen() != null) {
+            File imgFile = new File(Conexion.imagenesPath + File.separator + logroSeleccionado.getJuego().getImagen());
             if (imgFile.exists()) {
                 imgBoxart.setImage(new Image(imgFile.toURI().toString()));
                 iconoImagenNoDisponible.setVisible(false);
@@ -129,70 +141,143 @@ public class LogrosController implements Initializable {
         }
     }
 
-    @FXML
-    private void limpiarFiltros(ActionEvent event) {
-        comboEstado.getSelectionModel().clearSelection();
-        campoBusqueda.clear();
-        cargarLogros();
+    private void limpiarDetalle() {
+        lblNombre.setText("");
+        lblDescripcion.setText("");
+        lblJuego.setText("");
+        lblConsola.setText("");
+        lblEstado.setText("");
+        lblDificultad.setText("");
+        lblHoras.setText("");
+        lblIntentos.setText("");
+        lblPuntuacion.setText("");
+        lblCreditos.setText("");
+        imgBoxart.setImage(null);
+        iconoImagenNoDisponible.setVisible(false);
     }
 
     @FXML
     private void abrirModalAgregarLogro(ActionEvent event) {
-        // Pendiente: abrirModalAgregarEditarLogro(null);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormLogros.fxml"));
+            Parent root = loader.load();
+
+            FormLogrosController controller = loader.getController();
+            controller.limpiarFormulario(); // método que debes implementar en ese controlador
+
+            Stage modal = new Stage();
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setTitle("Añadir Logro");
+            modal.setScene(new Scene(root));
+            modal.setResizable(false);
+            modal.showAndWait();
+
+            cargarLogros();
+        } catch (IOException e) {
+            mostrarError("Error al abrir el formulario de nuevo logro", e);
+        }
+    }
+
+    @FXML
+    private void editarLogro(ActionEvent event) {
+        if (logroSeleccionado == null) {
+            mostrarAlerta("Seleccione un logro para editar.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormLogros.fxml"));
+            Parent root = loader.load();
+
+            FormLogrosController controller = loader.getController();
+            controller.cargarLogroParaEditar(logroSeleccionado);
+
+            Stage modal = new Stage();
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setTitle("Editar Logro");
+            modal.setScene(new Scene(root));
+            modal.setResizable(false);
+            modal.showAndWait();
+
+            cargarLogros();
+        } catch (IOException e) {
+            mostrarError("Error al abrir el formulario de edición", e);
+        }
     }
 
     @FXML
     private void eliminarLogro(ActionEvent event) {
-        Logros seleccionado = listaLogros.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
+        if (logroSeleccionado == null) {
+            mostrarAlerta("Seleccione un logro para eliminar.");
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "¿Estás seguro de eliminar este logro?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Confirmación");
-        alert.showAndWait();
-
-        if (alert.getResult() == ButtonType.YES) {
-            LogrosDAO dao = new LogrosDAO(); // ← Instancia del DAO
-            if (dao.eliminarLogro(seleccionado.getId())) {
-                cargarLogros(); // ← Recarga la lista
-            } else {
-                new Alert(Alert.AlertType.ERROR, "No se pudo eliminar el logro.").showAndWait();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "¿Eliminar logro seleccionado?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Eliminar Logro");
+        alert.setHeaderText(logroSeleccionado.getNombre());
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                boolean ok = logrosDAO.eliminarLogro(logroSeleccionado.getId());
+                if (ok) {
+                    mostrarAlerta("Logro eliminado correctamente.");
+                    cargarLogros();
+                } else {
+                    mostrarAlerta("No se pudo eliminar el logro.");
+                }
             }
-        }
+        });
+    }
+
+    @FXML
+    private void limpiarFiltros(ActionEvent event) {
+        comboEstado.getSelectionModel().selectFirst();
+        campoBusqueda.clear();
+        aplicarFiltros();
     }
 
     @FXML
     private void irPrimeraPagina(ActionEvent event) {
-        listaLogros.getSelectionModel().selectFirst();
-        mostrarDetalle(null);
+        pagina = 1;
+        actualizarPaginado();
     }
 
     @FXML
     private void irPaginaAnterior(ActionEvent event) {
-        int index = listaLogros.getSelectionModel().getSelectedIndex();
-        if (index > 0) {
-            listaLogros.getSelectionModel().select(index - 1);
-            mostrarDetalle(null);
+        if (pagina > 1) {
+            pagina--;
+            actualizarPaginado();
         }
     }
 
     @FXML
     private void irPaginaSiguiente(ActionEvent event) {
-        int index = listaLogros.getSelectionModel().getSelectedIndex();
-        if (index < listaLogros.getItems().size() - 1) {
-            listaLogros.getSelectionModel().select(index + 1);
-            mostrarDetalle(null);
+        int total = (int) Math.ceil((double) logrosFiltrados.size() / ITEMS_POR_PAGINA);
+        if (pagina < total) {
+            pagina++;
+            actualizarPaginado();
         }
     }
 
     @FXML
     private void irUltimaPagina(ActionEvent event) {
-        listaLogros.getSelectionModel().selectLast();
-        mostrarDetalle(null);
+        pagina = (int) Math.ceil((double) logrosFiltrados.size() / ITEMS_POR_PAGINA);
+        actualizarPaginado();
     }
 
-    @FXML
-    private void editarLogro(ActionEvent event) {
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarError(String mensaje, Exception e) {
+        e.printStackTrace();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(mensaje);
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
     }
 }
