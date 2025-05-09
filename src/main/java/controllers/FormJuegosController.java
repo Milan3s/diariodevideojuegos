@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -23,6 +24,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -55,7 +57,7 @@ public class FormJuegosController implements Initializable {
 
     private File imagenSeleccionada;
     private Juego juegoEditando;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -110,19 +112,6 @@ public class FormJuegosController implements Initializable {
             return;
         }
 
-        Estado estadoSeleccionado = comboEstado.getValue();
-        Consola consolaSeleccionada = comboConsola.getValue();
-        if (estadoSeleccionado == null) {
-            mostrarAlerta("Debe seleccionar un estado.");
-            AppLogger.warning("No se seleccionó un estado.");
-            return;
-        }
-        if (consolaSeleccionada == null) {
-            mostrarAlerta("Debe seleccionar una consola.");
-            AppLogger.warning("No se seleccionó una consola.");
-            return;
-        }
-
         String descripcion = txtDescripcion.getText().trim();
         String desarrollador = txtDesarrollador.getText().trim();
         String editor = txtEditor.getText().trim();
@@ -132,6 +121,8 @@ public class FormJuegosController implements Initializable {
                 ? dateFechaLanzamiento.getValue().format(formatter)
                 : null;
 
+        Estado estadoSeleccionado = comboEstado.getValue();
+        Consola consolaSeleccionada = comboConsola.getValue();
         boolean recomendado = radioSi.isSelected();
 
         String nombreImagen = null;
@@ -172,30 +163,34 @@ public class FormJuegosController implements Initializable {
         juego.setVideo(nombreVideo);
 
         JuegoDAO dao = new JuegoDAO();
-        boolean exito;
+        boolean exito = false;
+
         if (juegoEditando == null) {
             exito = dao.insertarJuego(juego);
         } else {
-            juego.setId(juegoEditando.getId());
-            exito = dao.actualizarJuego(juego);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Editar Juego");
+            alert.setHeaderText("¿Desea sobrescribir los datos del juego?");
+            alert.setContentText("Se reemplazarán los datos actuales por los nuevos.");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                juego.setId(juegoEditando.getId());
+                exito = dao.actualizarJuego(juego);
+            }
         }
 
+        if (exito) {
+            mostrarAlerta("Juego guardado correctamente.");
+            cerrarVentana();
+        } else {
+            mostrarAlerta("Error al guardar el juego.");
+        }
     }
 
-    void limpiarFormulario() {
-        txtNombre.clear();
-        txtDescripcion.clear();
-        txtDesarrollador.clear();
-        txtEditor.clear();
-        txtGenero.clear();
-        txtModoJuego.clear();
-        dateFechaLanzamiento.setValue(null);
-        comboEstado.getSelectionModel().clearSelection();
-        comboConsola.getSelectionModel().clearSelection();
-        grupoRecomendado.selectToggle(radioSi);
-        imagenSeleccionada = null;
-        mediaPreview.setMediaPlayer(null);
-        AppLogger.info("Formulario de juego limpiado.");
+    private void cerrarVentana() {
+        Stage stage = (Stage) btnGuardar.getScene().getWindow();
+        stage.close();
     }
 
     private void mostrarAlerta(String mensaje) {
@@ -217,8 +212,8 @@ public class FormJuegosController implements Initializable {
         txtModoJuego.setText(juegoSeleccionado.getModoJuego());
         dateFechaLanzamiento.setValue(
                 (juegoSeleccionado.getFechaLanzamiento() != null && !juegoSeleccionado.getFechaLanzamiento().isEmpty())
-                ? LocalDate.parse(juegoSeleccionado.getFechaLanzamiento(), formatter)
-                : null
+                        ? LocalDate.parse(juegoSeleccionado.getFechaLanzamiento(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        : null
         );
 
         comboEstado.setValue(juegoSeleccionado.getEstado());

@@ -322,8 +322,7 @@ public class JuegosController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
             Parent root = loader.load();
-            FormJuegosController controller = loader.getController();
-            controller.limpiarFormulario();
+            FormJuegosController controller = loader.getController();            
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setScene(new Scene(root));
