@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 
 public class ComboDAO {
 
+    // Método para cargar los estados por tipo (incluido moderador)
     public static ObservableList<Estado> cargarEstadosPorTipo(String tipo) {
         ObservableList<Estado> lista = FXCollections.observableArrayList();
         String sql = "SELECT id_estado, nombre FROM estados WHERE tipo = ? ORDER BY nombre ASC";
@@ -34,6 +35,27 @@ public class ComboDAO {
         return lista;
     }
 
+    // Método específico para cargar los estados de los moderadores
+    public static ObservableList<Estado> cargarEstadosModeradores() {
+        ObservableList<Estado> lista = FXCollections.observableArrayList();
+        String sql = "SELECT id_estado, nombre FROM estados WHERE tipo = 'moderador' ORDER BY nombre ASC";
+
+        try (Connection conn = DriverManager.getConnection(Conexion.getUrl()); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lista.add(new Estado(rs.getInt("id_estado"), rs.getString("nombre")));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    // Método para cargar las consolas
     public static ObservableList<Consola> cargarConsolas() {
         ObservableList<Consola> lista = FXCollections.observableArrayList();
         String sql = "SELECT id_consola, nombre, abreviatura FROM consolas ORDER BY nombre ASC";
@@ -52,6 +74,7 @@ public class ComboDAO {
         return lista;
     }
 
+    // Método para cargar las dificultades de logros
     public static ObservableList<Dificultad> cargarDificultades() {
         ObservableList<Dificultad> lista = FXCollections.observableArrayList();
         String sql = "SELECT id_dificultad, nombre FROM dificultades_logros ORDER BY nombre ASC";
@@ -69,6 +92,7 @@ public class ComboDAO {
         return lista;
     }
 
+    // Método para cargar los estados de consolas
     public static ObservableList<Estado> cargarEstadosConsolas() {
         ObservableList<Estado> lista = FXCollections.observableArrayList();
         String sql = "SELECT id_estado, nombre FROM estados WHERE tipo = 'consola' ORDER BY nombre ASC";

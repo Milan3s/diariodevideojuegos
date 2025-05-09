@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.FormModeradorController">
+    <VBox spacing="15.0" alignment="TOP_CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
+        <Label text="Formulario Moderador" styleClass="inicio-titulo"/>
+
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100.0" halignment="RIGHT"/>
+                <ColumnConstraints minWidth="200.0" halignment="LEFT"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
+
+            <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtNombre" promptText="Nombre del moderador" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtEmail" promptText="Correo electrónico" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Estado:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="comboEstado" promptText="Seleccione estado" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="btnGuardar" text="Guardar" onAction="#guardarModerador" styleClass="moderador-button"/>
+            <Button fx:id="btnCancelar" text="Cancelar" onAction="#cancelar" styleClass="moderador-button"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

@@ -9,6 +9,7 @@ public class Database {
                 + "    tipo TEXT,\n"
                 + "    nombre TEXT\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS consolas (\n"
                 + "    id_consola INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT,\n"
@@ -29,6 +30,7 @@ public class Database {
                 + "    id_estado INTEGER,\n"
                 + "    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS juegos (\n"
                 + "    id_juegos INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT,\n"
@@ -45,6 +47,7 @@ public class Database {
                 + "    video TEXT,\n"
                 + "    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS juegos_consolas (\n"
                 + "    id_juego INTEGER,\n"
                 + "    id_consola INTEGER,\n"
@@ -52,6 +55,7 @@ public class Database {
                 + "    FOREIGN KEY (id_juego) REFERENCES juegos(id_juegos),\n"
                 + "    FOREIGN KEY (id_consola) REFERENCES consolas(id_consola)\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS votos (\n"
                 + "    id_voto INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    id_juego INTEGER NOT NULL,\n"
@@ -60,10 +64,12 @@ public class Database {
                 + "    fecha_voto TEXT DEFAULT CURRENT_TIMESTAMP,\n"
                 + "    FOREIGN KEY (id_juego) REFERENCES juegos(id_juegos)\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS dificultades_logros (\n"
                 + "    id_dificultad INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS logros (\n"
                 + "    id_logro INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT,\n"
@@ -85,6 +91,7 @@ public class Database {
                 + "    FOREIGN KEY (id_dificultad) REFERENCES dificultades_logros(id_dificultad),\n"
                 + "    FOREIGN KEY (id_consola) REFERENCES consolas(id_consola)\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS eventos (\n"
                 + "    id_evento INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    titulo TEXT,\n"
@@ -99,6 +106,7 @@ public class Database {
                 + "    recurrente TEXT,\n"
                 + "    tipo_evento TEXT\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS metas_twitch (\n"
                 + "    id_meta INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    descripcion TEXT,\n"
@@ -110,21 +118,35 @@ public class Database {
                 + "    fecha_fin TEXT,\n"
                 + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS seguidores (\n"
                 + "    id_seguidores INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    cantidad INTEGER,\n"
                 + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS mejoras_canal (\n"
                 + "    id_mejora INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    descripcion TEXT,\n"
                 + "    fecha TEXT DEFAULT CURRENT_DATE\n"
                 + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS eventos_extensibles (\n"
                 + "    id_extensible INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    motivo TEXT,\n"
                 + "    fecha_evento TEXT\n"
                 + ");\n"
+
+                + "CREATE TABLE IF NOT EXISTS moderadores (\n"
+                + "    id_moderador INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    nombre TEXT,\n"
+                + "    email TEXT,\n"
+                + "    fecha_alta TEXT,\n"
+                + "    fecha_baja TEXT,\n"
+                + "    id_estado INTEGER,\n"
+                + "    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)\n"
+                + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS metas_especificas (\n"
                 + "    id_meta_especifica INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    descripcion TEXT,\n"
@@ -139,5 +161,4 @@ public class Database {
                 + "    FOREIGN KEY (id_consola) REFERENCES consolas(id_consola)\n"
                 + ");\n";
     }
-
 }

@@ -27,7 +27,10 @@
                     <Button fx:id="btnConsolas" onAction="#handleConsolas" prefWidth="180" styleClass="sidebar-button" text="Consolas" />
                                         
                     <Button fx:id="btnJuegos" onAction="#handleJuegos" prefWidth="180" styleClass="sidebar-button" text="Juegos" />
-               <Button fx:id="btnLogros" onAction="#handleLogros" prefWidth="180" styleClass="sidebar-button" text="Logros" />
+                    
+                    <Button fx:id="btnLogros" onAction="#handleLogros" prefWidth="180" styleClass="sidebar-button" text="Logros" />
+                    
+                    <Button fx:id="btnModerador" onAction="#handleModerador" prefWidth="180" styleClass="sidebar-button" text="Moderador" />
 
                 </VBox>
             </left>
