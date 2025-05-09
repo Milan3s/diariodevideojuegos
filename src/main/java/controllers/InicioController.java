@@ -9,6 +9,9 @@ import javafx.scene.text.Text;
 import models.Inicio;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 public class InicioController implements Initializable {
@@ -63,13 +66,48 @@ public class InicioController implements Initializable {
         txt_seguidores_total.setText(String.valueOf(resumen.getTotalSeguidores()));
 
         // Detalles dinámicos
-        lblSeguidorestotales.setText(resumen.getMetaSeguidoresProgreso() != null ? resumen.getMetaSeguidoresProgreso() : "No disponible");
-        lblJuegosCompletados.setText(resumen.getMetaJuegosCompletadosDescripcion() != null ? resumen.getMetaJuegosCompletadosDescripcion() : "No disponible");
-        lblResultadoMejoraDelCanal.setText(resumen.getMejorasDelCanal() != null ? resumen.getMejorasDelCanal() : "Sin mejoras registradas");
-        lblFaltanXDias.setText(resumen.getDiasParaExtensible() != null ? resumen.getDiasParaExtensible() : "No disponible");
-        lblFechaExtensible.setText(resumen.getFechaExtensible() != null ? resumen.getFechaExtensible() : "No registrada");
+        lblSeguidorestotales.setText(
+                resumen.getMetaSeguidoresProgreso() != null
+                ? resumen.getMetaSeguidoresProgreso()
+                : "No disponible"
+        );
 
-        // Nueva meta específica
-        lblMetaEspecifica.setText(resumen.getMetaEspecifica() != null ? resumen.getMetaEspecifica() : "No hay metas específicas registradas");
+        lblJuegosCompletados.setText(
+                resumen.getMetaJuegosCompletadosDescripcion() != null
+                ? resumen.getMetaJuegosCompletadosDescripcion()
+                : "No disponible"
+        );
+
+        lblResultadoMejoraDelCanal.setText(
+                resumen.getMejorasDelCanal() != null
+                ? resumen.getMejorasDelCanal()
+                : "Sin mejoras registradas"
+        );
+
+        lblFaltanXDias.setText(
+                resumen.getDiasParaExtensible() != null
+                ? resumen.getDiasParaExtensible()
+                : "No disponible"
+        );
+
+        // Formatear la fecha extensible a dd-MM-yyyy
+        String fechaOriginal = resumen.getFechaExtensible();
+        if (fechaOriginal != null && !fechaOriginal.isEmpty()) {
+            try {
+                LocalDate fecha = LocalDate.parse(fechaOriginal); // yyyy-MM-dd
+                String fechaFormateada = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                lblFechaExtensible.setText(fechaFormateada);
+            } catch (DateTimeParseException e) {
+                lblFechaExtensible.setText("Formato inválido");
+            }
+        } else {
+            lblFechaExtensible.setText("No registrada");
+        }
+
+        lblMetaEspecifica.setText(
+                resumen.getMetaEspecifica() != null
+                ? resumen.getMetaEspecifica()
+                : "No hay metas específicas registradas"
+        );
     }
 }

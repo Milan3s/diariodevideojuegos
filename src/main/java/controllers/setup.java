@@ -12,7 +12,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 import config.Database;
-import config.Conexion;  // Import correcto de tu clase Conexion
+import config.Conexion;
 import config.DatabaseInsertar;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -42,6 +42,7 @@ public class setup {
 
     private final Path basePath = Paths.get(System.getProperty("user.home"), "Documents", "diariodevideojuegos");
     private final Path dbPath = basePath.resolve("Config/Database/midiario.db");
+
     @FXML
     private VBox rootContainer;
     @FXML
@@ -63,14 +64,14 @@ public class setup {
             Files.createDirectories(basePath.resolve("imagenes/juegos"));
             Files.createDirectories(basePath.resolve("imagenes/consola"));
             Files.createDirectories(basePath.resolve("videos/juegos"));
-            Files.createDirectories(basePath.resolve("overlays/juegos"));
+            // overlays eliminado
 
             String url = "jdbc:sqlite:" + dbPath;
 
             try (Connection conn = DriverManager.getConnection(url)) {
                 if (conn != null) {
                     Statement stmt = conn.createStatement();
-                    stmt.executeUpdate(Database.getSqlSchema()); // Usamos el esquema de la base de datos
+                    stmt.executeUpdate(Database.getSqlSchema());
                     lblMensaje.setText("Base de datos y estructura creada correctamente.");
                 } else {
                     lblMensaje.setText("Error: no se pudo crear la base de datos.");
@@ -91,7 +92,7 @@ public class setup {
         resultado.append(Files.exists(basePath.resolve("imagenes/juegos")) ? "✔ imagenes/juegos\n" : "✘ imagenes/juegos\n");
         resultado.append(Files.exists(basePath.resolve("imagenes/consola")) ? "✔ imagenes/consola\n" : "✘ imagenes/consola\n");
         resultado.append(Files.exists(basePath.resolve("videos/juegos")) ? "✔ videos/juegos\n" : "✘ videos/juegos\n");
-        resultado.append(Files.exists(basePath.resolve("overlays/juegos")) ? "✔ overlays/juegos\n" : "✘ overlays/juegos\n");
+        // overlays eliminado
         resultado.append(Files.exists(dbPath) ? "✔ Base de datos (midiario.db)\n" : "✘ Base de datos (midiario.db)\n");
 
         lblMensaje.setText(resultado.toString());
@@ -102,10 +103,7 @@ public class setup {
     @FXML
     private void handleBorrar() {
         try {
-            // Borrar el directorio principal "diariodevideojuegos" y su contenido
-            Conexion.borrarDirectorioPrincipal();  // Llama al método para eliminar la carpeta
-
-            // Mostrar mensaje de confirmación
+            Conexion.borrarDirectorioPrincipal();
             lblMensaje.setText("Directorio 'diariodevideojuegos' y su contenido han sido eliminados.");
         } catch (Exception e) {
             lblMensaje.setText("Error al borrar el directorio.");
@@ -132,7 +130,6 @@ public class setup {
             stage.setResizable(true);
             stage.show();
 
-            // Cierra la ventana actual (setup)
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.close();
 
@@ -143,14 +140,11 @@ public class setup {
         }
     }
 
+    // Botón: INSERTAR DATOS
     @FXML
     private void handleInsertar() {
-        // Llamamos al método para insertar los datos en la base de datos
-        DatabaseInsertar.insertarDatos(); // Esta es la llamada a la clase DatabaseInsertar
-
-        // Alerta para indicar que los datos fueron insertados correctamente
+        DatabaseInsertar.insertarDatos();
         Alert alert = new Alert(AlertType.INFORMATION, "Los datos se han insertado correctamente.", ButtonType.OK);
         alert.showAndWait();
     }
-
 }

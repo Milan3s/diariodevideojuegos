@@ -44,26 +44,26 @@
     -fx-text-fill: black;
 }
 
-/* Texto general de los detalles */
+/* Texto general dentro de tarjetas detalle */
 .card-inicio Label {
     -fx-font-size: 15px;
     -fx-text-fill: #333;
 }
 
-/* Textos de encabezado dentro de tarjetas de detalle */
+/* Títulos dentro de los detalles */
 .card-inicio Text {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-text-fill: #444;
 }
 
-/* Tarjeta específica para el bloque de Próximo Extensible (opcional para destacar más) */
+/* Estilo opcional para bloques especiales */
 .card-inicio.extensible {
     -fx-border-color: #2b8ced;
     -fx-background-color: #f8fbff;
 }
 
-/* Para mantener consistencia visual en etiquetas tipo "Fecha:" */
+/* Subtítulos tipo “Fecha:” */
 .label-subtitulo {
     -fx-font-size: 13px;
     -fx-text-fill: #555;
