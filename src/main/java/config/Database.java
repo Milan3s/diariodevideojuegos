@@ -119,6 +119,13 @@ public class Database {
                 + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
                 + ");\n"
 
+                + "CREATE TABLE IF NOT EXISTS anios_metas_twitch (\n"
+                + "    id_meta INTEGER,\n"
+                + "    anio INTEGER,\n"
+                + "    PRIMARY KEY (id_meta, anio),\n"
+                + "    FOREIGN KEY (id_meta) REFERENCES metas_twitch(id_meta)\n"
+                + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS seguidores (\n"
                 + "    id_seguidores INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    cantidad INTEGER,\n"
@@ -159,6 +166,13 @@ public class Database {
                 + "    fecha_fin TEXT,\n"
                 + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP,\n"
                 + "    FOREIGN KEY (id_consola) REFERENCES consolas(id_consola)\n"
+                + ");\n"
+
+                + "CREATE TABLE IF NOT EXISTS anios_metas_especificas (\n"
+                + "    id_meta_especifica INTEGER,\n"
+                + "    anio INTEGER,\n"
+                + "    PRIMARY KEY (id_meta_especifica, anio),\n"
+                + "    FOREIGN KEY (id_meta_especifica) REFERENCES metas_especificas(id_meta_especifica)\n"
                 + ");\n";
     }
 }

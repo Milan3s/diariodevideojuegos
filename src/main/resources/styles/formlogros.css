@@ -1,52 +1,86 @@
-/* Fondo general del formulario */
+/* ------------------------ FONDO Y GENERAL ------------------------ */
 .formulario-logros {
     -fx-background-color: white;
     -fx-font-family: 'Raleway';
     -fx-text-fill: black;
 }
 
-/* Grid del formulario */
-.grid-logros {
-    -fx-background-color: transparent;
-}
-
-/* Etiquetas del formulario */
+/* Etiquetas */
 .label-logros {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-text-fill: black;
 }
 
-/* Campos de entrada comunes */
-.input-logros, .input-logros .text-field {
+/* ------------------------ TEXTFIELD ------------------------ */
+.input-logros {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;
     -fx-border-width: 1px;
+    -fx-border-radius: 0;
     -fx-font-size: 14px;
+    -fx-font-weight: bold;
     -fx-padding: 6px;
+    -fx-pref-height: 42px;
 }
 
-/* Estilo para ComboBox específicamente */
+/* ------------------------ COMBOBOX ------------------------ */
+.combo-box.input-logros {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px;
+    -fx-pref-height: 42px;
+}
+
 .combo-box .list-cell {
     -fx-text-fill: black;
     -fx-background-color: white;
 }
-
-/* DatePicker (igual que en consolas) */
-.date-picker .arrow-button {
-    -fx-background-color: white;
-    -fx-border-color: black;
-    -fx-border-width: 0 0 0 1px;
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: black;
 }
-.date-picker .text-field {
+
+/* ------------------------ DATEPICKER ------------------------ */
+.date-picker.input-logros {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+/* Campo del DatePicker */
+.date-picker.input-logros .text-field {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;
     -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px;
+    -fx-pref-height: 42px;
 }
 
-/* Botón de guardar estilo logros */
+/* Botón calendario */
+.date-picker.input-logros .arrow-button {
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #b3b3b3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-cursor: hand;
+}
+.date-picker.input-logros .arrow-button:hover {
+    -fx-background-color: #d6d6d6;
+}
+
+/* ------------------------ BOTONES ------------------------ */
 .logros-button {
     -fx-background-color: white;
     -fx-text-fill: black;
@@ -57,6 +91,7 @@
     -fx-padding: 6px 16px;
     -fx-cursor: hand;
 }
+
 .logros-button:hover {
     -fx-background-color: #f0f0f0;
 }
@@ -64,13 +99,4 @@
 .logros-button .fontawesome-icon-view {
     -fx-fill: black;
     -fx-padding: 0 6px 0 0;
-}
-
-/* ComboBox dropdown */
-.combo-box-popup .list-view {
-    -fx-background-color: white;
-}
-.combo-box-popup .list-cell:hover {
-    -fx-background-color: #f0f0f0;
-    -fx-text-fill: black;
 }

@@ -22,47 +22,47 @@
 
         <!-- Columna izquierda -->
         <Label styleClass="form-label" text="Nombre" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <TextField fx:id="txtNombre" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <TextField fx:id="txtNombre" promptText="Nombre de la consola" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
         <Label styleClass="form-label" text="Abreviatura" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField fx:id="txtAbreviatura" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <TextField fx:id="txtAbreviatura" promptText="Ej. PS5" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
         <Label styleClass="form-label" text="Año" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <TextField fx:id="txtAnio" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextField fx:id="txtAnio" promptText="Ej. 2020" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
         <Label styleClass="form-label" text="Fabricante" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <TextField fx:id="txtFabricante" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <TextField fx:id="txtFabricante" promptText="Nombre del fabricante" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <Label styleClass="form-label" text="Generación" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <TextField fx:id="txtGeneracion" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <TextField fx:id="txtGeneracion" promptText="Ej. Octava" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
         <Label styleClass="form-label" text="Región" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <TextField fx:id="txtRegion" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <TextField fx:id="txtRegion" promptText="Ej. NTSC / PAL" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
         <Label styleClass="form-label" text="Características" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-        <TextField fx:id="txtCaracteristicas" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <TextField fx:id="txtCaracteristicas" promptText="Descripción técnica u otras características" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
         <!-- Columna derecha -->
         <Label styleClass="form-label" text="Tipo" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <TextField fx:id="txtTipo" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <TextField fx:id="txtTipo" promptText="Ej. Portátil / Sobremesa" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
         <Label styleClass="form-label" text="Procesador" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <TextField fx:id="txtProcesador" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <TextField fx:id="txtProcesador" promptText="Modelo del procesador" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
         <Label styleClass="form-label" text="Memoria" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <TextField fx:id="txtMemoria" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <TextField fx:id="txtMemoria" promptText="Ej. 8 GB RAM" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
         <Label styleClass="form-label" text="Frecuencia (MHz)" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-        <TextField fx:id="txtFrecuencia" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+        <TextField fx:id="txtFrecuencia" promptText="Ej. 3200 MHz" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
         <Label styleClass="form-label" text="Almacenamiento" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-        <TextField fx:id="txtAlmacenamiento" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+        <TextField fx:id="txtAlmacenamiento" promptText="Capacidad y tipo de almacenamiento" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="4" />
 
         <Label styleClass="form-label" text="Fecha Lanzamiento" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-        <DatePicker fx:id="dateFechaLanzamiento" prefHeight="35.0" prefWidth="250.0" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+        <DatePicker fx:id="dateFechaLanzamiento" promptText="Selecciona una fecha" prefHeight="35.0" prefWidth="250.0" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="5" />
 
         <Label styleClass="form-label" text="Estado" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-        <ComboBox fx:id="comboEstado" prefHeight="25.0" prefWidth="258.0" promptText="Elige una Opción" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+        <ComboBox fx:id="comboEstado" prefHeight="25.0" prefWidth="258.0" promptText="Elige una opción" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="6" />
 
         <!-- Imagen -->
         <Label styleClass="form-label" text="Imagen" GridPane.columnIndex="0" GridPane.rowIndex="8" />

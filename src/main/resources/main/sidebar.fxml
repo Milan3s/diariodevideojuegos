@@ -31,6 +31,8 @@
                     <Button fx:id="btnLogros" onAction="#handleLogros" prefWidth="180" styleClass="sidebar-button" text="Logros" />
                     
                     <Button fx:id="btnModerador" onAction="#handleModerador" prefWidth="180" styleClass="sidebar-button" text="Moderador" />
+                    
+                    <Button fx:id="btnMetasTwitch" onAction="#handleMetasTwitch" prefWidth="180" styleClass="sidebar-button" text="Metas Twitch" />
 
                 </VBox>
             </left>
