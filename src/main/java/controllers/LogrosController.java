@@ -31,17 +31,27 @@ import java.util.stream.Collectors;
 
 public class LogrosController implements Initializable {
 
-    @FXML private Text tituloLogros;
-    @FXML private ComboBox<Estado> comboEstado;
-    @FXML private TextField campoBusqueda;
-    @FXML private Button btnLimpiar, btnAgregar, btnEditar, btnEliminar;
-    @FXML private ListView<Logros> listaLogros;
-    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
-    @FXML private Label paginaActual;
-    @FXML private ImageView imgBoxart;
-    @FXML private Label lblNombre, lblDescripcion, lblJuego, lblConsola, lblEstado,
+    @FXML
+    private Text tituloLogros;
+    @FXML
+    private ComboBox<Estado> comboEstado;
+    @FXML
+    private TextField campoBusqueda;
+    @FXML
+    private Button btnLimpiar, btnAgregar, btnEditar, btnEliminar;
+    @FXML
+    private ListView<Logros> listaLogros;
+    @FXML
+    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML
+    private Label paginaActual;
+    @FXML
+    private ImageView imgBoxart;
+    @FXML
+    private Label lblNombre, lblDescripcion, lblJuego, lblConsola, lblEstado,
             lblDificultad, lblHoras, lblIntentos, lblPuntuacion, lblCreditos;
-    @FXML private FontAwesomeIconView iconoImagenNoDisponible;
+    @FXML
+    private FontAwesomeIconView iconoImagenNoDisponible;
 
     private final LogrosDAO logrosDAO = new LogrosDAO();
     private final ObservableList<Logros> logrosOriginales = FXCollections.observableArrayList();
@@ -77,10 +87,15 @@ public class LogrosController implements Initializable {
         String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
         Estado estadoSel = comboEstado.getSelectionModel().getSelectedItem();
 
-        logrosFiltrados.setAll(logrosOriginales.stream()
-                .filter(l -> texto.isEmpty() || l.getNombre().toLowerCase().contains(texto))
-                .filter(l -> estadoSel == null || estadoSel.getId() == -1 || (l.getEstado() != null && l.getEstado().getId() == estadoSel.getId()))
-                .collect(Collectors.toList()));
+        if ((texto.isEmpty()) && (estadoSel == null || estadoSel.getId() == -1)) {
+            logrosFiltrados.setAll(logrosOriginales);
+        } else {
+            logrosFiltrados.setAll(logrosOriginales.stream()
+                    .filter(l -> texto.isEmpty() || l.getNombre().toLowerCase().contains(texto))
+                    .filter(l -> estadoSel == null || estadoSel.getId() == -1
+                    || (l.getEstado() != null && l.getEstado().getId() == estadoSel.getId()))
+                    .collect(Collectors.toList()));
+        }
 
         pagina = 1;
         actualizarPaginado();
@@ -90,15 +105,13 @@ public class LogrosController implements Initializable {
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, logrosFiltrados.size());
 
-        if (desde > hasta) desde = 0;
-        listaLogros.setItems(FXCollections.observableArrayList(logrosFiltrados.subList(desde, hasta)));
-
-        if (!listaLogros.getItems().isEmpty()) {
-            listaLogros.getSelectionModel().selectFirst();
-            mostrarDetalle(null);
-        } else {
-            limpiarDetalle();
+        if (desde > hasta) {
+            desde = 0;
         }
+
+        listaLogros.setItems(FXCollections.observableArrayList(logrosFiltrados.subList(desde, hasta)));
+        listaLogros.getSelectionModel().clearSelection();  // <-- deselect any selected item
+        limpiarDetalle();                                   // <-- limpia los detalles
 
         paginaActual.setText(String.valueOf(pagina));
     }
@@ -113,7 +126,9 @@ public class LogrosController implements Initializable {
 
     private void mostrarDetalle(MouseEvent event) {
         logroSeleccionado = listaLogros.getSelectionModel().getSelectedItem();
-        if (logroSeleccionado == null) return;
+        if (logroSeleccionado == null) {
+            return;
+        }
 
         lblNombre.setText(logroSeleccionado.getNombre());
         lblDescripcion.setText(logroSeleccionado.getDescripcion());
@@ -232,6 +247,8 @@ public class LogrosController implements Initializable {
     private void limpiarFiltros(ActionEvent event) {
         comboEstado.getSelectionModel().selectFirst();
         campoBusqueda.clear();
+        listaLogros.getSelectionModel().clearSelection();
+        limpiarDetalle();
         aplicarFiltros();
     }
 

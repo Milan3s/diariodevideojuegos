@@ -41,17 +41,19 @@ import java.util.stream.Collectors;
 public class JuegosController implements Initializable {
 
     @FXML
-    private Text tituloJuegos;
-    @FXML
     private ListView<Juego> listaJuegos;
-    @FXML
-    private Label lblNombre, lblGenero, lblEditor, lblDesarrollador, lblFecha, lblModo, lblRecomendado, lblEstado, lblConsola;
-    @FXML
-    private ImageView imgDetalle;
     @FXML
     private ComboBox<Estado> comboEstado;
     @FXML
     private ComboBox<Consola> comboConsola;
+    @FXML
+    private TextField campoBusqueda;
+    @FXML
+    private Label paginaActual;
+    @FXML
+    private Label lblNombre, lblGenero, lblEditor, lblDesarrollador, lblFecha, lblModo, lblRecomendado, lblEstado, lblConsola;
+    @FXML
+    private ImageView imgDetalle;
     @FXML
     private MediaView videoDetalle;
     @FXML
@@ -59,15 +61,7 @@ public class JuegosController implements Initializable {
     @FXML
     private StackPane videoContainer;
     @FXML
-    private FontAwesomeIconView iconoVideoNoDisponible;
-    @FXML
-    private FontAwesomeIconView iconoImagenNoDisponible;
-    @FXML
-    private TextField campoBusqueda;
-    @FXML
-    private Label paginaActual;
-    @FXML
-    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo, btnEditar, btnEliminar;
+    private FontAwesomeIconView iconoVideoNoDisponible, iconoImagenNoDisponible;
 
     private ObservableList<Juego> todosLosJuegos = FXCollections.observableArrayList();
     private ObservableList<Juego> juegosFiltrados = FXCollections.observableArrayList();
@@ -85,43 +79,21 @@ public class JuegosController implements Initializable {
         campoBusqueda.setOnKeyReleased(this::filtrarJuegos);
         cargarJuegos();
         configurarListView();
-        ocultarControlesYIconos();
+        listaJuegos.getSelectionModel().clearSelection();
+        limpiarDetalle();
+
     }
 
     private void cargarCombos() {
         ObservableList<Estado> estados = ComboDAO.cargarEstadosPorTipo("juego");
         estados.add(0, new Estado(-1, "Todos"));
         comboEstado.setItems(estados);
-        comboEstado.setButtonCell(createEstadoCell());
-        comboEstado.setCellFactory(lv -> createEstadoCell());
         comboEstado.getSelectionModel().selectFirst();
 
         ObservableList<Consola> consolas = ComboDAO.cargarConsolas();
         consolas.add(0, new Consola(-1, "Todos", ""));
         comboConsola.setItems(consolas);
-        comboConsola.setButtonCell(createConsolaCell());
-        comboConsola.setCellFactory(lv -> createConsolaCell());
         comboConsola.getSelectionModel().selectFirst();
-    }
-
-    private ListCell<Estado> createEstadoCell() {
-        return new ListCell<>() {
-            @Override
-            protected void updateItem(Estado item, boolean empty) {
-                super.updateItem(item, empty);
-                setText((empty || item == null || item.getId() == -1) ? "Estados" : item.getNombre());
-            }
-        };
-    }
-
-    private ListCell<Consola> createConsolaCell() {
-        return new ListCell<>() {
-            @Override
-            protected void updateItem(Consola item, boolean empty) {
-                super.updateItem(item, empty);
-                setText((empty || item == null || item.getId() == -1) ? "Consolas" : item.getNombre());
-            }
-        };
     }
 
     private void cargarJuegos() {
@@ -204,17 +176,12 @@ public class JuegosController implements Initializable {
         });
 
         listaJuegos.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, nuevo) -> {
-            if (mediaPlayer != null) {
-                mediaPlayer.stop();
-                mediaPlayer.dispose();
-                videoDetalle.setMediaPlayer(null);
-                mediaPlayer = null;
-            }
+            detenerVideo(null);
             if (nuevo != null) {
                 juegoSeleccionado = nuevo;
                 mostrarDetalle(nuevo);
             } else {
-                ocultarControlesYIconos();
+                limpiarDetalle();
             }
         });
     }
@@ -274,6 +241,23 @@ public class JuegosController implements Initializable {
         }
     }
 
+    private void limpiarDetalle() {
+        lblNombre.setText("");
+        lblGenero.setText("");
+        lblEditor.setText("");
+        lblDesarrollador.setText("");
+        lblFecha.setText("");
+        lblModo.setText("");
+        lblRecomendado.setText("");
+        lblEstado.setText("");
+        lblConsola.setText("");
+        imgDetalle.setImage(null);
+        videoDetalle.setMediaPlayer(null);
+        controlesVideo.setVisible(false);
+        iconoImagenNoDisponible.setVisible(false);
+        iconoVideoNoDisponible.setVisible(false);
+    }
+
     @FXML
     private void reproducirVideo(MouseEvent e) {
         if (mediaPlayer != null) {
@@ -294,12 +278,6 @@ public class JuegosController implements Initializable {
             mediaPlayer.pause();
             mediaPlayer.seek(mediaPlayer.getStartTime());
         }
-    }
-
-    private void ocultarControlesYIconos() {
-        controlesVideo.setVisible(false);
-        iconoVideoNoDisponible.setVisible(false);
-        iconoImagenNoDisponible.setVisible(false);
     }
 
     @FXML
@@ -329,9 +307,7 @@ public class JuegosController implements Initializable {
     @FXML
     private void editarJuego(ActionEvent event) {
         if (juegoSeleccionado != null) {
-            if (mediaPlayer != null) {
-                mediaPlayer.pause();
-            }
+            detenerVideo(null);
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormJuegos.fxml"));
                 Parent root = loader.load();
@@ -378,7 +354,6 @@ public class JuegosController implements Initializable {
             int totalPaginas = (int) Math.ceil((double) juegosFiltrados.size() / ITEMS_POR_PAGINA);
             pagina = totalPaginas;
             actualizarPaginado();
-
             listaJuegos.getSelectionModel().selectLast();
             listaJuegos.scrollTo(listaJuegos.getItems().size() - 1);
         }
@@ -408,19 +383,17 @@ public class JuegosController implements Initializable {
         }
     }
 
+    @FXML
+    private void limpiarFiltros(ActionEvent event) {
+        listaJuegos.getSelectionModel().clearSelection();
+        limpiarDetalle();
+    }
+
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    @FXML
-    private void limpiarFiltros(ActionEvent event) {
-        comboEstado.getSelectionModel().selectFirst();
-        comboConsola.getSelectionModel().selectFirst();
-        campoBusqueda.clear();
-        aplicarFiltros();
     }
 }

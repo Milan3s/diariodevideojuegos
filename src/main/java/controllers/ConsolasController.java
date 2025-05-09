@@ -113,10 +113,16 @@ public class ConsolasController implements Initializable {
         String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
         Estado estadoSel = comboEstado.getSelectionModel().getSelectedItem();
 
-        consolasFiltradas.setAll(todasLasConsolas.stream()
-                .filter(c -> texto.isEmpty() || c.getNombre().toLowerCase().contains(texto))
-                .filter(c -> estadoSel == null || estadoSel.getId() == -1 || (c.getEstado() != null && c.getEstado().getId() == estadoSel.getId()))
-                .collect(Collectors.toList()));
+        // Si no hay ningún filtro activo, mostrar todo
+        if ((texto.isEmpty()) && (estadoSel == null || estadoSel.getId() == -1)) {
+            consolasFiltradas.setAll(todasLasConsolas);
+        } else {
+            consolasFiltradas.setAll(todasLasConsolas.stream()
+                    .filter(c -> texto.isEmpty() || c.getNombre().toLowerCase().contains(texto))
+                    .filter(c -> estadoSel == null || estadoSel.getId() == -1
+                    || (c.getEstado() != null && c.getEstado().getId() == estadoSel.getId()))
+                    .collect(Collectors.toList()));
+        }
 
         pagina = 1;
         actualizarPaginado();
@@ -207,7 +213,9 @@ public class ConsolasController implements Initializable {
     private void limpiarFiltros(ActionEvent event) {
         comboEstado.getSelectionModel().selectFirst();
         campoBusqueda.clear();
-        aplicarFiltros();
+        listaConsolas.getSelectionModel().clearSelection();
+        limpiarDetalle();
+        aplicarFiltros(); // muy importante para mostrar todo
     }
 
     @FXML
