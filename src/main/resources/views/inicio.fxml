@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -52,52 +53,69 @@
                 <Label fx:id="txt_seguidores_total" styleClass="card-value" />
             </VBox>
         </HBox>
-      <columnConstraints>
-         <ColumnConstraints />
-         <ColumnConstraints />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
     </GridPane>
 
     <!-- Grid secundario: Detalles -->
     <GridPane fx:id="gridMetasDetalle" hgap="30" layoutX="520.0" layoutY="60.0" prefHeight="512.0" prefWidth="442.0" styleClass="inicio-grid" vgap="20">
-        <HBox alignment="CENTER_LEFT" prefHeight="100" prefWidth="260" spacing="10" styleClass="card-inicio" GridPane.rowIndex="0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Meta : " wrappingWidth="36.50400161743164" />
-            <Label fx:id="lblSeguidorestotales" prefHeight="45.0" prefWidth="299.0" />
-         </children>
+        <HBox alignment="TOP_LEFT" spacing="10" styleClass="card-inicio" GridPane.rowIndex="0">
+            <VBox prefHeight="81.0" prefWidth="360.0" spacing="5">
+                <Text text="Meta de seguidores:" />
+                <Label fx:id="lblSeguidorestotales" maxWidth="380" wrapText="true" />
+            </VBox>
         </HBox>
-        <HBox alignment="CENTER_LEFT" prefHeight="100" prefWidth="260" spacing="10" styleClass="card-inicio" GridPane.rowIndex="1">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Meta :  " wrappingWidth="41.50400161743164" />
-            <Label fx:id="lblJuegosCompletados" prefHeight="45.0" prefWidth="299.0" />
-         </children>
+        <HBox alignment="TOP_LEFT" spacing="10" styleClass="card-inicio" GridPane.rowIndex="1">
+            <VBox prefHeight="86.0" prefWidth="360.0" spacing="5">
+                <Text text="Meta de juegos:" />
+                <Label fx:id="lblJuegosCompletados" maxWidth="380" wrapText="true" />
+            </VBox>
         </HBox>
-        <HBox alignment="CENTER_LEFT" prefHeight="100" prefWidth="260" spacing="10" styleClass="card-inicio" GridPane.rowIndex="2">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mejora del Canal : " wrappingWidth="106.50400161743164" />
-            <Label fx:id="lblResultadoMejoraDelCanal" prefHeight="45.0" prefWidth="299.0" />
-         </children>
+        <HBox alignment="TOP_LEFT" spacing="10" styleClass="card-inicio" GridPane.rowIndex="2">
+            <VBox prefHeight="81.0" prefWidth="360.0" spacing="5">
+                <Text text="Mejora del Canal:" />
+                <Label fx:id="lblResultadoMejoraDelCanal" maxWidth="380" wrapText="true" />
+            </VBox>
         </HBox>
-        <HBox alignment="CENTER_LEFT" prefHeight="103.0" prefWidth="420.0" spacing="10" styleClass="card-inicio" GridPane.rowIndex="3">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proximo Extensible :" wrappingWidth="118.50400161743164" />
-            <Label fx:id="lblFaltanXDias" prefHeight="45.0" prefWidth="299.0" />
-            <Label fx:id="lblFechaExtensible" prefHeight="45.0" prefWidth="299.0" />
-         </children>
+        <HBox alignment="TOP_LEFT" prefHeight="131.0" prefWidth="367.0" spacing="10" styleClass="card-inicio" GridPane.rowIndex="3">
+            <VBox prefHeight="89.0" prefWidth="428.0" spacing="5">
+                <Text text="Próximo Extensible:" />
+                <Label fx:id="lblFaltanXDias" maxWidth="380" prefHeight="100.0" prefWidth="325.0" wrapText="true">
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </Label>
+                <HBox prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <Label prefHeight="19.0" prefWidth="51.0" text="Fecha:" />
+                        <Label fx:id="lblFechaExtensible" maxWidth="380" prefHeight="43.0" prefWidth="287.0" wrapText="true" />
+                    </children>
+                </HBox>
+            </VBox>
         </HBox>
-      <columnConstraints>
-         <ColumnConstraints />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+        <!-- NUEVA TARJETA: Meta específica -->
+        <HBox alignment="TOP_LEFT" spacing="10" styleClass="card-inicio" GridPane.rowIndex="4">
+            <VBox prefHeight="81.0" prefWidth="360.0" spacing="5">
+                <Text text="Meta específica:" />
+                <Label fx:id="lblMetaEspecifica" maxWidth="380" wrapText="true" />
+            </VBox>
+        </HBox>
+        <columnConstraints>
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
     </GridPane>
 </AnchorPane>

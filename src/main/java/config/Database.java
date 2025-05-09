@@ -124,6 +124,19 @@ public class Database {
                 + "    id_extensible INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    motivo TEXT NOT NULL,\n"
                 + "    fecha_evento TEXT NOT NULL\n"
+                + ");\n"
+                + "CREATE TABLE IF NOT EXISTS metas_especificas (\n"
+                + "    id_meta_especifica INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    descripcion TEXT NOT NULL,\n"
+                + "    cumplida BOOLEAN DEFAULT 0,\n"
+                + "    juegos_objetivo INTEGER,\n"
+                + "    juegos_completados INTEGER,\n"
+                + "    fabricante TEXT,\n"
+                + "    id_consola INTEGER,\n"
+                + "    fecha_inicio TEXT DEFAULT CURRENT_DATE,\n"
+                + "    fecha_fin TEXT,\n"
+                + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP,\n"
+                + "    FOREIGN KEY (id_consola) REFERENCES consolas(id_consola)\n"
                 + ");\n";
     }
 }

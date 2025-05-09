@@ -14,12 +14,21 @@ public class Inicio {
     private String mejorasDelCanal;
     private String fechaExtensible;
     private String diasParaExtensible;
+    private String metaEspecifica;
 
     public Inicio(
-            int totalJuegos, int totalLogros, int totalConsolas, int totalEventos,
-            int totalMetas, int totalSeguidores,
-            String metaSeguidoresProgreso, String metaJuegosCompletadosDescripcion,
-            String mejorasDelCanal, String fechaExtensible, String diasParaExtensible
+            int totalJuegos,
+            int totalLogros,
+            int totalConsolas,
+            int totalEventos,
+            int totalMetas,
+            int totalSeguidores,
+            String metaSeguidoresProgreso,
+            String metaJuegosCompletadosDescripcion,
+            String mejorasDelCanal,
+            String fechaExtensible,
+            String diasParaExtensible,
+            String metaEspecifica
     ) {
         this.totalJuegos = totalJuegos;
         this.totalLogros = totalLogros;
@@ -32,6 +41,7 @@ public class Inicio {
         this.mejorasDelCanal = mejorasDelCanal;
         this.fechaExtensible = fechaExtensible;
         this.diasParaExtensible = diasParaExtensible;
+        this.metaEspecifica = metaEspecifica;
     }
 
     // Getters
@@ -77,5 +87,14 @@ public class Inicio {
 
     public String getDiasParaExtensible() {
         return diasParaExtensible;
+    }
+
+    public String getMetaEspecifica() {
+        return metaEspecifica;
+    }
+
+    // Setters
+    public void setMetaEspecifica(String metaEspecifica) {
+        this.metaEspecifica = metaEspecifica;
     }
 }

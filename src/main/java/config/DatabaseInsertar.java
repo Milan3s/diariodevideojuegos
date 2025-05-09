@@ -25,7 +25,8 @@ public class DatabaseInsertar {
                         + "('moderador', 'Dado de baja'), "
                         + "('consola', 'Con chip'), "
                         + "('consola', 'Sin chip'), "
-                        + "('consola', 'Original');";
+                        + "('consola', 'Original'), "
+                        + "('consola', 'FPGA');";
 
                 String sqlDificultades = "INSERT INTO dificultades_logros (nombre) VALUES "
                         + "('Fácil'), ('Media'), ('Difícil'), ('Extrema');";
@@ -33,7 +34,8 @@ public class DatabaseInsertar {
                 String sqlConsolas = "INSERT INTO consolas (nombre, abreviatura, anio, fabricante, generacion, region, tipo, "
                         + "procesador, memoria, almacenamiento, fecha_lanzamiento, imagen, id_estado, frecuencia_mhz, chip, caracteristicas) VALUES "
                         + "('PlayStation 2', 'PS2', 2000, 'Sony', 'Sexta', 'Global', 'Sobremesa', 'Emotion Engine', '32 MB RAM', 'DVD-ROM', '2000-03-04', 'tv-ps2.png', 12, 294.91, 1, 'La más vendida de la historia'), "
-                        + "('Nintendo Switch', 'NS', 2017, 'Nintendo', 'Octava', 'Global', 'Híbrida', 'NVIDIA Tegra X1', '4 GB RAM', '32 GB NAND', '2017-03-03', 'tv-switch.png', 12, 1020.0, 0, 'Portátil y de sobremesa a la vez');";
+                        + "('Nintendo Switch', 'NS', 2017, 'Nintendo', 'Octava', 'Global', 'Híbrida', 'NVIDIA Tegra X1', '4 GB RAM', '32 GB NAND', '2017-03-03', 'tv-switch.png', 12, 1020.0, 0, 'Portátil y de sobremesa a la vez'), "
+                        + "('MiSTer FPGA', 'MiSTer', 2018, 'Open Source', 'Varias', 'Global', 'FPGA', 'Altera Cyclone V', '1 GB DDR3', 'Tarjeta SD', '2018-01-01', 'tv-mister.png', 15, 800.0, 0, 'Recrea hardware retro con precisión');";
 
                 String sqlJuegos = "INSERT INTO juegos (nombre, descripcion, desarrollador, editor, genero, modo_juego, fecha_lanzamiento, id_estado, es_recomendado, imagen, video) VALUES "
                         + "('Final Fantasy VII', 'RPG épico con Cloud Strife', 'Square', 'Square', 'RPG', 'Un jugador', '1997-01-31', 3, 1, 'final_fantasy_vii.jpg', 'final_fantasy_vii.mp4'), "
@@ -58,6 +60,13 @@ public class DatabaseInsertar {
 
                 String sqlSeguidores = "INSERT INTO seguidores (cantidad) VALUES (350);";
 
+                String sqlMetasEspecificas = "INSERT INTO metas_especificas (descripcion, cumplida, juegos_objetivo, juegos_completados, fabricante, fecha_inicio, fecha_fin) VALUES "
+                        + "('Completar todos los juegos de consolas SEGA', 1, 5, 5, 'SEGA', '2025-04-01', '2025-05-09');";
+
+                String sqlMejorasCanal = "INSERT INTO mejoras_canal (descripcion, fecha) VALUES "
+                        + "('Mejora del audio con nuevo micrófono y filtros', '2025-04-20'), "
+                        + "('Nuevo overlay animado para los directos', '2025-05-05');";
+
                 conn.createStatement().execute(sqlEstados);
                 conn.createStatement().execute(sqlDificultades);
                 conn.createStatement().execute(sqlConsolas);
@@ -68,6 +77,10 @@ public class DatabaseInsertar {
                 conn.createStatement().execute(sqlEventos);
                 conn.createStatement().execute(sqlMetas);
                 conn.createStatement().execute(sqlSeguidores);
+                conn.createStatement().execute(sqlMetasEspecificas);
+                conn.createStatement().execute(sqlSeguidores);
+                conn.createStatement().execute(sqlMejorasCanal);
+                conn.createStatement().execute(sqlMetasEspecificas);
 
                 Alert alert = new Alert(AlertType.INFORMATION, "Datos insertados correctamente.", ButtonType.OK);
                 alert.showAndWait();

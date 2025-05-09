@@ -42,6 +42,8 @@ public class InicioController implements Initializable {
     private Label lblFaltanXDias;
     @FXML
     private Label lblFechaExtensible;
+    @FXML
+    private Label lblMetaEspecifica;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -66,5 +68,8 @@ public class InicioController implements Initializable {
         lblResultadoMejoraDelCanal.setText(resumen.getMejorasDelCanal() != null ? resumen.getMejorasDelCanal() : "Sin mejoras registradas");
         lblFaltanXDias.setText(resumen.getDiasParaExtensible() != null ? resumen.getDiasParaExtensible() : "No disponible");
         lblFechaExtensible.setText(resumen.getFechaExtensible() != null ? resumen.getFechaExtensible() : "No registrada");
+
+        // Nueva meta específica
+        lblMetaEspecifica.setText(resumen.getMetaEspecifica() != null ? resumen.getMetaEspecifica() : "No hay metas específicas registradas");
     }
 }

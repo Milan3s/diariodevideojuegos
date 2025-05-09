@@ -25,6 +25,7 @@ public class InicioDAO {
         String mejorasDelCanal = "Sin mejoras registradas";
         String fechaExtensible = "No registrada";
         String diasParaExtensible = "No disponible";
+        String metaEspecifica = "No hay metas específicas registradas";
 
         try (Connection conn = Conexion.obtenerConexion()) {
 
@@ -61,7 +62,7 @@ public class InicioDAO {
                     if (totalJuegos < 50) {
                         metaJuegosCompletadosDescripcion =
                                 "Completados: " + juegosCompletados + " / " + totalJuegos +
-                                ". No hay suficientes juegos para alcanzar la meta de 50.";
+                                        ". No hay suficientes juegos para alcanzar la meta de 50.";
                     } else if (juegosCompletados >= 50) {
                         metaJuegosCompletadosDescripcion =
                                 "Completados: " + juegosCompletados + " / " + totalJuegos + ". ¡Meta alcanzada!";
@@ -69,7 +70,7 @@ public class InicioDAO {
                         int faltan = 50 - juegosCompletados;
                         metaJuegosCompletadosDescripcion =
                                 "Completados: " + juegosCompletados + " / " + totalJuegos +
-                                ". Faltan " + faltan + " para la meta.";
+                                        ". Faltan " + faltan + " para la meta.";
                     }
                 }
             }
@@ -96,6 +97,19 @@ public class InicioDAO {
                 }
             }
 
+            // Nueva consulta: Meta específica cumplida más reciente
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT descripcion, juegos_completados, juegos_objetivo FROM metas_especificas " +
+                            "WHERE cumplida = 1 ORDER BY fecha_fin DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String descripcion = rs.getString("descripcion");
+                    int completados = rs.getInt("juegos_completados");
+                    int objetivo = rs.getInt("juegos_objetivo");
+                    metaEspecifica = String.format("%s (%d/%d)", descripcion, completados, objetivo);
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -111,7 +125,8 @@ public class InicioDAO {
                 metaJuegosCompletadosDescripcion,
                 mejorasDelCanal,
                 fechaExtensible,
-                diasParaExtensible
+                diasParaExtensible,
+                metaEspecifica
         );
     }
 
