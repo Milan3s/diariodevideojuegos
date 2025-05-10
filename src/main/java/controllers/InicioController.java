@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
+import javafx.scene.control.Button;
 
 public class InicioController implements Initializable {
 
@@ -47,6 +48,46 @@ public class InicioController implements Initializable {
     private Label lblFechaExtensible;
     @FXML
     private Label lblMetaEspecifica;
+    @FXML
+    private Button btnAsignarMetaEspecifica;
+    @FXML
+    private Button btnAsignarExtensible;
+    @FXML
+    private Button btnAddSeguidores;
+    @FXML
+    private Button btnAsignarSeguidores;
+    @FXML
+    private Button btnEditarSeguidores;
+    @FXML
+    private Button btnEliminarSeguidores;
+    @FXML
+    private Button btnAddJuegos;
+    @FXML
+    private Button btnAsignarJuegos;
+    @FXML
+    private Button btnEditarJuegos;
+    @FXML
+    private Button btnEliminarJuegos;
+    @FXML
+    private Button btnAddMetaEspecifica;
+    @FXML
+    private Button btnEditarMetaEspecifica;
+    @FXML
+    private Button btnEliminarMetaEspecifica;
+    @FXML
+    private Button btnAddMejora;
+    @FXML
+    private Button btnAsignarMejora;
+    @FXML
+    private Button btnEditarMejora;
+    @FXML
+    private Button btnEliminarMejora;
+    @FXML
+    private Button btnAddExtensible;
+    @FXML
+    private Button btnEditarExtensible;
+    @FXML
+    private Button btnEliminarExtensible;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

@@ -70,3 +70,40 @@
     -fx-font-weight: normal;
     -fx-padding: 2 0 0 0;
 }
+
+/* ------------------------------
+   ESTILO GENERAL PARA BOTONES
+--------------------------------*/
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 6 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+    -fx-cursor: hand;
+}
+
+/* Hover en blanco y negro */
+.button:hover {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+/* Botón dentro de .accion-boton contenedor (si se sigue usando en otra parte) */
+.accion-boton Button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.accion-boton FontAwesomeIconView {
+    -fx-fill: black;
+}
