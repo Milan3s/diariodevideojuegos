@@ -8,7 +8,8 @@ import javafx.stage.Stage;
 import models.MetasTwitch;
 
 import java.time.LocalDate;
-import java.util.function.Consumer;
+import java.time.format.DateTimeFormatter;
+import javafx.util.StringConverter;
 
 public class FormMetasTwitchController {
 
@@ -22,6 +23,13 @@ public class FormMetasTwitchController {
     private Runnable onGuardarCallback;
     private final MetasTwitchDAO dao = new MetasTwitchDAO();
     private MetasTwitch metaExistente;
+
+    // Agregamos el formateador aquí
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public void initialize() {
+        configurarDatePickers();
+    }
 
     public void setOnGuardarCallback(Runnable callback) {
         this.onGuardarCallback = callback;
@@ -39,8 +47,15 @@ public class FormMetasTwitchController {
         pickerFin.setValue(meta.getFechaFin());
     }
 
+    @FXML
+    private void guardarMeta(ActionEvent event) {
+        guardar(event);
+    }
+
     private void guardar(ActionEvent event) {
-        if (!validarCampos()) return;
+        if (!validarCampos()) {
+            return;
+        }
 
         MetasTwitch meta = new MetasTwitch(
                 metaExistente != null ? metaExistente.getIdMeta() : 0,
@@ -71,15 +86,10 @@ public class FormMetasTwitchController {
         }
     }
 
-    @FXML
-    private void cancelar(ActionEvent event) {
-        cerrarVentana();
-    }
-
     private boolean validarCampos() {
-        if (txtDescripcion.getText().isEmpty() || txtMeta.getText().isEmpty() ||
-            txtActual.getText().isEmpty() || txtMes.getText().isEmpty() || txtAnio.getText().isEmpty() ||
-            pickerInicio.getValue() == null || pickerFin.getValue() == null) {
+        if (txtDescripcion.getText().isEmpty() || txtMeta.getText().isEmpty()
+                || txtActual.getText().isEmpty() || txtMes.getText().isEmpty() || txtAnio.getText().isEmpty()
+                || pickerInicio.getValue() == null || pickerFin.getValue() == null) {
             mostrarAlerta("Todos los campos deben estar completos.");
             return false;
         }
@@ -109,7 +119,41 @@ public class FormMetasTwitchController {
         alert.showAndWait();
     }
 
+    private void configurarDatePickers() {
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string == null || string.trim().isEmpty()) {
+                    return null;
+                }
+                try {
+                    return LocalDate.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                } catch (Exception e1) {
+                    try {
+                        return LocalDate.parse(string, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    } catch (Exception e2) {
+                        mostrarAlerta("Formato de fecha inválido. Usa dd/MM/yyyy o dd-MM-yyyy");
+                        return null;
+                    }
+                }
+            }
+        };
+
+        pickerInicio.setConverter(converter);
+        pickerFin.setConverter(converter);
+    }
+
     @FXML
-    private void guardarMeta(ActionEvent event) {
+    private void cancelar(ActionEvent event) {
+        // Obtener el botón que lanzó el evento
+        Button btn = (Button) event.getSource();
+        // Obtener la ventana (Stage) y cerrarla
+        Stage stage = (Stage) btn.getScene().getWindow();
+        stage.close();
     }
 }
