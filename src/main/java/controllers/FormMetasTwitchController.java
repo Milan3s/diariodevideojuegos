@@ -9,6 +9,7 @@ import models.MetasTwitch;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import javafx.util.StringConverter;
 
 public class FormMetasTwitchController {
@@ -23,8 +24,8 @@ public class FormMetasTwitchController {
     private Runnable onGuardarCallback;
     private final MetasTwitchDAO dao = new MetasTwitchDAO();
     private MetasTwitch metaExistente;
+    private MetasTwitch metaGuardada;
 
-    // Agregamos el formateador aquí
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public void initialize() {
@@ -47,15 +48,17 @@ public class FormMetasTwitchController {
         pickerFin.setValue(meta.getFechaFin());
     }
 
+    public MetasTwitch getMetaGuardada() {
+        return metaGuardada;
+    }
+
     @FXML
     private void guardarMeta(ActionEvent event) {
         guardar(event);
     }
 
     private void guardar(ActionEvent event) {
-        if (!validarCampos()) {
-            return;
-        }
+        if (!validarCampos()) return;
 
         MetasTwitch meta = new MetasTwitch(
                 metaExistente != null ? metaExistente.getIdMeta() : 0,
@@ -69,11 +72,29 @@ public class FormMetasTwitchController {
                 LocalDate.now()
         );
 
-        boolean exito;
+        boolean exito = false;
+
         if (metaExistente == null) {
-            exito = dao.insertarMetaYDevolverId(meta) != null;
+            Integer idInsertado = dao.insertarMetaYDevolverId(meta);
+            if (idInsertado != null) {
+                meta.setIdMeta(idInsertado);
+                metaGuardada = meta;
+                mostrarInfo("Meta registrada correctamente.");
+                exito = true;
+            }
         } else {
-            exito = dao.actualizarMeta(meta);
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar actualización");
+            confirmacion.setHeaderText("¿Deseas actualizar esta meta?");
+            confirmacion.setContentText("Se sobrescribirá la información actual.");
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
+            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                exito = dao.actualizarMeta(meta);
+                if (exito) {
+                    metaGuardada = meta;
+                    mostrarInfo("Meta actualizada correctamente.");
+                }
+            }
         }
 
         if (exito) {
@@ -81,8 +102,10 @@ public class FormMetasTwitchController {
                 onGuardarCallback.run();
             }
             cerrarVentana();
+        } else if (metaExistente != null) {
+            mostrarAlerta("No se pudo actualizar la meta.");
         } else {
-            mostrarAlerta("Error al guardar la meta.");
+            mostrarAlerta("No se pudo registrar la meta.");
         }
     }
 
@@ -106,19 +129,6 @@ public class FormMetasTwitchController {
         return true;
     }
 
-    private void cerrarVentana() {
-        Stage stage = (Stage) btnCancelar.getScene().getWindow();
-        stage.close();
-    }
-
-    private void mostrarAlerta(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Advertencia");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
     private void configurarDatePickers() {
         StringConverter<LocalDate> converter = new StringConverter<>() {
             @Override
@@ -128,9 +138,7 @@ public class FormMetasTwitchController {
 
             @Override
             public LocalDate fromString(String string) {
-                if (string == null || string.trim().isEmpty()) {
-                    return null;
-                }
+                if (string == null || string.trim().isEmpty()) return null;
                 try {
                     return LocalDate.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 } catch (Exception e1) {
@@ -148,12 +156,29 @@ public class FormMetasTwitchController {
         pickerFin.setConverter(converter);
     }
 
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Advertencia");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarInfo(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
     @FXML
     private void cancelar(ActionEvent event) {
-        // Obtener el botón que lanzó el evento
-        Button btn = (Button) event.getSource();
-        // Obtener la ventana (Stage) y cerrarla
-        Stage stage = (Stage) btn.getScene().getWindow();
+        cerrarVentana();
+    }
+
+    private void cerrarVentana() {
+        Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 }

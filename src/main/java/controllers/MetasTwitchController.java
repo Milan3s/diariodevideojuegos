@@ -62,7 +62,7 @@ public class MetasTwitchController implements Initializable {
         comboAnios.setOnAction(this::filtrarPorAnio);
 
         comboAnios.setItems(ComboDAO.cargarAniosMetasTwitch());
-        comboAnios.getItems().add(0, null); // opción para "Todos los años"
+        comboAnios.getItems().add(0, null);
         comboAnios.setPromptText("Año");
 
         cargarMetas();
@@ -86,8 +86,12 @@ public class MetasTwitchController implements Initializable {
         });
 
         totalPaginas = (int) Math.ceil((double) filtradas.size() / elementosPorPagina);
-        if (pagina > totalPaginas) pagina = totalPaginas;
-        if (pagina < 1) pagina = 1;
+        if (pagina > totalPaginas) {
+            pagina = totalPaginas;
+        }
+        if (pagina < 1) {
+            pagina = 1;
+        }
 
         int desde = (pagina - 1) * elementosPorPagina;
         int hasta = Math.min(desde + elementosPorPagina, filtradas.size());
@@ -110,14 +114,16 @@ public class MetasTwitchController implements Initializable {
             return;
         }
 
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         lblDescripcion.setText(meta.getDescripcion());
         lblMeta.setText(String.valueOf(meta.getMeta()));
         lblActual.setText(String.valueOf(meta.getActual()));
         lblMes.setText(meta.getMes());
         lblAnio.setText(String.valueOf(meta.getAnio()));
-        lblFechaInicio.setText(meta.getFechaInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        lblFechaFin.setText(meta.getFechaFin().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        lblFechaRegistro.setText(meta.getFechaRegistro().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        lblFechaInicio.setText(meta.getFechaInicio().format(fmt));
+        lblFechaFin.setText(meta.getFechaFin().format(fmt));
+        lblFechaRegistro.setText(meta.getFechaRegistro().format(fmt));
     }
 
     private void buscar(KeyEvent event) {
@@ -137,14 +143,16 @@ public class MetasTwitchController implements Initializable {
             Parent root = loader.load();
 
             FormMetasTwitchController controller = loader.getController();
-            controller.setOnGuardarCallback(() -> cargarMetas());
+            controller.setOnGuardarCallback(() -> {
+                cargarMetas();
+                seleccionarMetaPorId(controller.getMetaGuardada().getIdMeta());
+            });
 
             Stage stage = new Stage();
             stage.setTitle("Nueva Meta Twitch");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -164,14 +172,16 @@ public class MetasTwitchController implements Initializable {
 
             FormMetasTwitchController controller = loader.getController();
             controller.setMeta(seleccionada);
-            controller.setOnGuardarCallback(() -> cargarMetas());
+            controller.setOnGuardarCallback(() -> {
+                cargarMetas();
+                seleccionarMetaPorId(controller.getMetaGuardada().getIdMeta());
+            });
 
             Stage stage = new Stage();
             stage.setTitle("Editar Meta Twitch");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -194,6 +204,19 @@ public class MetasTwitchController implements Initializable {
                 cargarMetas();
             }
         });
+    }
+
+    private void seleccionarMetaPorId(int id) {
+        for (int i = 0; i < todasLasMetas.size(); i++) {
+            if (todasLasMetas.get(i).getIdMeta() == id) {
+                pagina = (i / elementosPorPagina) + 1;
+                aplicarFiltroYActualizarPaginacion();
+                int indiceEnPagina = i % elementosPorPagina;
+                listaMetas.getSelectionModel().select(indiceEnPagina);
+                listaMetas.scrollTo(indiceEnPagina);
+                break;
+            }
+        }
     }
 
     @FXML
