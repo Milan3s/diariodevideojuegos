@@ -7,13 +7,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import models.MetasTwitch;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -80,12 +86,8 @@ public class MetasTwitchController implements Initializable {
         });
 
         totalPaginas = (int) Math.ceil((double) filtradas.size() / elementosPorPagina);
-        if (pagina > totalPaginas) {
-            pagina = totalPaginas;
-        }
-        if (pagina < 1) {
-            pagina = 1;
-        }
+        if (pagina > totalPaginas) pagina = totalPaginas;
+        if (pagina < 1) pagina = 1;
 
         int desde = (pagina - 1) * elementosPorPagina;
         int hasta = Math.min(desde + elementosPorPagina, filtradas.size());
@@ -130,7 +132,22 @@ public class MetasTwitchController implements Initializable {
 
     @FXML
     private void abrirModalAgregar(ActionEvent event) {
-        // TODO: Abrir modal, crear nueva meta y recargar lista
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetasTwitch.fxml"));
+            Parent root = loader.load();
+
+            FormMetasTwitchController controller = loader.getController();
+            controller.setOnGuardarCallback(() -> cargarMetas());
+
+            Stage stage = new Stage();
+            stage.setTitle("Nueva Meta Twitch");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -140,7 +157,24 @@ public class MetasTwitchController implements Initializable {
             mostrarAlerta("Selecciona una meta para editar.");
             return;
         }
-        // TODO: Abrir modal con datos de la meta seleccionada
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetasTwitch.fxml"));
+            Parent root = loader.load();
+
+            FormMetasTwitchController controller = loader.getController();
+            controller.setMeta(seleccionada);
+            controller.setOnGuardarCallback(() -> cargarMetas());
+
+            Stage stage = new Stage();
+            stage.setTitle("Editar Meta Twitch");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

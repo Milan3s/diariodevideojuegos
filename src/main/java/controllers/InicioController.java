@@ -68,31 +68,31 @@ public class InicioController implements Initializable {
         // Detalles dinámicos
         lblSeguidorestotales.setText(
                 resumen.getMetaSeguidoresProgreso() != null
-                ? resumen.getMetaSeguidoresProgreso()
-                : "No disponible"
+                        ? resumen.getMetaSeguidoresProgreso()
+                        : "No disponible"
         );
 
         lblJuegosCompletados.setText(
                 resumen.getMetaJuegosCompletadosDescripcion() != null
-                ? resumen.getMetaJuegosCompletadosDescripcion()
-                : "No disponible"
+                        ? resumen.getMetaJuegosCompletadosDescripcion()
+                        : "No disponible"
         );
 
         lblResultadoMejoraDelCanal.setText(
                 resumen.getMejorasDelCanal() != null
-                ? resumen.getMejorasDelCanal()
-                : "Sin mejoras registradas"
+                        ? resumen.getMejorasDelCanal()
+                        : "Sin mejoras registradas"
         );
 
         lblFaltanXDias.setText(
                 resumen.getDiasParaExtensible() != null
-                ? resumen.getDiasParaExtensible()
-                : "No disponible"
+                        ? resumen.getDiasParaExtensible()
+                        : "No disponible"
         );
 
-        // Formatear la fecha extensible a dd-MM-yyyy
+        // Formatear la fecha si es válida, sino mostrar el texto tal cual
         String fechaOriginal = resumen.getFechaExtensible();
-        if (fechaOriginal != null && !fechaOriginal.isEmpty()) {
+        if (fechaOriginal != null && fechaOriginal.matches("\\d{4}-\\d{2}-\\d{2}")) {
             try {
                 LocalDate fecha = LocalDate.parse(fechaOriginal); // yyyy-MM-dd
                 String fechaFormateada = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -101,13 +101,13 @@ public class InicioController implements Initializable {
                 lblFechaExtensible.setText("Formato inválido");
             }
         } else {
-            lblFechaExtensible.setText("No registrada");
+            lblFechaExtensible.setText(fechaOriginal != null ? fechaOriginal : "No registrada");
         }
 
         lblMetaEspecifica.setText(
                 resumen.getMetaEspecifica() != null
-                ? resumen.getMetaEspecifica()
-                : "No hay metas específicas registradas"
+                        ? resumen.getMetaEspecifica()
+                        : "No hay metas específicas registradas"
         );
     }
 }

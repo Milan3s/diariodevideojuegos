@@ -55,27 +55,25 @@ public class InicioDAO {
             // Meta de juegos completados
             int juegosCompletados = 0;
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT COUNT(*) FROM juegos j JOIN estados e ON j.id_estado = e.id_estado WHERE e.tipo = 'juego' AND e.nombre = 'Completado'");
+                    "SELECT COUNT(*) FROM juegos j JOIN estados e ON j.id_estado = e.id_estado " +
+                            "WHERE e.tipo = 'juego' AND e.nombre = 'Completado'");
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     juegosCompletados = rs.getInt(1);
                     if (totalJuegos < 50) {
-                        metaJuegosCompletadosDescripcion =
-                                "Completados: " + juegosCompletados + " / " + totalJuegos +
-                                        ". No hay suficientes juegos para alcanzar la meta de 50.";
+                        metaJuegosCompletadosDescripcion = "Completados: " + juegosCompletados + " / " + totalJuegos +
+                                ". No hay suficientes juegos para alcanzar la meta de 50.";
                     } else if (juegosCompletados >= 50) {
-                        metaJuegosCompletadosDescripcion =
-                                "Completados: " + juegosCompletados + " / " + totalJuegos + ". ¡Meta alcanzada!";
+                        metaJuegosCompletadosDescripcion = "Completados: " + juegosCompletados + " / " + totalJuegos + ". ¡Meta alcanzada!";
                     } else {
                         int faltan = 50 - juegosCompletados;
-                        metaJuegosCompletadosDescripcion =
-                                "Completados: " + juegosCompletados + " / " + totalJuegos +
-                                        ". Faltan " + faltan + " para la meta.";
+                        metaJuegosCompletadosDescripcion = "Completados: " + juegosCompletados + " / " + totalJuegos +
+                                ". Faltan " + faltan + " para la meta.";
                     }
                 }
             }
 
-            // Mejoras del canal (última mejora registrada)
+            // Última mejora del canal
             try (PreparedStatement stmt = conn.prepareStatement(
                     "SELECT descripcion FROM mejoras_canal ORDER BY fecha DESC LIMIT 1");
                  ResultSet rs = stmt.executeQuery()) {
@@ -84,23 +82,33 @@ public class InicioDAO {
                 }
             }
 
-            // Próximo extensible (buscado en metas_twitch por texto relacionado)
+            // Evento extensible más cercano desde tabla eventos
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT fecha_fin FROM metas_twitch WHERE descripcion LIKE '%extensible%' OR descripcion LIKE '%aniversario%' ORDER BY fecha_fin DESC LIMIT 1");
+                    "SELECT fecha_fin FROM eventos " +
+                            "WHERE LOWER(titulo) LIKE '%extensible%' OR LOWER(descripcion) LIKE '%extensible%' " +
+                            "ORDER BY fecha_fin ASC LIMIT 1");
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String fechaStr = rs.getString("fecha_fin");
                     fechaExtensible = fechaStr;
-                    LocalDate fechaEvento = LocalDate.parse(fechaStr);
-                    long diasFaltan = ChronoUnit.DAYS.between(LocalDate.now(), fechaEvento);
-                    diasParaExtensible = "Faltan " + diasFaltan + " días";
+
+                    try {
+                        LocalDate fechaEvento = LocalDate.parse(fechaStr);
+                        long diasFaltan = ChronoUnit.DAYS.between(LocalDate.now(), fechaEvento);
+                        diasParaExtensible = diasFaltan >= 0
+                                ? "Faltan " + diasFaltan + " días"
+                                : "Ya ocurrió";
+                    } catch (Exception e) {
+                        fechaExtensible = "Formato inválido";
+                        diasParaExtensible = "No disponible";
+                    }
                 }
             }
 
-            // Nueva consulta: Meta específica cumplida más reciente
+            // Meta específica cumplida más reciente
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT descripcion, juegos_completados, juegos_objetivo FROM metas_especificas " +
-                            "WHERE cumplida = 1 ORDER BY fecha_fin DESC LIMIT 1");
+                    "SELECT descripcion, juegos_completados, juegos_objetivo " +
+                            "FROM metas_especificas WHERE cumplida = 1 ORDER BY fecha_fin DESC LIMIT 1");
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String descripcion = rs.getString("descripcion");
