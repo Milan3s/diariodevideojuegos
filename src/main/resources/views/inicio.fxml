@@ -17,19 +17,19 @@
 
     <!-- Grid principal: Totales -->
     <GridPane fx:id="gridResumen" hgap="40" layoutX="9.0" layoutY="74.0" prefHeight="557.0" prefWidth="486.0" styleClass="inicio-grid" vgap="40">
-        <HBox alignment="CENTER" prefHeight="141.0" prefWidth="198.0" styleClass="card-inicio" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <HBox alignment="CENTER" styleClass="card-inicio" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <VBox alignment="CENTER" spacing="5">
                 <Text styleClass="card-label" text="Juegos" />
                 <Label fx:id="txt_juegos_total" styleClass="card-value" />
             </VBox>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="126.0" prefWidth="187.0" styleClass="card-inicio" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <HBox alignment="CENTER" styleClass="card-inicio" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <VBox alignment="CENTER" spacing="5">
                 <Text styleClass="card-label" text="Logros" />
                 <Label fx:id="txt_logros_total" styleClass="card-value" />
             </VBox>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="141.0" prefWidth="190.0" styleClass="card-inicio" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <HBox alignment="CENTER" styleClass="card-inicio" GridPane.columnIndex="0" GridPane.rowIndex="1">
             <VBox alignment="CENTER" spacing="5">
                 <Text styleClass="card-label" text="Consolas" />
                 <Label fx:id="txt_consolas_total" styleClass="card-value" />
@@ -41,7 +41,7 @@
                 <Label fx:id="txt_eventos_total" styleClass="card-value" />
             </VBox>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="131.0" prefWidth="187.0" styleClass="card-inicio" GridPane.columnIndex="0" GridPane.rowIndex="2">
+        <HBox alignment="CENTER" styleClass="card-inicio" GridPane.columnIndex="0" GridPane.rowIndex="2">
             <VBox alignment="CENTER" spacing="5">
                 <Text styleClass="card-label" text="Metas" />
                 <Label fx:id="txt_metas_total" styleClass="card-value" />
@@ -76,9 +76,9 @@
                 </VBox>
             </HBox>
             <HBox spacing="10">
-                <Button fx:id="btnAddSeguidores" text="Añadir" />
-                <Button fx:id="btnAsignarSeguidores" text="Asignar" />
-                <Button fx:id="btnEditarSeguidores" text="Editar" />
+                <Button fx:id="btnAddSeguidores" text="Añadir" onAction="#abrirFormSeguidores" />
+                <Button fx:id="btnAsignarSeguidores" text="Asignar" onAction="#abrirFormSeguidores" />
+                <Button fx:id="btnEditarSeguidores" text="Editar" onAction="#abrirFormSeguidores" />
                 <Button fx:id="btnEliminarSeguidores" text="Eliminar" />
             </HBox>
         </VBox>
@@ -92,9 +92,9 @@
                 </VBox>
             </HBox>
             <HBox spacing="10">
-                <Button fx:id="btnAddJuegos" text="Añadir" />
-                <Button fx:id="btnAsignarJuegos" text="Asignar" />
-                <Button fx:id="btnEditarJuegos" text="Editar" />
+                <Button fx:id="btnAddJuegos" text="Añadir" onAction="#abrirFormJuegos" />
+                <Button fx:id="btnAsignarJuegos" text="Asignar" onAction="#abrirFormJuegos" />
+                <Button fx:id="btnEditarJuegos" text="Editar" onAction="#abrirFormJuegos" />
                 <Button fx:id="btnEliminarJuegos" text="Eliminar" />
             </HBox>
         </VBox>
@@ -108,9 +108,9 @@
                 </VBox>
             </HBox>
             <HBox spacing="10">
-                <Button fx:id="btnAddMetaEspecifica" text="Añadir" />
-                <Button fx:id="btnAsignarMetaEspecifica" text="Asignar" />
-                <Button fx:id="btnEditarMetaEspecifica" text="Editar" />
+                <Button fx:id="btnAddMetaEspecifica" text="Añadir" onAction="#abrirFormEspecifica" />
+                <Button fx:id="btnAsignarMetaEspecifica" text="Asignar" onAction="#abrirFormEspecifica" />
+                <Button fx:id="btnEditarMetaEspecifica" text="Editar" onAction="#abrirFormEspecifica" />
                 <Button fx:id="btnEliminarMetaEspecifica" text="Eliminar" />
             </HBox>
         </VBox>
@@ -124,14 +124,13 @@
                 </VBox>
             </HBox>
             <HBox spacing="10">
-                <Button fx:id="btnAddMejora" text="Añadir" />
-                <Button fx:id="btnAsignarMejora" text="Asignar" />
-                <Button fx:id="btnEditarMejora" text="Editar" />
+                <Button fx:id="btnAddMejora" text="Añadir" onAction="#abrirFormMejora" />
+                <Button fx:id="btnAsignarMejora" text="Asignar" onAction="#abrirFormMejora" />
+                <Button fx:id="btnEditarMejora" text="Editar" onAction="#abrirFormMejora" />
                 <Button fx:id="btnEliminarMejora" text="Eliminar" />
             </HBox>
         </VBox>
 
-        
         <!-- Próximo extensible -->
         <VBox spacing="10" GridPane.rowIndex="4">
             <HBox alignment="TOP_LEFT" styleClass="card-inicio">
@@ -145,20 +144,17 @@
                 </VBox>
             </HBox>
             <HBox spacing="10">
-                <Button fx:id="btnAddExtensible" text="Añadir" />
-                <Button fx:id="btnAsignarExtensible" text="Asignar" />
-                <Button fx:id="btnEditarExtensible" text="Editar" />
+                <Button fx:id="btnAddExtensible" text="Añadir" onAction="#abrirFormExtensible" />
+                <Button fx:id="btnAsignarExtensible" text="Asignar" onAction="#abrirFormExtensible" />
+                <Button fx:id="btnEditarExtensible" text="Editar" onAction="#abrirFormExtensible" />
                 <Button fx:id="btnEliminarExtensible" text="Eliminar" />
             </HBox>
         </VBox>
-        
+
         <columnConstraints>
             <ColumnConstraints />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
