@@ -31,6 +31,8 @@ public class SidebarController implements Initializable {
     private Button btnModerador;
     @FXML
     private Button btnMetasTwitch;
+    @FXML
+    private Button btnDatosAuxiliares;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,6 +98,16 @@ public class SidebarController implements Initializable {
     private void handleMetasTwitch() {
         try {
             Node node = FXMLLoader.load(getClass().getResource("/views/metas_twitch.fxml"));
+            contentArea.getChildren().setAll(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleDatosAuxiliares(ActionEvent event) {
+        try {
+            Node node = FXMLLoader.load(getClass().getResource("/views/datos_auxiliares.fxml"));
             contentArea.getChildren().setAll(node);
         } catch (IOException e) {
             e.printStackTrace();
