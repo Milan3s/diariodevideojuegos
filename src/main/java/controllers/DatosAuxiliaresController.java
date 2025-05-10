@@ -30,54 +30,48 @@ public class DatosAuxiliaresController implements Initializable {
     private TextField campoBusqueda;
     @FXML
     private ListView<DatosAuxiliares> listaAuxiliares;
-
     @FXML
     private Label paginaActual;
     @FXML
-    private Label lblId;
+    private Label lblId, lblNombre, lblTipo, lblTipoLabel, lblTabla;
     @FXML
-    private Label lblNombre;
+    private Button btnLimpiar, btnAgregar, btnEditar, btnEliminar;
     @FXML
-    private Label lblTipo;
-    @FXML
-    private Label lblTipoLabel;
-    @FXML
-    private Label lblTabla;
-
-    @FXML
-    private Button btnLimpiar;
-    @FXML
-    private Button btnAgregar;
-    @FXML
-    private Button btnEditar;
-    @FXML
-    private Button btnEliminar;
-    @FXML
-    private Button btnPrimero;
-    @FXML
-    private Button btnAnterior;
-    @FXML
-    private Button btnSiguiente;
-    @FXML
-    private Button btnUltimo;
+    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
 
     private final DatosAuxiliaresDAO dao = new DatosAuxiliaresDAO();
     private final ObservableList<DatosAuxiliares> datos = FXCollections.observableArrayList();
     private List<DatosAuxiliares> datosFiltrados = new ArrayList<>();
     private static final int ITEMS_POR_PAGINA = 30;
     private int pagina = 1;
+    private List<String> tiposVisuales;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<String> tiposVisuales = dao.obtenerTiposVisuales();
+        tiposVisuales = dao.obtenerTiposVisuales();
         tiposVisuales.removeIf(Objects::isNull);
         Collections.sort(tiposVisuales);
         tiposVisuales.add(0, "Todos");
 
         comboTipoDato.setItems(FXCollections.observableArrayList(tiposVisuales));
-        comboTipoDato.setPromptText("Seleccione una opción");
+        comboTipoDato.setPromptText("Selecciona una opción...");
+        comboTipoDato.getSelectionModel().clearSelection();
 
-        comboTipoDato.setOnAction(e -> cargarDatos());
+        comboTipoDato.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null) ? "Selecciona una opción..." : item);
+            }
+        });
+
+        comboTipoDato.setOnAction(e -> {
+            String tipoSeleccionado = comboTipoDato.getSelectionModel().getSelectedItem();
+            if (tipoSeleccionado != null && !tipoSeleccionado.isBlank()) {
+                cargarDatos(tipoSeleccionado);
+            }
+        });
+
         campoBusqueda.textProperty().addListener((obs, oldVal, newVal) -> aplicarFiltros());
         listaAuxiliares.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, nuevo) -> mostrarDetalle(nuevo));
 
@@ -95,25 +89,32 @@ public class DatosAuxiliaresController implements Initializable {
             }
         });
 
-        comboTipoDato.getSelectionModel().clearSelection();
+        // ⚠️ Solo carga si es compatible
         cargarDatos("Todos");
     }
 
-    private void cargarDatos() {
+    private ListCell<String> crearCeldaCombo() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Selecciona una opción..." : item);
+            }
+        };
+    }
+
+    private void cargarDatosDesdeCombo() {
         String tipo = comboTipoDato.getValue();
-        cargarDatos(tipo != null ? tipo : "Todos");
+        if (tipo != null && !tipo.isBlank()) {
+            cargarDatos(tipo);
+        }
     }
 
     private void cargarDatos(String tipo) {
-        if (tipo == null || tipo.equals("Seleccione una opción")) {
-            return;
-        }
-
         datos.clear();
-
         if (tipo.equals("Todos")) {
-            for (String visual : dao.obtenerTiposVisuales()) {
-                if (!visual.equals("Todos") && !visual.equals("Seleccione una opción")) {
+            for (String visual : tiposVisuales) {
+                if (!visual.equals("Todos")) {
                     List<DatosAuxiliares> lista = dao.listar(visual);
                     for (DatosAuxiliares da : lista) {
                         da.setTipoVisual(visual);
@@ -124,7 +125,6 @@ public class DatosAuxiliaresController implements Initializable {
         } else {
             datos.setAll(dao.listar(tipo).stream().peek(d -> d.setTipoVisual(tipo)).collect(Collectors.toList()));
         }
-
         aplicarFiltros();
     }
 
@@ -139,22 +139,35 @@ public class DatosAuxiliaresController implements Initializable {
     }
 
     private void actualizarPaginado() {
+        if (datosFiltrados == null || datosFiltrados.isEmpty()) {
+            listaAuxiliares.setItems(FXCollections.observableArrayList());
+            paginaActual.setText("1");
+            listaAuxiliares.getSelectionModel().clearSelection();
+            mostrarDetalle(null);
+            return;
+        }
+
+        int totalPaginas = (int) Math.ceil((double) datosFiltrados.size() / ITEMS_POR_PAGINA);
+        if (pagina > totalPaginas) {
+            pagina = totalPaginas;
+        }
+
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, datosFiltrados.size());
 
-        if (desde >= hasta && pagina > 1) {
-            pagina--;
-            actualizarPaginado();
+        if (desde >= hasta || desde >= datosFiltrados.size()) {
+            listaAuxiliares.setItems(FXCollections.observableArrayList());
+            paginaActual.setText(String.valueOf(pagina));
+            listaAuxiliares.getSelectionModel().clearSelection();
+            mostrarDetalle(null);
             return;
         }
 
         List<DatosAuxiliares> paginaActualDatos = datosFiltrados.subList(desde, hasta);
         listaAuxiliares.setItems(FXCollections.observableArrayList(paginaActualDatos));
         paginaActual.setText(String.valueOf(pagina));
-
-        // No seleccionar ningún ítem
         listaAuxiliares.getSelectionModel().clearSelection();
-        mostrarDetalle(null); // Limpia el panel de detalles
+        mostrarDetalle(null);
     }
 
     private void mostrarDetalle(DatosAuxiliares dato) {
@@ -180,16 +193,22 @@ public class DatosAuxiliaresController implements Initializable {
     @FXML
     private void limpiarFiltros(ActionEvent event) {
         campoBusqueda.clear();
-        listaAuxiliares.getItems().clear();
+        comboTipoDato.getSelectionModel().clearSelection();
+        comboTipoDato.setValue(null);  // fuerza deselección visual
+        comboTipoDato.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null) ? "Selecciona una opción..." : item);
+            }
+        });
+
+        listaAuxiliares.getSelectionModel().clearSelection();
+        mostrarDetalle(null);
         datos.clear();
         datosFiltrados.clear();
+        pagina = 1;
         paginaActual.setText("1");
-        mostrarDetalle(null);
-
-        comboTipoDato.getSelectionModel().clearSelection();
-        comboTipoDato.setValue(null); // Esto ayuda a mostrar el promptText
-        comboTipoDato.setPromptText("Seleccione una opción");
-
         cargarDatos("Todos");
     }
 
@@ -216,18 +235,10 @@ public class DatosAuxiliaresController implements Initializable {
 
             controller.configurarFormulario(dato, tipo, () -> {
                 DatosAuxiliares guardado = controller.getDatoGuardado();
-
-                cargarDatos();
+                cargarDatos("Todos");
                 if (guardado != null) {
-                    // Seleccionar el dato recién guardado
                     datos.stream()
                             .filter(d -> d.getId() == guardado.getId() && Objects.equals(d.getTipoVisual(), guardado.getTipoVisual()))
-                            .findFirst()
-                            .ifPresent(d -> listaAuxiliares.getSelectionModel().select(d));
-                } else if (dato != null) {
-                    // En modo edición, seleccionar el mismo
-                    datos.stream()
-                            .filter(d -> d.getId() == dato.getId() && Objects.equals(d.getTipoVisual(), tipo))
                             .findFirst()
                             .ifPresent(d -> listaAuxiliares.getSelectionModel().select(d));
                 }
@@ -253,27 +264,20 @@ public class DatosAuxiliaresController implements Initializable {
             return;
         }
 
-        String tipo = comboTipoDato.getValue();
-        if (tipo == null || tipo.equals("Todos")) {
-            tipo = seleccionado.getTipoVisual();
-        }
-
+        String tipo = seleccionado.getTipoVisual();
         if (tipo == null) {
             return;
         }
 
-        final String tipoFinal = tipo;
-        final DatosAuxiliares seleccionadoFinal = seleccionado;
-
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Eliminar " + tipoFinal);
+        confirm.setTitle("Eliminar " + tipo);
         confirm.setHeaderText("¿Eliminar este registro?");
-        confirm.setContentText(seleccionadoFinal.getNombre());
+        confirm.setContentText(seleccionado.getNombre());
 
         confirm.showAndWait().ifPresent(res -> {
             if (res == ButtonType.OK) {
-                dao.eliminar(tipoFinal, seleccionadoFinal.getId());
-                cargarDatos();
+                dao.eliminar(tipo, seleccionado.getId());
+                cargarDatos("Todos");
             }
         });
     }

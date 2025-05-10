@@ -1,91 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/datos_auxiliares.css"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.DatosAuxiliaresController">
+<AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/datos_auxiliares.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DatosAuxiliaresController">
 
     <!-- Título -->
     <Text fx:id="tituloAuxiliares" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Datos Auxiliares" />
 
     <!-- ComboBox de tipo -->
-    <ComboBox fx:id="comboTipoDato" layoutX="39.0" layoutY="120.0"
-              prefHeight="52.0" prefWidth="483.0"
-              styleClass="combo-box-style" promptText="Seleccione una opción" />
+    <ComboBox fx:id="comboTipoDato" layoutX="39.0" layoutY="120.0" prefHeight="52.0" prefWidth="483.0" promptText="Selecciona una opcion..." styleClass="combo-box-style" />
 
     <!-- Campo de búsqueda -->
-    <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="180.0"
-               prefWidth="483.0" promptText="Buscar..."
-               styleClass="combo-box-style" />
+    <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="180.0" prefWidth="483.0" promptText="Buscar..." styleClass="combo-box-style" />
 
     <!-- Lista de datos auxiliares -->
-    <ListView fx:id="listaAuxiliares" layoutX="39.0" layoutY="239.0"
-              prefHeight="703.0" prefWidth="483.0"
-              styleClass="lista-auxiliares" />
+    <ListView fx:id="listaAuxiliares" layoutX="39.0" layoutY="239.0" prefHeight="703.0" prefWidth="483.0" styleClass="lista-auxiliares" />
 
     <!-- Botones de acción -->
-    <HBox layoutX="536.0" layoutY="120.0" spacing="10.0"
-          prefHeight="52.0" prefWidth="494.0">
-        <Button fx:id="btnLimpiar" onAction="#limpiarFiltros"
-                prefHeight="52.0" prefWidth="120.0"
-                styleClass="auxiliares-button" text="Limpiar">
+    <HBox layoutX="536.0" layoutY="120.0" prefHeight="52.0" prefWidth="494.0" spacing="10.0">
+        <Button fx:id="btnLimpiar" onAction="#limpiarFiltros" prefHeight="52.0" prefWidth="120.0" styleClass="auxiliares-button" text="Limpiar">
             <graphic><FontAwesomeIconView glyphName="ERASER" styleClass="control-icon" /></graphic>
         </Button>
-        <Button fx:id="btnAgregar" onAction="#abrirModalAgregar"
-                prefHeight="53.0" prefWidth="112.0"
-                styleClass="auxiliares-button" text="Añadir">
+        <Button fx:id="btnAgregar" onAction="#abrirModalAgregar" prefHeight="53.0" prefWidth="112.0" styleClass="auxiliares-button" text="Añadir">
             <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="control-icon" /></graphic>
         </Button>
-        <Button fx:id="btnEditar" onAction="#editarItem"
-                prefHeight="52.0" prefWidth="116.0"
-                styleClass="auxiliares-button" text="Editar">
+        <Button fx:id="btnEditar" onAction="#editarItem" prefHeight="52.0" prefWidth="116.0" styleClass="auxiliares-button" text="Editar">
             <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="control-icon" /></graphic>
         </Button>
-        <Button fx:id="btnEliminar" onAction="#eliminarItem"
-                prefHeight="53.0" prefWidth="116.0"
-                styleClass="auxiliares-button" text="Eliminar">
+        <Button fx:id="btnEliminar" onAction="#eliminarItem" prefHeight="53.0" prefWidth="116.0" styleClass="auxiliares-button" text="Eliminar">
             <graphic><FontAwesomeIconView glyphName="TRASH" styleClass="control-icon" /></graphic>
         </Button>
     </HBox>
 
     <!-- Paginación -->
-    <HBox layoutX="123.0" layoutY="942.0" spacing="10.0"
-          prefHeight="42.0" prefWidth="316.0" styleClass="paginado-box">
-        <Button fx:id="btnPrimero" onAction="#irPrimeraPagina"
-                styleClass="paginado-button" text="⏮ Primero" />
-        <Button fx:id="btnAnterior" onAction="#irPaginaAnterior"
-                styleClass="paginado-button" text="◀" />
+    <HBox layoutX="123.0" layoutY="942.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
+        <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
+        <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
         <Label fx:id="paginaActual" styleClass="numeracion" text="1" />
-        <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente"
-                styleClass="paginado-button" text="▶" />
-        <Button fx:id="btnUltimo" onAction="#irUltimaPagina"
-                styleClass="paginado-button" text="Último ⏭" />
+        <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente" styleClass="paginado-button" text="▶" />
+        <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
     </HBox>
 
     <!-- Panel de detalles -->
-    <GridPane layoutX="536.0" layoutY="181.0" prefWidth="799.0"
-              hgap="15" vgap="15" styleClass="detalle-card">
+    <GridPane hgap="15" layoutX="536.0" layoutY="181.0" prefWidth="799.0" styleClass="detalle-card" vgap="15">
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" minWidth="100.0" />
             <ColumnConstraints hgrow="ALWAYS" />
         </columnConstraints>
 
-        <Label text="ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-        <Label fx:id="lblId" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="lblId" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label text="Nombre:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-        <Label fx:id="lblNombre" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+        <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="lblNombre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label fx:id="lblTipoLabel" text="Tipo:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-        <Label fx:id="lblTipo" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+        <Label fx:id="lblTipoLabel" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="lblTipo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-        <Label text="Tabla:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-        <Label fx:id="lblTabla" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+        <Label text="Tabla:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="lblTabla" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
     </GridPane>
 
 </AnchorPane>
