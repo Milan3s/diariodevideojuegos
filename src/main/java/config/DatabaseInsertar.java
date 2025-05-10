@@ -13,6 +13,14 @@ public class DatabaseInsertar {
             if (conn != null) {
                 Statement stmt = conn.createStatement();
 
+                String sqlConfiguracionAuxiliares = "INSERT OR IGNORE INTO configuracion_auxiliares (nombre_visual, nombre_tabla, columna_id, columna_nombre) VALUES "
+                        + "('Estados | Juego', 'estados', 'id_estado', 'nombre'), "
+                        + "('Estados | Logro', 'estados', 'id_estado', 'nombre'), "
+                        + "('Estados | Moderador', 'estados', 'id_estado', 'nombre'), "
+                        + "('Estados | Consola', 'estados', 'id_estado', 'nombre'), "
+                        + "('Dificultades', 'dificultades_logros', 'id_dificultad', 'nombre'), "
+                        + "('Años Metas', 'anios_metas_especificas', 'anio', 'anio');";
+
                 String sqlEstados = "INSERT INTO estados (tipo, nombre) VALUES "
                         + "('juego', 'Pendiente'), ('juego', 'Jugando'), ('juego', 'Completado'), ('juego', 'Abandonado'), "
                         + "('logro', 'Pendiente'), ('logro', 'Completado'), ('logro', 'Oculto'), "
@@ -21,11 +29,6 @@ public class DatabaseInsertar {
 
                 String sqlDificultades = "INSERT INTO dificultades_logros (nombre, tipo) VALUES "
                         + "('Fácil', 'logro'), ('Media', 'logro'), ('Difícil', 'logro'), ('Extrema', 'logro');";
-
-                String sqlConfiguracionAuxiliares = "INSERT INTO configuracion_auxiliares (nombre_visual, nombre_tabla, columna_id, columna_nombre) VALUES "
-                        + "('Estados', 'estados', 'id_estado', 'nombre'), "
-                        + "('Dificultades', 'dificultades_logros', 'id_dificultad', 'nombre'), "
-                        + "('Años Metas', 'anios_metas_especificas', 'anio', 'anio');";
 
                 String sqlModeradores = "INSERT INTO moderadores (nombre, email, fecha_alta, id_estado) VALUES "
                         + "('Carlos Pérez', 'carlos.perez@example.com', '2025-01-01', (SELECT id_estado FROM estados WHERE nombre='Activo' AND tipo='moderador')), "
@@ -72,9 +75,9 @@ public class DatabaseInsertar {
 
                 String sqlExtensibles = "INSERT INTO eventos_extensibles (motivo, fecha_evento) VALUES ('Evento benéfico', '2025-06-10');";
 
+                stmt.execute(sqlConfiguracionAuxiliares);
                 stmt.execute(sqlEstados);
                 stmt.execute(sqlDificultades);
-                stmt.execute(sqlConfiguracionAuxiliares);
                 stmt.execute(sqlModeradores);
                 stmt.execute(sqlConsolas);
                 stmt.execute(sqlJuegos);

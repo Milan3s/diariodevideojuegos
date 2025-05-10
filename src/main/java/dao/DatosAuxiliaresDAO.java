@@ -7,9 +7,6 @@ import models.DatosAuxiliares;
 import java.sql.*;
 import java.util.*;
 
-/**
- * DAO genérico mejorado para datos auxiliares dinámicos.
- */
 public class DatosAuxiliaresDAO {
 
     public List<String> obtenerTiposVisuales() {
@@ -60,18 +57,23 @@ public class DatosAuxiliaresDAO {
         if (config == null) return resultados;
 
         String sql = config.tabla.equalsIgnoreCase("estados")
-                ? "SELECT " + config.columnaId + ", " + config.columnaNombre + ", tipo FROM " + config.tabla + " ORDER BY " + config.columnaNombre
+                ? "SELECT " + config.columnaId + ", " + config.columnaNombre + ", tipo FROM " + config.tabla + " WHERE tipo = ? ORDER BY " + config.columnaNombre
                 : "SELECT " + config.columnaId + ", " + config.columnaNombre + " FROM " + config.tabla + " ORDER BY " + config.columnaNombre;
 
         try (Connection conn = Conexion.obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                int id = rs.getInt(config.columnaId);
-                String nombre = rs.getString(config.columnaNombre);
-                String tipo = config.tabla.equalsIgnoreCase("estados") ? rs.getString("tipo") : null;
-                resultados.add(new DatosAuxiliares(id, nombre, tipo, config.tipoVisual));
+            if (config.tabla.equalsIgnoreCase("estados")) {
+                stmt.setString(1, inferirTipoDesdeVisual(config.tipoVisual));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt(config.columnaId);
+                    String nombre = rs.getString(config.columnaNombre);
+                    String tipo = config.tabla.equalsIgnoreCase("estados") ? rs.getString("tipo") : null;
+                    resultados.add(new DatosAuxiliares(id, nombre, tipo, config.tipoVisual));
+                }
             }
 
         } catch (SQLException e) {
@@ -85,12 +87,23 @@ public class DatosAuxiliaresDAO {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
         if (config == null) return -1;
 
-        String sql = "INSERT INTO " + config.tabla + " (" + config.columnaNombre + ") VALUES (?)";
+        String sql;
+        boolean esEstado = config.tabla.equalsIgnoreCase("estados");
+
+        if (esEstado) {
+            sql = "INSERT INTO " + config.tabla + " (" + config.columnaNombre + ", tipo) VALUES (?, ?)";
+        } else {
+            sql = "INSERT INTO " + config.tabla + " (" + config.columnaNombre + ") VALUES (?)";
+        }
 
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, valor);
+            if (esEstado) {
+                pstmt.setString(2, inferirTipoDesdeVisual(config.tipoVisual));
+            }
+
             int filas = pstmt.executeUpdate();
             if (filas > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
@@ -204,4 +217,14 @@ public class DatosAuxiliaresDAO {
             this.tipoVisual = tipoVisual;
         }
     }
-} 
+
+    private String inferirTipoDesdeVisual(String visual) {
+        if (visual == null) return null;
+        visual = visual.toLowerCase();
+        if (visual.contains("juego")) return "juego";
+        if (visual.contains("logro")) return "logro";
+        if (visual.contains("moderador")) return "moderador";
+        if (visual.contains("consola")) return "consola";
+        return "general";
+    }
+}
