@@ -25,7 +25,7 @@
     <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="180.0" prefWidth="367.0" promptText="Buscar..." styleClass="combo-box-style" />
 
     <!-- Lista de ítems -->
-    <ListView fx:id="listaAuxiliares" layoutX="39.0" layoutY="230.0" prefHeight="712.0" prefWidth="367.0" styleClass="lista-auxiliares" />
+    <ListView fx:id="listaAuxiliares" layoutX="39.0" layoutY="239.0" prefHeight="703.0" prefWidth="367.0" styleClass="lista-auxiliares" />
 
     <!-- Botones -->
     <HBox layoutX="412.0" layoutY="120.0" prefHeight="52.0" prefWidth="494.0" spacing="10.0">

@@ -40,7 +40,7 @@
     </HBox>
 
     <!-- Lista de consolas -->
-    <ListView fx:id="listaConsolas" layoutX="39.0" layoutY="225.0" prefHeight="717.0" prefWidth="367.0" styleClass="lista-consolas" />
+    <ListView fx:id="listaConsolas" layoutX="39.0" layoutY="231.0" prefHeight="711.0" prefWidth="367.0" styleClass="lista-consolas" />
 
     <!-- Controles de paginación -->
     <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">

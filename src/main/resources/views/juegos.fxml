@@ -53,7 +53,7 @@
 
 
     <!-- Lista de juegos -->
-    <ListView fx:id="listaJuegos" layoutX="39.0" layoutY="215.0" prefHeight="727.0" prefWidth="367.0" styleClass="lista-juegos" />
+    <ListView fx:id="listaJuegos" layoutX="39.0" layoutY="234.0" prefHeight="708.0" prefWidth="367.0" styleClass="lista-juegos" />
 
     <!-- Paginado clásico -->
     <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">

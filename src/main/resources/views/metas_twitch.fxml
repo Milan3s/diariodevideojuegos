@@ -41,7 +41,7 @@
     <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="182.0" prefWidth="367.0" promptText="Buscar..." styleClass="combo-box-style" />
 
     <!-- Lista -->
-    <ListView fx:id="listaMetas" layoutX="39.0" layoutY="235.0" prefHeight="707.0" prefWidth="367.0" styleClass="lista-metas" />
+    <ListView fx:id="listaMetas" layoutX="39.0" layoutY="247.0" prefHeight="695.0" prefWidth="367.0" styleClass="lista-metas" />
 
     <!-- Paginado -->
     <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
