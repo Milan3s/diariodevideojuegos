@@ -184,6 +184,14 @@ public class Database {
                 + "    anio INTEGER,\n"
                 + "    PRIMARY KEY (id_meta_especifica, anio),\n"
                 + "    FOREIGN KEY (id_meta_especifica) REFERENCES metas_especificas(id_meta_especifica)\n"
+                + ");\n"
+
+                + "CREATE TABLE IF NOT EXISTS configuracion_auxiliares (\n"
+                + "    id_configuracion INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    nombre_visual TEXT NOT NULL,\n"
+                + "    nombre_tabla TEXT NOT NULL,\n"
+                + "    columna_id TEXT NOT NULL,\n"
+                + "    columna_nombre TEXT NOT NULL\n"
                 + ");\n";
     }
 }

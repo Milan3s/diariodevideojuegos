@@ -7,6 +7,7 @@ public class DatosAuxiliares {
 
     private int id;
     private String nombre;
+    private String tipo; // <--- nuevo campo opcional: puede ser 'juego', 'logro', etc.
 
     public DatosAuxiliares() {
     }
@@ -14,6 +15,12 @@ public class DatosAuxiliares {
     public DatosAuxiliares(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
+    }
+
+    public DatosAuxiliares(int id, String nombre, String tipo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.tipo = tipo;
     }
 
     // Getters y setters
@@ -34,9 +41,17 @@ public class DatosAuxiliares {
         this.nombre = nombre;
     }
 
-    // Para mostrar el nombre en listas (ListView, ComboBox, etc.)
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    // Para mostrar el nombre en listas
     @Override
     public String toString() {
-        return nombre;
+        return nombre + (tipo != null ? " (" + tipo + ")" : "");
     }
 }
