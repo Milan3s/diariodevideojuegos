@@ -10,6 +10,20 @@ public class Database {
                 + "    nombre TEXT\n"
                 + ");\n"
 
+                + "CREATE TABLE IF NOT EXISTS dificultades_logros (\n"
+                + "    id_dificultad INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    nombre TEXT,\n"
+                + "    tipo TEXT\n"
+                + ");\n"
+
+                + "CREATE TABLE IF NOT EXISTS anios_metas_especificas (\n"
+                + "    id_meta_especifica INTEGER,\n"
+                + "    anio INTEGER,\n"
+                + "    tipo TEXT,\n"
+                + "    PRIMARY KEY (id_meta_especifica, anio),\n"
+                + "    FOREIGN KEY (id_meta_especifica) REFERENCES metas_especificas(id_meta_especifica)\n"
+                + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS consolas (\n"
                 + "    id_consola INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT,\n"
@@ -76,11 +90,6 @@ public class Database {
                 + "    FOREIGN KEY (id_juego) REFERENCES juegos(id_juegos)\n"
                 + ");\n"
 
-                + "CREATE TABLE IF NOT EXISTS dificultades_logros (\n"
-                + "    id_dificultad INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-                + "    nombre TEXT\n"
-                + ");\n"
-
                 + "CREATE TABLE IF NOT EXISTS logros (\n"
                 + "    id_logro INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    nombre TEXT,\n"
@@ -133,6 +142,7 @@ public class Database {
                 + "CREATE TABLE IF NOT EXISTS anios_metas_twitch (\n"
                 + "    id_meta INTEGER,\n"
                 + "    anio INTEGER,\n"
+                + "    tipo TEXT,\n"
                 + "    PRIMARY KEY (id_meta, anio),\n"
                 + "    FOREIGN KEY (id_meta) REFERENCES metas_twitch(id_meta)\n"
                 + ");\n"
@@ -177,13 +187,6 @@ public class Database {
                 + "    fecha_fin TEXT,\n"
                 + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP,\n"
                 + "    FOREIGN KEY (id_consola) REFERENCES consolas(id_consola)\n"
-                + ");\n"
-
-                + "CREATE TABLE IF NOT EXISTS anios_metas_especificas (\n"
-                + "    id_meta_especifica INTEGER,\n"
-                + "    anio INTEGER,\n"
-                + "    PRIMARY KEY (id_meta_especifica, anio),\n"
-                + "    FOREIGN KEY (id_meta_especifica) REFERENCES metas_especificas(id_meta_especifica)\n"
                 + ");\n"
 
                 + "CREATE TABLE IF NOT EXISTS configuracion_auxiliares (\n"

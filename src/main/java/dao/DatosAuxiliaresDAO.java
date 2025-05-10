@@ -7,8 +7,15 @@ import models.DatosAuxiliares;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * DAO genérico mejorado para datos auxiliares dinámicos.
+ */
 public class DatosAuxiliaresDAO {
 
+    /**
+     * Recupera todas las opciones disponibles desde configuracion_auxiliares.
+     * Se usa para poblar el ComboBox en el controlador.
+     */
     public List<String> obtenerTiposVisuales() {
         List<String> tipos = new ArrayList<>();
         String sql = "SELECT nombre_visual FROM configuracion_auxiliares ORDER BY nombre_visual";
@@ -28,6 +35,9 @@ public class DatosAuxiliaresDAO {
         return tipos;
     }
 
+    /**
+     * Recupera la configuración para una clave visual (ej. "Estados", "Dificultades", etc.)
+     */
     private TablaAuxiliar obtenerConfiguracion(String nombreVisual) {
         String sql = "SELECT nombre_tabla, columna_id, columna_nombre FROM configuracion_auxiliares WHERE nombre_visual = ?";
         try (Connection conn = Conexion.obtenerConexion();
@@ -39,7 +49,8 @@ public class DatosAuxiliaresDAO {
                     return new TablaAuxiliar(
                         rs.getString("nombre_tabla"),
                         rs.getString("columna_id"),
-                        rs.getString("columna_nombre")
+                        rs.getString("columna_nombre"),
+                        nombreVisual
                     );
                 }
             }
@@ -72,7 +83,7 @@ public class DatosAuxiliaresDAO {
                 int id = rs.getInt(config.columnaId);
                 String nombre = rs.getString(config.columnaNombre);
                 String tipo = config.tabla.equalsIgnoreCase("estados") ? rs.getString("tipo") : null;
-                resultados.add(new DatosAuxiliares(id, nombre, tipo));
+                resultados.add(new DatosAuxiliares(id, nombre, tipo, config.tipoVisual));
             }
 
         } catch (SQLException e) {
@@ -105,7 +116,7 @@ public class DatosAuxiliaresDAO {
                     int id = rs.getInt(config.columnaId);
                     String nombre = rs.getString(config.columnaNombre);
                     String tipo = config.tabla.equalsIgnoreCase("estados") ? rs.getString("tipo") : null;
-                    resultados.add(new DatosAuxiliares(id, nombre, tipo));
+                    resultados.add(new DatosAuxiliares(id, nombre, tipo, config.tipoVisual));
                 }
             }
 
@@ -171,15 +182,18 @@ public class DatosAuxiliaresDAO {
         }
     }
 
+    /** Clase interna para mapear la configuración de cada tipo visual */
     private static class TablaAuxiliar {
         final String tabla;
         final String columnaId;
         final String columnaNombre;
+        final String tipoVisual;
 
-        public TablaAuxiliar(String tabla, String columnaId, String columnaNombre) {
+        public TablaAuxiliar(String tabla, String columnaId, String columnaNombre, String tipoVisual) {
             this.tabla = tabla;
             this.columnaId = columnaId;
             this.columnaNombre = columnaNombre;
+            this.tipoVisual = tipoVisual;
         }
     }
 }

@@ -7,7 +7,8 @@ public class DatosAuxiliares {
 
     private int id;
     private String nombre;
-    private String tipo; // <--- nuevo campo opcional: puede ser 'juego', 'logro', etc.
+    private String tipo;         // Puede representar valores como 'juego', 'logro', etc. (solo para algunas tablas)
+    private String tipoVisual;   // Representa el tipo visual seleccionado (ej. "Estados", "Dificultades")
 
     public DatosAuxiliares() {
     }
@@ -21,6 +22,13 @@ public class DatosAuxiliares {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
+    }
+
+    public DatosAuxiliares(int id, String nombre, String tipo, String tipoVisual) {
+        this.id = id;
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.tipoVisual = tipoVisual;
     }
 
     // Getters y setters
@@ -49,9 +57,19 @@ public class DatosAuxiliares {
         this.tipo = tipo;
     }
 
-    // Para mostrar el nombre en listas
+    public String getTipoVisual() {
+        return tipoVisual;
+    }
+
+    public void setTipoVisual(String tipoVisual) {
+        this.tipoVisual = tipoVisual;
+    }
+
     @Override
     public String toString() {
-        return nombre + (tipo != null ? " (" + tipo + ")" : "");
+        StringBuilder sb = new StringBuilder(nombre);
+        if (tipo != null) sb.append(" (").append(tipo).append(")");
+        if (tipoVisual != null) sb.append(" | ").append(tipoVisual);
+        return sb.toString();
     }
 }
