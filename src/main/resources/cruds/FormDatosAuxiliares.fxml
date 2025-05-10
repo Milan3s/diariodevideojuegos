@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.FormDatosAuxiliaresController"
-            styleClass="mainFxmlClass">
+<AnchorPane fx:id="formularioBase" prefHeight="200.0" prefWidth="400.0" styleClass="formulario-base" stylesheets="@../styles/formdatosauxiliares.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormDatosAuxiliaresController">
 
-    <VBox layoutX="30.0" layoutY="30.0" spacing="15.0" prefWidth="340.0" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30" AnchorPane.bottomAnchor="30">
-    
-        <Label fx:id="lblTitulo" text="Agregar/Editar" styleClass="form-titulo" />
+    <VBox layoutX="30.0" layoutY="30.0" prefWidth="340.0" spacing="15.0" styleClass="form-grid" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="30">
 
-        <!-- Combo para elegir tipo -->
-        <ComboBox fx:id="comboTipoDato" promptText="Selecciona tipo de dato auxiliar" />
+        <Label fx:id="lblTitulo" styleClass="form-titulo form-label" text="Agregar/Editar" />
 
-        <!-- Campo de texto -->
-        <TextField fx:id="campoNombre" promptText="Nombre del dato" />
+        <!-- Combo para seleccionar la tabla (tipo de dato) -->
+        <ComboBox fx:id="comboTablaDestino" prefHeight="44.0" prefWidth="301.0" promptText="Selecciona tabla de destino" styleClass="form-input" />
 
-        <!-- Botones -->
-        <HBox spacing="10.0">
-            <Button fx:id="btnGuardar" text="Guardar" onAction="#guardarDatoAuxiliar" defaultButton="true" />
-            <Button fx:id="btnCancelar" text="Cancelar" onAction="#cancelar" cancelButton="true" />
+        <!-- Campo de texto para el nombre -->
+        <TextField fx:id="campoNombre" prefHeight="30" promptText="Nombre del dato" styleClass="form-input" />
+
+        <!-- Botones con iconos -->
+        <HBox alignment="CENTER" spacing="10.0">
+            <Button fx:id="btnGuardar" defaultButton="true" onAction="#guardarDatoAuxiliar" prefHeight="34.0" prefWidth="148.0" styleClass="juegos-button" text="Guardar">
+                <graphic>
+                    <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
+                </graphic>
+            </Button>
+            <Button fx:id="btnCancelar" cancelButton="true" onAction="#cancelar" prefHeight="34.0" prefWidth="142.0" styleClass="juegos-button" text="Cancelar">
+                <graphic>
+                    <FontAwesomeIconView glyphName="CLOSE" styleClass="control-icon" />
+                </graphic>
+            </Button>
         </HBox>
     </VBox>
-
-
-   
 </AnchorPane>

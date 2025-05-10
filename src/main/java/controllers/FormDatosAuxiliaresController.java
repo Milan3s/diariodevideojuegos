@@ -11,22 +11,32 @@ import models.DatosAuxiliares;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class FormDatosAuxiliaresController implements Initializable {
 
-    @FXML private Label lblTitulo;
-    @FXML private ComboBox<String> comboTipoDato;
-    @FXML private TextField campoNombre;
-    @FXML private Button btnGuardar;
-    @FXML private Button btnCancelar;
+    @FXML
+    private Label lblTitulo;
+    @FXML
+    private ComboBox<String> comboTablaDestino;
+    @FXML
+    private TextField campoNombre;
+    @FXML
+    private Button btnGuardar;
+    @FXML
+    private Button btnCancelar;
+    @FXML
+    private AnchorPane formularioBase;
 
     private final DatosAuxiliaresDAO dao = new DatosAuxiliaresDAO();
     private DatosAuxiliares datoExistente;
     private Runnable onGuardarCallback;
+    private DatosAuxiliares datoGuardado;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        comboTipoDato.setItems(FXCollections.observableArrayList(dao.obtenerTiposVisuales()));
+        comboTablaDestino.setItems(FXCollections.observableArrayList(dao.obtenerTiposVisuales()));
+        comboTablaDestino.setPromptText("Selecciona tabla de destino");
     }
 
     public void configurarFormulario(DatosAuxiliares dato, String tipoPreseleccionado, Runnable callback) {
@@ -34,7 +44,7 @@ public class FormDatosAuxiliaresController implements Initializable {
         this.onGuardarCallback = callback;
 
         if (tipoPreseleccionado != null) {
-            comboTipoDato.getSelectionModel().select(tipoPreseleccionado);
+            comboTablaDestino.getSelectionModel().select(tipoPreseleccionado);
         }
 
         if (dato != null) {
@@ -47,11 +57,11 @@ public class FormDatosAuxiliaresController implements Initializable {
 
     @FXML
     private void guardarDatoAuxiliar(ActionEvent event) {
-        String tipoSeleccionado = comboTipoDato.getValue();
+        String tipoSeleccionado = comboTablaDestino.getValue();
         String nombre = campoNombre.getText().trim();
 
         if (tipoSeleccionado == null) {
-            mostrarAlerta("Debes seleccionar el tipo de dato auxiliar.");
+            mostrarAlerta("Debes seleccionar la tabla destino.");
             return;
         }
 
@@ -60,20 +70,61 @@ public class FormDatosAuxiliaresController implements Initializable {
             return;
         }
 
-        boolean ok;
-        if (datoExistente == null) {
-            // Insertar nuevo
-            ok = dao.insertar(tipoSeleccionado, nombre);
-        } else {
-            // Editar existente
-            ok = dao.editar(tipoSeleccionado, datoExistente.getId(), nombre);
+        if (datoExistente == null && dao.existeRegistro(tipoSeleccionado, nombre)) {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Registro existente");
+            confirm.setHeaderText("Ya existe un dato con ese nombre en la tabla.");
+            confirm.setContentText("¿Deseas sobrescribirlo?");
+            
+            ButtonType btnSobrescribir = new ButtonType("Sobrescribir", ButtonBar.ButtonData.OK_DONE);
+            ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+            
+            confirm.getButtonTypes().setAll(btnSobrescribir, btnCancelar);
+            
+            confirm.showAndWait().ifPresent(respuesta -> {
+                if (respuesta == btnSobrescribir) {
+                    sobrescribirDato(tipoSeleccionado, nombre);
+                }
+            });
+
+            return;
         }
 
-        if (ok) {
+        guardarODetener(tipoSeleccionado, nombre);
+    }
+
+    private void sobrescribirDato(String tipo, String nombre) {
+        DatosAuxiliares existente = dao.buscarPorNombre(tipo, nombre);
+        if (existente != null) {
+            dao.editar(tipo, existente.getId(), nombre);
             if (onGuardarCallback != null) onGuardarCallback.run();
             cerrarVentana();
+        }
+    }
+
+    private void guardarODetener(String tipo, String nombre) {
+        boolean ok;
+        if (datoExistente == null) {
+            int idNuevo = dao.insertarYObtenerId(tipo, nombre);
+            if (idNuevo > 0) {
+                datoGuardado = new DatosAuxiliares(idNuevo, nombre, null, tipo);
+                if (onGuardarCallback != null) {
+                    onGuardarCallback.run();
+                }
+                cerrarVentana();
+            } else {
+                mostrarAlerta("Error al guardar los datos.");
+            }
         } else {
-            mostrarAlerta("Error al guardar los datos.");
+            ok = dao.editar(tipo, datoExistente.getId(), nombre);
+            if (ok) {
+                if (onGuardarCallback != null) {
+                    onGuardarCallback.run();
+                }
+                cerrarVentana();
+            } else {
+                mostrarAlerta("Error al guardar los datos.");
+            }
         }
     }
 
@@ -93,5 +144,9 @@ public class FormDatosAuxiliaresController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    public DatosAuxiliares getDatoGuardado() {
+        return datoGuardado;
     }
 }

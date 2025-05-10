@@ -12,10 +12,6 @@ import java.util.*;
  */
 public class DatosAuxiliaresDAO {
 
-    /**
-     * Recupera todas las opciones disponibles desde configuracion_auxiliares.
-     * Se usa para poblar el ComboBox en el controlador.
-     */
     public List<String> obtenerTiposVisuales() {
         List<String> tipos = new ArrayList<>();
         String sql = "SELECT nombre_visual FROM configuracion_auxiliares ORDER BY nombre_visual";
@@ -35,9 +31,6 @@ public class DatosAuxiliaresDAO {
         return tipos;
     }
 
-    /**
-     * Recupera la configuración para una clave visual (ej. "Estados", "Dificultades", etc.)
-     */
     private TablaAuxiliar obtenerConfiguracion(String nombreVisual) {
         String sql = "SELECT nombre_tabla, columna_id, columna_nombre FROM configuracion_auxiliares WHERE nombre_visual = ?";
         try (Connection conn = Conexion.obtenerConexion();
@@ -47,10 +40,10 @@ public class DatosAuxiliaresDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return new TablaAuxiliar(
-                        rs.getString("nombre_tabla"),
-                        rs.getString("columna_id"),
-                        rs.getString("columna_nombre"),
-                        nombreVisual
+                            rs.getString("nombre_tabla"),
+                            rs.getString("columna_id"),
+                            rs.getString("columna_nombre"),
+                            nombreVisual
                     );
                 }
             }
@@ -66,14 +59,9 @@ public class DatosAuxiliaresDAO {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
         if (config == null) return resultados;
 
-        String sql;
-        if (config.tabla.equalsIgnoreCase("estados")) {
-            sql = "SELECT " + config.columnaId + ", " + config.columnaNombre + ", tipo FROM " + config.tabla +
-                  " ORDER BY " + config.columnaNombre;
-        } else {
-            sql = "SELECT " + config.columnaId + ", " + config.columnaNombre + " FROM " + config.tabla +
-                  " ORDER BY " + config.columnaNombre;
-        }
+        String sql = config.tabla.equalsIgnoreCase("estados")
+                ? "SELECT " + config.columnaId + ", " + config.columnaNombre + ", tipo FROM " + config.tabla + " ORDER BY " + config.columnaNombre
+                : "SELECT " + config.columnaId + ", " + config.columnaNombre + " FROM " + config.tabla + " ORDER BY " + config.columnaNombre;
 
         try (Connection conn = Conexion.obtenerConexion();
              Statement stmt = conn.createStatement();
@@ -93,56 +81,30 @@ public class DatosAuxiliaresDAO {
         return resultados;
     }
 
-    public List<DatosAuxiliares> buscar(String nombreVisual, String filtro) {
-        List<DatosAuxiliares> resultados = new ArrayList<>();
+    public int insertarYObtenerId(String nombreVisual, String valor) {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) return resultados;
-
-        String sql;
-        if (config.tabla.equalsIgnoreCase("estados")) {
-            sql = "SELECT " + config.columnaId + ", " + config.columnaNombre + ", tipo FROM " + config.tabla +
-                  " WHERE " + config.columnaNombre + " LIKE ? ORDER BY " + config.columnaNombre;
-        } else {
-            sql = "SELECT " + config.columnaId + ", " + config.columnaNombre + " FROM " + config.tabla +
-                  " WHERE " + config.columnaNombre + " LIKE ? ORDER BY " + config.columnaNombre;
-        }
-
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, "%" + filtro + "%");
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt(config.columnaId);
-                    String nombre = rs.getString(config.columnaNombre);
-                    String tipo = config.tabla.equalsIgnoreCase("estados") ? rs.getString("tipo") : null;
-                    resultados.add(new DatosAuxiliares(id, nombre, tipo, config.tipoVisual));
-                }
-            }
-
-        } catch (SQLException e) {
-            AppLogger.severe("Error al buscar en " + config.tabla + ": " + e.getMessage());
-        }
-
-        return resultados;
-    }
-
-    public boolean insertar(String nombreVisual, String valor) {
-        TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) return false;
+        if (config == null) return -1;
 
         String sql = "INSERT INTO " + config.tabla + " (" + config.columnaNombre + ") VALUES (?)";
 
         try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, valor);
-            return pstmt.executeUpdate() > 0;
+            int filas = pstmt.executeUpdate();
+            if (filas > 0) {
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
 
         } catch (SQLException e) {
             AppLogger.severe("Error al insertar en " + config.tabla + ": " + e.getMessage());
-            return false;
         }
+
+        return -1;
     }
 
     public boolean editar(String nombreVisual, int id, String nuevoValor) {
@@ -182,7 +144,53 @@ public class DatosAuxiliaresDAO {
         }
     }
 
-    /** Clase interna para mapear la configuración de cada tipo visual */
+    public boolean existeRegistro(String tipoVisual, String nombre) {
+        TablaAuxiliar config = obtenerConfiguracion(tipoVisual);
+        if (config == null) return false;
+
+        String sql = "SELECT COUNT(*) FROM " + config.tabla + " WHERE " + config.columnaNombre + " = ?";
+
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nombre);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            AppLogger.severe("Error al verificar existencia de registro: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public DatosAuxiliares buscarPorNombre(String tipoVisual, String nombre) {
+        TablaAuxiliar config = obtenerConfiguracion(tipoVisual);
+        if (config == null) return null;
+
+        String sql = "SELECT " + config.columnaId + ", " + config.columnaNombre
+                + (config.tabla.equalsIgnoreCase("estados") ? ", tipo" : "")
+                + " FROM " + config.tabla + " WHERE " + config.columnaNombre + " = ?";
+
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nombre);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt(config.columnaId);
+                    String tipo = config.tabla.equalsIgnoreCase("estados") ? rs.getString("tipo") : null;
+                    return new DatosAuxiliares(id, nombre, tipo, tipoVisual);
+                }
+            }
+
+        } catch (SQLException e) {
+            AppLogger.severe("Error al buscar por nombre: " + e.getMessage());
+        }
+
+        return null;
+    }
+
     private static class TablaAuxiliar {
         final String tabla;
         final String columnaId;
@@ -196,4 +204,4 @@ public class DatosAuxiliaresDAO {
             this.tipoVisual = tipoVisual;
         }
     }
-}
+} 
