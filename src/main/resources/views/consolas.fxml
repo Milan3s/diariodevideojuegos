@@ -52,10 +52,10 @@
     </HBox>
 
     <!-- Detalle de consola -->
-    <AnchorPane layoutX="412.0" layoutY="171.0" prefHeight="806.0" prefWidth="923.0" styleClass="detalle-card">
-        <VBox layoutX="22.0" layoutY="336.0" prefHeight="320.0" prefWidth="549.0" spacing="10">
-            <StackPane prefHeight="324.0" prefWidth="552.0">
-                <ImageView fx:id="imgDetalle" fitHeight="323.0" fitWidth="552.0" preserveRatio="true" />
+    <AnchorPane layoutX="412.0" layoutY="171.0" prefHeight="839.0" prefWidth="923.0" styleClass="detalle-card">
+        <VBox layoutX="22.0" layoutY="336.0" prefHeight="274.0" prefWidth="552.0" spacing="10">
+            <StackPane prefHeight="262.0" prefWidth="552.0">
+                <ImageView fx:id="imgDetalle" fitHeight="281.0" fitWidth="552.0" preserveRatio="true" />
                 <FontAwesomeIconView fx:id="iconoImagenNoDisponible" glyphName="BAN" styleClass="control-icon" visible="false" StackPane.alignment="CENTER" />
             </StackPane>
         </VBox>

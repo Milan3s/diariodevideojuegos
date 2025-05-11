@@ -40,15 +40,12 @@ public class App extends Application {
             Parent root = loader.load();
             Stage stage = new Stage();
 
-            // Ajustar ventana a pantalla completa
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            stage.setX(screenBounds.getMinX());
-            stage.setY(screenBounds.getMinY());
-            stage.setWidth(screenBounds.getWidth());
-            stage.setHeight(screenBounds.getHeight());
-
-            stage.setScene(new Scene(root));
+            // Establecer resolución inicial sin ocupar pantalla completa
+            Scene scene = new Scene(root, 1920, 1080);
+            stage.setScene(scene);
             stage.setTitle("Gestor de Juegos");
+
+            // Permitir que el usuario redimensione y maximice
             stage.setResizable(true);
             stage.show();
 

@@ -1,22 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 
+/* ======================
+   ESTILOS GLOBALES
+   ====================== */
 .root {
     -fx-background-color: white;
     -fx-font-family: "Raleway";
     -fx-text-fill: black;
 }
 
-/* Título de sección (si se usa texto en el sidebar) */
+/* ======================
+   TÍTULOS
+   ====================== */
 .sidebar-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: black;
 }
 
-/* Botones del sidebar y del instalador */
-.sidebar-button, .action-button {
+/* ======================
+   BOTONES ESTÁNDAR
+   ====================== */
+.sidebar-button, .action-button, .submenu-button {
     -fx-font-size: 14px;
     -fx-pref-height: 36px;
+    -fx-pref-width: 180px;
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;
@@ -25,19 +33,58 @@
     -fx-cursor: hand;
 }
 
-.sidebar-button:hover, .action-button:hover {
+.sidebar-button:hover,
+.action-button:hover,
+.submenu-button:hover {
     -fx-background-color: #f0f0f0;
 }
 
-/* Sidebar con fondo gris claro y sombra lateral para separarlo del contenido */
+/* ======================
+   SIDEBAR LATERAL
+   ====================== */
 .sidebar {
     -fx-background-color: #f7f7f7;
     -fx-padding: 10;
+    -fx-spacing: 15;
+    -fx-alignment: top-center;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0.3, 2, 0);
 }
 
-/* Zona de contenido */
+/* ======================
+   ÁREA DE CONTENIDO
+   ====================== */
 .content-area {
     -fx-background-color: white;
     -fx-padding: 20;
+}
+
+/* ======================
+   SUBMENÚ DE METAS
+   ====================== */
+.submenu-arrow {
+    -fx-text-fill: black;
+    -fx-font-size: 10px;
+    -fx-alignment: center;
+    -fx-padding: 0;
+    -fx-translate-y: -3;
+}
+
+.submenu-metas {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-spacing: 5;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.3, 1, 1);
+}
+
+.submenu-button {
+    -fx-font-size: 13px;
+    -fx-pref-height: 32px;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, black, 1, 0, 1, 1);
 }

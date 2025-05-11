@@ -127,7 +127,8 @@ public class InicioController implements Initializable {
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setScene(new Scene(root));
             modal.setTitle("Asignar Meta");
-            modal.setResizable(false);
+
+            modal.setResizable(true); // ✅ Permitir maximizar
             modal.showAndWait();
 
         } catch (IOException e) {

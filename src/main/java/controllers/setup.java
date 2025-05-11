@@ -126,10 +126,14 @@ public class setup {
 
             Stage stage = new Stage();
             stage.setTitle("Inicio - Diario de Videojuegos");
-            stage.setScene(new Scene(root));
-            stage.setResizable(true);
+
+            // Establecer resolución fija 1920x1080
+            Scene scene = new Scene(root, 1920, 1080);
+            stage.setScene(scene);
+            stage.setResizable(true); // Opcional: evita que el usuario cambie el tamaño
             stage.show();
 
+            // Cerrar la ventana actual
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.close();
 
