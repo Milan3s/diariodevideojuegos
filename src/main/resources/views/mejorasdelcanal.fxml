@@ -18,13 +18,19 @@
 
     <HBox layoutX="412.0" layoutY="120.0" spacing="10.0">
         <Button fx:id="btnAgregar" onAction="#abrirModalAgregar" prefWidth="112.0" styleClass="logros-button" text="Añadir">
-            <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="control-icon" /></graphic>
+            <graphic>
+                <FontAwesomeIconView glyphName="PLUS" styleClass="control-icon" />
+            </graphic>
         </Button>
         <Button fx:id="btnEditar" onAction="#editarMejora" prefWidth="116.0" styleClass="logros-button" text="Editar">
-            <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="control-icon" /></graphic>
+            <graphic>
+                <FontAwesomeIconView glyphName="PENCIL" styleClass="control-icon" />
+            </graphic>
         </Button>
         <Button fx:id="btnEliminar" onAction="#eliminarMejora" prefWidth="116.0" styleClass="logros-button" text="Eliminar">
-            <graphic><FontAwesomeIconView glyphName="TRASH" styleClass="control-icon" /></graphic>
+            <graphic>
+                <FontAwesomeIconView glyphName="TRASH" styleClass="control-icon" />
+            </graphic>
         </Button>
     </HBox>
 
@@ -41,27 +47,47 @@
     </HBox>
 
     <AnchorPane layoutX="412.0" layoutY="183.0" prefHeight="757.0" prefWidth="923.0" styleClass="detalle-card">
-        <GridPane hgap="40" layoutX="22.0" layoutY="19.0" prefHeight="200.0" prefWidth="850.0" vgap="10">
+        <GridPane hgap="40" layoutX="22.0" layoutY="19.0" prefHeight="400.0" prefWidth="850.0" vgap="15">
             <columnConstraints>
-                <ColumnConstraints percentWidth="50" />
-                <ColumnConstraints percentWidth="50" />
+                <ColumnConstraints percentWidth="61.0" />
+                <ColumnConstraints percentWidth="39.0" />
             </columnConstraints>
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
 
-            <!-- Columna 1 -->
+            <!-- Fila 1 -->
             <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <Label styleClass="detalle-titulo" text="Descripción:" />
                 <Label fx:id="lblDescripcion" styleClass="detalle-valor" />
             </HBox>
-
-            <!-- Columna 2 -->
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <Label styleClass="detalle-titulo" text="Fecha:" />
-                <Label fx:id="lblFecha" styleClass="detalle-valor" />
+                <Label styleClass="detalle-titulo" text="Meta:" />
+                <Label fx:id="lblMeta" styleClass="detalle-valor" />
             </HBox>
+
+            <!-- Fila 2 -->
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label styleClass="detalle-titulo" text="Actual:" />
+                <Label fx:id="lblActual" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label styleClass="detalle-titulo" text="Inicio:" />
+                <Label fx:id="lblFechaInicio" styleClass="detalle-valor" />
+            </HBox>
+
+            <!-- Fila 3 -->
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                <Label styleClass="detalle-titulo" text="Fin:" />
+                <Label fx:id="lblFechaFin" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label styleClass="detalle-titulo" text="Cumplida:" />
+                <Label fx:id="lblCumplida" styleClass="detalle-valor" />
+            </HBox>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
         </GridPane>
     </AnchorPane>
+
 </AnchorPane>

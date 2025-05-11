@@ -12,7 +12,7 @@ public class MejorasDelCanalDAO {
 
     public ObservableList<MejorasDelCanal> obtenerMejoras() {
         ObservableList<MejorasDelCanal> lista = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM mejoras_canal ORDER BY fecha DESC";
+        String sql = "SELECT * FROM mejoras_canal ORDER BY fecha_inicio DESC";
 
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -22,7 +22,11 @@ public class MejorasDelCanalDAO {
                 MejorasDelCanal mejora = new MejorasDelCanal(
                         rs.getInt("id_mejora"),
                         rs.getString("descripcion"),
-                        LocalDate.parse(rs.getString("fecha"))
+                        rs.getInt("meta"),
+                        rs.getInt("actual"),
+                        LocalDate.parse(rs.getString("fecha_inicio")),
+                        LocalDate.parse(rs.getString("fecha_fin")),
+                        rs.getBoolean("cumplida")
                 );
                 lista.add(mejora);
             }
@@ -35,13 +39,19 @@ public class MejorasDelCanalDAO {
     }
 
     public Integer insertarMejoraYDevolverId(MejorasDelCanal mejora) {
-        String sql = "INSERT INTO mejoras_canal (descripcion, fecha) VALUES (?, ?)";
+        String sql = "INSERT INTO mejoras_canal "
+                   + "(descripcion, meta, actual, fecha_inicio, fecha_fin, cumplida) "
+                   + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, mejora.getDescripcion());
-            stmt.setString(2, mejora.getFecha().toString());
+            stmt.setInt(2, mejora.getMeta());
+            stmt.setInt(3, mejora.getActual());
+            stmt.setString(4, mejora.getFechaInicio().toString());
+            stmt.setString(5, mejora.getFechaFin().toString());
+            stmt.setBoolean(6, mejora.isCumplida());
 
             int filas = stmt.executeUpdate();
             if (filas > 0) {
@@ -59,14 +69,21 @@ public class MejorasDelCanalDAO {
     }
 
     public boolean actualizarMejora(MejorasDelCanal mejora) {
-        String sql = "UPDATE mejoras_canal SET descripcion = ?, fecha = ? WHERE id_mejora = ?";
+        String sql = "UPDATE mejoras_canal SET "
+                   + "descripcion = ?, meta = ?, actual = ?, "
+                   + "fecha_inicio = ?, fecha_fin = ?, cumplida = ? "
+                   + "WHERE id_mejora = ?";
 
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, mejora.getDescripcion());
-            stmt.setString(2, mejora.getFecha().toString());
-            stmt.setInt(3, mejora.getId());
+            stmt.setInt(2, mejora.getMeta());
+            stmt.setInt(3, mejora.getActual());
+            stmt.setString(4, mejora.getFechaInicio().toString());
+            stmt.setString(5, mejora.getFechaFin().toString());
+            stmt.setBoolean(6, mejora.isCumplida());
+            stmt.setInt(7, mejora.getId());
 
             return stmt.executeUpdate() > 0;
 

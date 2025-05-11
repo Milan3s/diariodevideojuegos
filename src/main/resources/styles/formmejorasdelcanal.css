@@ -1,7 +1,109 @@
-/*
- * Empty Stylesheet file.
- */
+/* Fondo general */
+.root, .formulario-mejorascanal {
+    -fx-background-color: white;
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+}
 
-.mainFxmlClass {
+/* Título */
+.inicio-titulo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
 
+/* Etiquetas */
+.label-mejorascanal {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* --------------------- INPUTS --------------------- */
+.input-mejorascanal,
+.input-mejorascanal .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 10;
+    -fx-pref-height: 42px;
+}
+
+/* --------------------- DATEPICKER --------------------- */
+.date-picker.input-mejorascanal {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.date-picker.input-mejorascanal .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 10;
+    -fx-pref-height: 42px;
+}
+
+.date-picker.input-mejorascanal .arrow-button {
+    -fx-background-color: #f2f2f2;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-pref-width: 36px;
+}
+
+.date-picker.input-mejorascanal .arrow-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.date-picker.input-mejorascanal .arrow-button .arrow {
+    -fx-background-color: black;
+}
+
+/* --------------------- COMBOBOX --------------------- */
+.combo-box .list-cell {
+    -fx-text-fill: black;
+    -fx-background-color: white;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: black;
+}
+
+/* --------------------- BOTONES --------------------- */
+.mejoras-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.mejoras-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Iconos */
+.control-icon {
+    -fx-fill: black;
+    -fx-font-size: 20px;
+    -fx-padding: 0 6px 0 0;
+    -fx-cursor: hand;
+}
+
+.control-icon:hover {
+    -fx-fill: #555;
 }

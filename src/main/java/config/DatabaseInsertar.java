@@ -71,7 +71,11 @@ public class DatabaseInsertar {
 
                 String sqlSeguidores = "INSERT INTO seguidores (cantidad, fecha_registro) VALUES (1000, '2025-05-01');";
 
-                String sqlMejoras = "INSERT INTO mejoras_canal (descripcion, fecha) VALUES ('Nuevo overlay animado', '2025-05-01');";
+                String sqlMejoras = "INSERT INTO mejoras_canal "
+                        + "(descripcion, meta, actual, fecha_inicio, fecha_fin, cumplida) VALUES "
+                        + "('Nuevo overlay animado', 1, 0, '2025-05-01', '2025-05-31', 0), "
+                        + "('Rediseño de paneles de información', 1, 1, '2025-04-01', '2025-04-15', 1), "
+                        + "('Automatización de agradecimientos', 1, 0, '2025-06-01', '2025-06-30', 0);";
 
                 String sqlExtensibles = "INSERT INTO eventos_extensibles (motivo, fecha_evento) VALUES ('Evento benéfico', '2025-06-10');";
 

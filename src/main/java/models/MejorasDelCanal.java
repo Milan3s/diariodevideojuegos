@@ -3,20 +3,34 @@ package models;
 import java.time.LocalDate;
 
 public class MejorasDelCanal {
+
     private int id;
     private String descripcion;
-    private LocalDate fecha;
+    private int meta;
+    private int actual;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private boolean cumplida;
 
-    public MejorasDelCanal(int id, String descripcion, LocalDate fecha) {
+    // Constructor completo
+    public MejorasDelCanal(int id, String descripcion, int meta, int actual,
+                           LocalDate fechaInicio, LocalDate fechaFin, boolean cumplida) {
         this.id = id;
         this.descripcion = descripcion;
-        this.fecha = fecha;
+        this.meta = meta;
+        this.actual = actual;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.cumplida = cumplida;
     }
 
-    public MejorasDelCanal(String descripcion, LocalDate fecha) {
-        this(-1, descripcion, fecha);
+    // Constructor sin ID (para inserciones)
+    public MejorasDelCanal(String descripcion, int meta, int actual,
+                           LocalDate fechaInicio, LocalDate fechaFin, boolean cumplida) {
+        this(-1, descripcion, meta, actual, fechaInicio, fechaFin, cumplida);
     }
 
+    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -33,16 +47,48 @@ public class MejorasDelCanal {
         this.descripcion = descripcion;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public int getMeta() {
+        return meta;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setMeta(int meta) {
+        this.meta = meta;
+    }
+
+    public int getActual() {
+        return actual;
+    }
+
+    public void setActual(int actual) {
+        this.actual = actual;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public boolean isCumplida() {
+        return cumplida;
+    }
+
+    public void setCumplida(boolean cumplida) {
+        this.cumplida = cumplida;
     }
 
     @Override
     public String toString() {
-        return descripcion + " (" + fecha + ")";
+        return descripcion + " (" + fechaInicio + " → " + fechaFin + ")";
     }
 }

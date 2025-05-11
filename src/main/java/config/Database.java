@@ -155,8 +155,13 @@ public class Database {
 
                 + "CREATE TABLE IF NOT EXISTS mejoras_canal (\n"
                 + "    id_mejora INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-                + "    descripcion TEXT,\n"
-                + "    fecha TEXT DEFAULT CURRENT_DATE\n"
+                + "    descripcion TEXT NOT NULL,\n"
+                + "    meta INTEGER,\n"
+                + "    actual INTEGER DEFAULT 0,\n"
+                + "    fecha_inicio TEXT,\n"
+                + "    fecha_fin TEXT,\n"
+                + "    cumplida BOOLEAN DEFAULT 0,\n"
+                + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
                 + ");\n"
 
                 + "CREATE TABLE IF NOT EXISTS eventos_extensibles (\n"

@@ -19,6 +19,7 @@ import models.MejorasDelCanal;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -27,17 +28,18 @@ public class MejorasdelcanalController implements Initializable {
     @FXML
     private Text tituloMejoras;
     @FXML
-    private Button btnAgregar, btnEditar, btnEliminar;
-    @FXML
     private TextField campoBusqueda;
     @FXML
     private ListView<MejorasDelCanal> listaMejoras;
     @FXML
+    private Button btnAgregar, btnEditar, btnEliminar;
+    @FXML
     private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
     @FXML
     private Label paginaActual;
+
     @FXML
-    private Label lblDescripcion, lblFecha;
+    private Label lblDescripcion, lblMeta, lblActual, lblFechaInicio, lblFechaFin, lblCumplida;
 
     private final MejorasDelCanalDAO dao = new MejorasDelCanalDAO();
     private final ObservableList<MejorasDelCanal> mejorasOriginales = FXCollections.observableArrayList();
@@ -47,11 +49,13 @@ public class MejorasdelcanalController implements Initializable {
     private int pagina = 1;
     private MejorasDelCanal mejoraSeleccionada;
 
+    private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         campoBusqueda.setOnKeyReleased(this::filtrarMejoras);
-        cargarMejoras();
         listaMejoras.setOnMouseClicked(this::mostrarDetalle);
+        cargarMejoras();
     }
 
     private void cargarMejoras() {
@@ -76,21 +80,10 @@ public class MejorasdelcanalController implements Initializable {
 
     private void actualizarPaginado() {
         int totalPaginas = (int) Math.ceil((double) mejorasFiltradas.size() / ITEMS_POR_PAGINA);
-        if (pagina < 1) {
-            pagina = 1;
-        }
-        if (pagina > totalPaginas) {
-            pagina = totalPaginas;
-        }
+        pagina = Math.max(1, Math.min(pagina, totalPaginas));
 
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, mejorasFiltradas.size());
-
-        if (desde > hasta) {
-            desde = 0;
-            hasta = Math.min(ITEMS_POR_PAGINA, mejorasFiltradas.size());
-            pagina = 1;
-        }
 
         listaMejoras.setItems(FXCollections.observableArrayList(mejorasFiltradas.subList(desde, hasta)));
         listaMejoras.getSelectionModel().clearSelection();
@@ -106,34 +99,25 @@ public class MejorasdelcanalController implements Initializable {
         }
 
         lblDescripcion.setText(mejoraSeleccionada.getDescripcion());
-        lblFecha.setText(mejoraSeleccionada.getFecha().toString());
+        lblMeta.setText(String.valueOf(mejoraSeleccionada.getMeta()));
+        lblActual.setText(String.valueOf(mejoraSeleccionada.getActual()));
+        lblFechaInicio.setText(mejoraSeleccionada.getFechaInicio().format(formatoFecha));
+        lblFechaFin.setText(mejoraSeleccionada.getFechaFin().format(formatoFecha));
+        lblCumplida.setText(mejoraSeleccionada.isCumplida() ? "Sí" : "No");
     }
 
     private void limpiarDetalle() {
         lblDescripcion.setText("");
-        lblFecha.setText("");
+        lblMeta.setText("");
+        lblActual.setText("");
+        lblFechaInicio.setText("");
+        lblFechaFin.setText("");
+        lblCumplida.setText("");
     }
 
     @FXML
     private void abrirModalAgregar(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMejorasDelCanal.fxml"));
-            Parent root = loader.load();
-
-            FormMejorasDelCanalController controller = loader.getController();
-            controller.limpiarFormulario();
-
-            Stage modal = new Stage();
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setTitle("Añadir Mejora");
-            modal.setScene(new Scene(root));
-            modal.setResizable(false);
-            modal.showAndWait();
-
-            cargarMejoras();
-        } catch (IOException e) {
-            mostrarError("Error al abrir el formulario de mejora", e);
-        }
+        abrirFormulario(null);
     }
 
     @FXML
@@ -142,24 +126,49 @@ public class MejorasdelcanalController implements Initializable {
             mostrarAlerta("Seleccione una mejora para editar.");
             return;
         }
+        abrirFormulario(mejoraSeleccionada);
+    }
 
+    private void abrirFormulario(MejorasDelCanal mejora) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMejorasDelCanal.fxml"));
             Parent root = loader.load();
-
             FormMejorasDelCanalController controller = loader.getController();
-            controller.cargarMejoraParaEditar(mejoraSeleccionada);
+
+            if (mejora != null) {
+                controller.cargarMejoraParaEditar(mejora);
+            } else {
+                controller.limpiarFormulario();
+            }
 
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setTitle("Editar Mejora");
+            modal.setTitle(mejora == null ? "Añadir Mejora" : "Editar Mejora");
             modal.setScene(new Scene(root));
             modal.setResizable(false);
             modal.showAndWait();
 
+            Object resultado = root.getUserData();
             cargarMejoras();
+
+            if (resultado instanceof MejorasDelCanal) {
+                MejorasDelCanal mejoraActualizada = (MejorasDelCanal) resultado;
+
+                int index = mejorasFiltradas.indexOf(
+                        mejorasFiltradas.stream()
+                                .filter(m -> m.getId() == mejoraActualizada.getId())
+                                .findFirst().orElse(null)
+                );
+
+                if (index >= 0) {
+                    listaMejoras.getSelectionModel().select(index);
+                    listaMejoras.scrollTo(index);
+                    mostrarDetalle(null);
+                }
+            }
+
         } catch (IOException e) {
-            mostrarError("Error al abrir el formulario de edición", e);
+            mostrarError("Error al abrir el formulario de mejora", e);
         }
     }
 

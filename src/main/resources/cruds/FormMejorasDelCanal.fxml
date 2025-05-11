@@ -1,14 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMejorasDelCanalController">
-    <stylesheets>
-        <URL value="@/styles/formmejorasdelcanal.css"/>
-    </stylesheets>
+<AnchorPane prefHeight="351.0" prefWidth="900.0" styleClass="formulario-mejorascanal" stylesheets="@../styles/formmejorasdelcanal.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMejorasDelCanalController">
+
+    <!-- Título -->
+    <children>
+        <Label alignment="CENTER" layoutX="20.0" layoutY="25.0" prefHeight="35.0" prefWidth="860.0" styleClass="inicio-titulo" text="Formulario de Mejora del Canal" />
+
+        <!-- Formulario -->
+        <GridPane fx:id="gridFormulario" hgap="40" layoutX="20.0" layoutY="110.0" prefHeight="177.0" prefWidth="860.0" vgap="15" AnchorPane.bottomAnchor="133.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="110.0">
+
+            <columnConstraints>
+                <ColumnConstraints prefWidth="150.0" />
+                <ColumnConstraints prefWidth="300.0" />
+                <ColumnConstraints prefWidth="150.0" />
+                <ColumnConstraints prefWidth="300.0" />
+            </columnConstraints>
+
+            <!-- Fila 0 -->
+            <Label styleClass="label-mejorascanal" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="txtDescripcion" promptText="Describe la mejora" styleClass="input-mejorascanal" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label styleClass="label-mejorascanal" text="Meta esperada:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <TextField fx:id="txtMeta" promptText="Valor objetivo" styleClass="input-mejorascanal" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+            <!-- Fila 1 -->
+            <Label styleClass="label-mejorascanal" text="Progreso actual:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="txtActual" promptText="Cantidad alcanzada" styleClass="input-mejorascanal" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label styleClass="label-mejorascanal" text="¿Cumplida?" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <HBox alignment="CENTER_LEFT" spacing="20" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                <RadioButton fx:id="radioCumplidaSi" styleClass="label-mejorascanal" text="Sí">
+               <toggleGroup>
+                  <ToggleGroup fx:id="cumplidaGroup" />
+               </toggleGroup></RadioButton>
+                <RadioButton fx:id="radioCumplidaNo" styleClass="label-mejorascanal" text="No" toggleGroup="$cumplidaGroup" />
+            </HBox>
+
+            <!-- Fila 2 -->
+            <Label styleClass="label-mejorascanal" text="Fecha de inicio:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <DatePicker fx:id="pickerFechaInicio" prefWidth="261.0" promptText="Desde" styleClass="input-mejorascanal" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <Label styleClass="label-mejorascanal" text="Fecha de fin:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <DatePicker fx:id="pickerFechaFin" prefWidth="266.0" promptText="Hasta" styleClass="input-mejorascanal" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+
+        <!-- Botones -->
+        <HBox alignment="CENTER" layoutY="301.0" spacing="12" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <Button fx:id="btnGuardar" onAction="#guardarMejora" styleClass="mejoras-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
+                </graphic>
+                <text>Guardar</text>
+            </Button>
+            <Button fx:id="btnCancelar" onAction="#cerrarVentana" styleClass="mejoras-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="TIMES" styleClass="control-icon" />
+                </graphic>
+                <text>Cancelar</text>
+            </Button>
+        </HBox>
+    </children>
 </AnchorPane>
