@@ -84,15 +84,7 @@
                 <Label styleClass="detalle-titulo" text="Actual:" />
                 <Label fx:id="lblActual" styleClass="detalle-valor" />
             </HBox>
-            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="3">
-                <Label styleClass="detalle-titulo" text="Mes:" />
-                <Label fx:id="lblMes" styleClass="detalle-valor" />
-            </HBox>
-            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="4">
-                <Label styleClass="detalle-titulo" text="Año:" />
-                <Label fx:id="lblAnio" styleClass="detalle-valor" />
-            </HBox>
-
+            
             <!-- Columna 2 -->
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Label styleClass="detalle-titulo" text="Inicio:" />

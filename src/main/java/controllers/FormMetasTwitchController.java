@@ -3,23 +3,34 @@ package controllers;
 import dao.MetasTwitchDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import models.MetasTwitch;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javafx.util.StringConverter;
 
-public class FormMetasTwitchController {
+public class FormMetasTwitchController implements Initializable {
 
     @FXML
-    private TextField txtDescripcion, txtMeta, txtActual, txtMes, txtAnio;
+    private TextField txtDescripcion;
     @FXML
-    private DatePicker pickerInicio, pickerFin;
+    private TextField txtMeta;
     @FXML
-    private Button btnGuardar, btnCancelar;
+    private TextField txtActual;
+    @FXML
+    private DatePicker pickerInicio;
+    @FXML
+    private DatePicker pickerFin;
+    @FXML
+    private Button btnGuardar;
+    @FXML
+    private Button btnCancelar;
 
     private Runnable onGuardarCallback;
     private final MetasTwitchDAO dao = new MetasTwitchDAO();
@@ -28,7 +39,8 @@ public class FormMetasTwitchController {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         configurarDatePickers();
     }
 
@@ -38,12 +50,9 @@ public class FormMetasTwitchController {
 
     public void setMeta(MetasTwitch meta) {
         this.metaExistente = meta;
-
         txtDescripcion.setText(meta.getDescripcion());
         txtMeta.setText(String.valueOf(meta.getMeta()));
         txtActual.setText(String.valueOf(meta.getActual()));
-        txtMes.setText(meta.getMes());
-        txtAnio.setText(String.valueOf(meta.getAnio()));
         pickerInicio.setValue(meta.getFechaInicio());
         pickerFin.setValue(meta.getFechaFin());
     }
@@ -54,19 +63,15 @@ public class FormMetasTwitchController {
 
     @FXML
     private void guardarMeta(ActionEvent event) {
-        guardar(event);
-    }
-
-    private void guardar(ActionEvent event) {
-        if (!validarCampos()) return;
+        if (!validarCampos()) {
+            return;
+        }
 
         MetasTwitch meta = new MetasTwitch(
                 metaExistente != null ? metaExistente.getIdMeta() : 0,
-                txtDescripcion.getText(),
-                Integer.parseInt(txtMeta.getText()),
-                Integer.parseInt(txtActual.getText()),
-                txtMes.getText(),
-                Integer.parseInt(txtAnio.getText()),
+                txtDescripcion.getText().trim(),
+                Integer.parseInt(txtMeta.getText().trim()),
+                Integer.parseInt(txtActual.getText().trim()),
                 pickerInicio.getValue(),
                 pickerFin.getValue(),
                 LocalDate.now()
@@ -75,20 +80,20 @@ public class FormMetasTwitchController {
         boolean exito = false;
 
         if (metaExistente == null) {
-            Integer idInsertado = dao.insertarMetaYDevolverId(meta);
-            if (idInsertado != null) {
-                meta.setIdMeta(idInsertado);
+            Integer id = dao.insertarMetaYDevolverId(meta);
+            if (id != null) {
+                meta.setIdMeta(id);
                 metaGuardada = meta;
                 mostrarInfo("Meta registrada correctamente.");
                 exito = true;
             }
         } else {
-            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacion.setTitle("Confirmar actualización");
-            confirmacion.setHeaderText("¿Deseas actualizar esta meta?");
-            confirmacion.setContentText("Se sobrescribirá la información actual.");
-            Optional<ButtonType> resultado = confirmacion.showAndWait();
-            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+            alerta.setTitle("Confirmación de edición");
+            alerta.setHeaderText("¿Deseas actualizar esta meta?");
+            alerta.setContentText("Esta acción reemplazará la información existente.");
+            Optional<ButtonType> result = alerta.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 exito = dao.actualizarMeta(meta);
                 if (exito) {
                     metaGuardada = meta;
@@ -102,30 +107,27 @@ public class FormMetasTwitchController {
                 onGuardarCallback.run();
             }
             cerrarVentana();
-        } else if (metaExistente != null) {
-            mostrarAlerta("No se pudo actualizar la meta.");
         } else {
-            mostrarAlerta("No se pudo registrar la meta.");
+            mostrarAlerta(metaExistente != null ? "No se pudo actualizar la meta." : "No se pudo registrar la meta.");
         }
     }
 
     private boolean validarCampos() {
-        if (txtDescripcion.getText().isEmpty() || txtMeta.getText().isEmpty()
-                || txtActual.getText().isEmpty() || txtMes.getText().isEmpty() || txtAnio.getText().isEmpty()
-                || pickerInicio.getValue() == null || pickerFin.getValue() == null) {
+        if (txtDescripcion.getText().trim().isEmpty()
+                || txtMeta.getText().trim().isEmpty()
+                || txtActual.getText().trim().isEmpty()
+                || pickerInicio.getValue() == null
+                || pickerFin.getValue() == null) {
             mostrarAlerta("Todos los campos deben estar completos.");
             return false;
         }
-
         try {
-            Integer.parseInt(txtMeta.getText());
-            Integer.parseInt(txtActual.getText());
-            Integer.parseInt(txtAnio.getText());
+            Integer.parseInt(txtMeta.getText().trim());
+            Integer.parseInt(txtActual.getText().trim());
         } catch (NumberFormatException e) {
-            mostrarAlerta("Meta, Actual y Año deben ser números válidos.");
+            mostrarAlerta("Meta y Actual deben ser números válidos.");
             return false;
         }
-
         return true;
     }
 
@@ -138,20 +140,17 @@ public class FormMetasTwitchController {
 
             @Override
             public LocalDate fromString(String string) {
-                if (string == null || string.trim().isEmpty()) return null;
+                if (string == null || string.trim().isEmpty()) {
+                    return null;
+                }
                 try {
-                    return LocalDate.parse(string, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                } catch (Exception e1) {
-                    try {
-                        return LocalDate.parse(string, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    } catch (Exception e2) {
-                        mostrarAlerta("Formato de fecha inválido. Usa dd/MM/yyyy o dd-MM-yyyy");
-                        return null;
-                    }
+                    return LocalDate.parse(string, formatter);
+                } catch (Exception e) {
+                    mostrarAlerta("Formato de fecha inválido. Usa dd/MM/yyyy");
+                    return null;
                 }
             }
         };
-
         pickerInicio.setConverter(converter);
         pickerFin.setConverter(converter);
     }

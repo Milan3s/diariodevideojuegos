@@ -1,8 +1,6 @@
 package controllers;
 
-import dao.ComboDAO;
 import dao.MetasTwitchDAO;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,26 +24,15 @@ import java.util.ResourceBundle;
 
 public class MetasTwitchController implements Initializable {
 
-    @FXML
-    private TextField campoBusqueda;
-    @FXML
-    private Button btnAgregar, btnEditar, btnEliminar;
-    @FXML
-    private ListView<MetasTwitch> listaMetas;
-    @FXML
-    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
-    @FXML
-    private Label paginaActual;
-    @FXML
-    private Text tituloMetas;
-    @FXML
-    private ImageView imgBoxart;
-    @FXML
-    private Label lblDescripcion, lblMeta, lblActual, lblMes, lblAnio, lblFechaInicio, lblFechaFin, lblFechaRegistro;
-    @FXML
-    private ComboBox<Integer> comboAnios;
-    @FXML
-    private FontAwesomeIconView iconoImagenNoDisponible;
+    @FXML private TextField campoBusqueda;
+    @FXML private Button btnAgregar, btnEditar, btnEliminar;
+    @FXML private ListView<MetasTwitch> listaMetas;
+    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML private Label paginaActual;
+    @FXML private Text tituloMetas;
+    @FXML private ImageView imgBoxart;
+    @FXML private Label lblDescripcion, lblMeta, lblActual, lblFechaInicio, lblFechaFin, lblFechaRegistro;
+    @FXML private javafx.scene.text.Text txtNoDisponible;
 
     private final MetasTwitchDAO dao = new MetasTwitchDAO();
     private ObservableList<MetasTwitch> todasLasMetas = FXCollections.observableArrayList();
@@ -55,16 +42,12 @@ public class MetasTwitchController implements Initializable {
     private int pagina = 1;
     private int totalPaginas = 1;
 
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         listaMetas.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> mostrarDetalle(newVal));
         campoBusqueda.setOnKeyReleased(this::buscar);
-        comboAnios.setOnAction(this::filtrarPorAnio);
-
-        comboAnios.setItems(ComboDAO.cargarAniosMetasTwitch());
-        comboAnios.getItems().add(0, null);
-        comboAnios.setPromptText("Año");
-
         cargarMetas();
     }
 
@@ -75,23 +58,15 @@ public class MetasTwitchController implements Initializable {
 
     private void aplicarFiltroYActualizarPaginacion() {
         String filtro = campoBusqueda.getText().toLowerCase();
-        Integer anioSeleccionado = comboAnios.getValue();
 
-        ObservableList<MetasTwitch> filtradas = todasLasMetas.filtered(meta -> {
-            boolean coincideTexto = meta.getDescripcion().toLowerCase().contains(filtro)
-                    || meta.getMes().toLowerCase().contains(filtro)
-                    || String.valueOf(meta.getAnio()).contains(filtro);
-            boolean coincideAnio = anioSeleccionado == null || meta.getAnio() == anioSeleccionado;
-            return coincideTexto && coincideAnio;
-        });
+        ObservableList<MetasTwitch> filtradas = todasLasMetas.filtered(meta ->
+                meta.getDescripcion().toLowerCase().contains(filtro)
+                        || String.valueOf(meta.getMeta()).contains(filtro)
+                        || String.valueOf(meta.getActual()).contains(filtro)
+        );
 
         totalPaginas = (int) Math.ceil((double) filtradas.size() / elementosPorPagina);
-        if (pagina > totalPaginas) {
-            pagina = totalPaginas;
-        }
-        if (pagina < 1) {
-            pagina = 1;
-        }
+        pagina = Math.max(1, Math.min(pagina, totalPaginas));
 
         int desde = (pagina - 1) * elementosPorPagina;
         int hasta = Math.min(desde + elementosPorPagina, filtradas.size());
@@ -99,7 +74,6 @@ public class MetasTwitchController implements Initializable {
         metasPaginadas.setAll(filtradas.subList(desde, hasta));
         listaMetas.setItems(metasPaginadas);
         paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
-
     }
 
     private void mostrarDetalle(MetasTwitch meta) {
@@ -107,32 +81,21 @@ public class MetasTwitchController implements Initializable {
             lblDescripcion.setText("");
             lblMeta.setText("");
             lblActual.setText("");
-            lblMes.setText("");
-            lblAnio.setText("");
             lblFechaInicio.setText("");
             lblFechaFin.setText("");
             lblFechaRegistro.setText("");
             return;
         }
 
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         lblDescripcion.setText(meta.getDescripcion());
         lblMeta.setText(String.valueOf(meta.getMeta()));
         lblActual.setText(String.valueOf(meta.getActual()));
-        lblMes.setText(meta.getMes());
-        lblAnio.setText(String.valueOf(meta.getAnio()));
-        lblFechaInicio.setText(meta.getFechaInicio().format(fmt));
-        lblFechaFin.setText(meta.getFechaFin().format(fmt));
-        lblFechaRegistro.setText(meta.getFechaRegistro().format(fmt));
+        lblFechaInicio.setText(meta.getFechaInicio().format(formatter));
+        lblFechaFin.setText(meta.getFechaFin().format(formatter));
+        lblFechaRegistro.setText(meta.getFechaRegistro() != null ? meta.getFechaRegistro().format(formatter) : "-");
     }
 
     private void buscar(KeyEvent event) {
-        pagina = 1;
-        aplicarFiltroYActualizarPaginacion();
-    }
-
-    private void filtrarPorAnio(ActionEvent event) {
         pagina = 1;
         aplicarFiltroYActualizarPaginacion();
     }
@@ -155,7 +118,7 @@ public class MetasTwitchController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            mostrarError("Error al abrir el formulario", e);
         }
     }
 
@@ -184,7 +147,7 @@ public class MetasTwitchController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            mostrarError("Error al abrir el formulario de edición", e);
         }
     }
 
@@ -220,30 +183,26 @@ public class MetasTwitchController implements Initializable {
         }
     }
 
-    @FXML
-    private void irPrimeraPagina(ActionEvent event) {
+    @FXML private void irPrimeraPagina(ActionEvent event) {
         pagina = 1;
         aplicarFiltroYActualizarPaginacion();
     }
 
-    @FXML
-    private void irPaginaAnterior(ActionEvent event) {
+    @FXML private void irPaginaAnterior(ActionEvent event) {
         if (pagina > 1) {
             pagina--;
             aplicarFiltroYActualizarPaginacion();
         }
     }
 
-    @FXML
-    private void irPaginaSiguiente(ActionEvent event) {
+    @FXML private void irPaginaSiguiente(ActionEvent event) {
         if (pagina < totalPaginas) {
             pagina++;
             aplicarFiltroYActualizarPaginacion();
         }
     }
 
-    @FXML
-    private void irUltimaPagina(ActionEvent event) {
+    @FXML private void irUltimaPagina(ActionEvent event) {
         pagina = totalPaginas;
         aplicarFiltroYActualizarPaginacion();
     }
@@ -252,6 +211,15 @@ public class MetasTwitchController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarError(String mensaje, Exception e) {
+        e.printStackTrace();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(mensaje);
+        alert.setContentText(e.getMessage());
         alert.showAndWait();
     }
 }

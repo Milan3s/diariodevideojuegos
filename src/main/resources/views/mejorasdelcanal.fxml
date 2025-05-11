@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/mejorasdelcanal.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MejorasdelcanalController">
+<AnchorPane prefHeight="940.0" prefWidth="1542.0" styleClass="mainFxmlClass" stylesheets="@../styles/mejorasdelcanal.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MejorasdelcanalController">
 
     <Text fx:id="tituloMejoras" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Mejoras del Canal" />
 

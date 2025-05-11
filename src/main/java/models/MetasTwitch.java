@@ -8,8 +8,6 @@ public class MetasTwitch {
     private String descripcion;
     private int meta;
     private int actual;
-    private String mes;
-    private int anio;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private LocalDate fechaRegistro;
@@ -17,14 +15,12 @@ public class MetasTwitch {
     public MetasTwitch() {
     }
 
-    public MetasTwitch(int idMeta, String descripcion, int meta, int actual, String mes, int anio,
-            LocalDate fechaInicio, LocalDate fechaFin, LocalDate fechaRegistro) {
+    public MetasTwitch(int idMeta, String descripcion, int meta, int actual,
+                       LocalDate fechaInicio, LocalDate fechaFin, LocalDate fechaRegistro) {
         this.idMeta = idMeta;
         this.descripcion = descripcion;
         this.meta = meta;
         this.actual = actual;
-        this.mes = mes;
-        this.anio = anio;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.fechaRegistro = fechaRegistro;
@@ -62,22 +58,6 @@ public class MetasTwitch {
         this.actual = actual;
     }
 
-    public String getMes() {
-        return mes;
-    }
-
-    public void setMes(String mes) {
-        this.mes = mes;
-    }
-
-    public int getAnio() {
-        return anio;
-    }
-
-    public void setAnio(int anio) {
-        this.anio = anio;
-    }
-
     public LocalDate getFechaInicio() {
         return fechaInicio;
     }
@@ -104,6 +84,6 @@ public class MetasTwitch {
 
     @Override
     public String toString() {
-        return descripcion + " (" + mes + " " + anio + ")";
+        return descripcion + " (" + fechaInicio + ")";
     }
 }

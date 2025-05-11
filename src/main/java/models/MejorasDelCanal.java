@@ -89,6 +89,6 @@ public class MejorasDelCanal {
 
     @Override
     public String toString() {
-        return descripcion + " (" + fechaInicio + " → " + fechaFin + ")";
+        return descripcion;
     }
 }
