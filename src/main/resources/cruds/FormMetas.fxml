@@ -9,7 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="formularioMetas" prefHeight="404.0" prefWidth="356.0" styleClass="formulario-meta" stylesheets="@../styles/formmetas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMetasController">
+<AnchorPane fx:id="formularioMetas" prefHeight="404.0" prefWidth="356.0" styleClass="formulario-meta" stylesheets="@../styles/formmetas.css" 
+            xmlns="http://javafx.com/javafx/23.0.1" 
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMetasController">
 
     <VBox fx:id="vboxConfiguracion" layoutX="30.0" layoutY="30.0" prefWidth="300" spacing="10.0" styleClass="form-vbox">
 

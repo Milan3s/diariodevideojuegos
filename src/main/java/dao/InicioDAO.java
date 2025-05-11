@@ -1,6 +1,7 @@
 package dao;
 
 import config.Conexion;
+import config.AppLogger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.ConfiguracionAuxiliar;
@@ -38,9 +39,11 @@ public class InicioDAO {
             totalMetas = ejecutarConteo(conn, "SELECT COUNT(*) FROM metas_twitch");
             totalSeguidores = ejecutarConteo(conn, "SELECT SUM(cantidad) FROM seguidores");
 
-            // Meta de seguidores (más reciente)
+            // Meta seguidores desde asignación
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT meta, actual FROM metas_twitch ORDER BY fecha_inicio DESC LIMIT 1");
+                    "SELECT mt.meta, mt.actual FROM configuracion_auxiliares_asignadas ca " +
+                            "JOIN metas_twitch mt ON ca.id_valor = mt.id_meta " +
+                            "WHERE ca.nombre_tabla = 'metas_twitch' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     int meta = rs.getInt("meta");
@@ -78,18 +81,22 @@ public class InicioDAO {
                 }
             }
 
-            // Última mejora del canal
+            // Última mejora del canal desde asignación
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT descripcion FROM mejoras_canal ORDER BY fecha DESC LIMIT 1");
+                    "SELECT mc.descripcion FROM configuracion_auxiliares_asignadas ca " +
+                            "JOIN mejoras_canal mc ON ca.id_valor = mc.id_mejora " +
+                            "WHERE ca.nombre_tabla = 'mejoras_canal' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     mejorasDelCanal = rs.getString("descripcion");
                 }
             }
 
-            // Próximo evento extensible
+            // Próximo evento extensible desde asignación
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT fecha_evento FROM eventos_extensibles WHERE fecha_evento >= CURRENT_DATE ORDER BY fecha_evento ASC LIMIT 1");
+                    "SELECT ee.fecha_evento FROM configuracion_auxiliares_asignadas ca " +
+                            "JOIN eventos_extensibles ee ON ca.id_valor = ee.id_extensible " +
+                            "WHERE ca.nombre_tabla = 'eventos_extensibles' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String fechaStr = rs.getString("fecha_evento");
@@ -105,21 +112,25 @@ public class InicioDAO {
                 }
             }
 
-            // Última meta específica registrada (cumplida o no)
+            // Última meta específica asignada
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT descripcion, juegos_completados, juegos_objetivo FROM metas_especificas " +
-                            "ORDER BY fecha_fin DESC LIMIT 1");
+                    "SELECT me.descripcion, me.juegos_completados, me.juegos_objetivo, me.fecha_fin FROM configuracion_auxiliares_asignadas ca " +
+                            "JOIN metas_especificas me ON ca.id_valor = me.id_meta_especifica " +
+                            "WHERE ca.nombre_tabla = 'metas_especificas' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String descripcion = rs.getString("descripcion");
                     int completados = rs.getInt("juegos_completados");
                     int objetivo = rs.getInt("juegos_objetivo");
-                    metaEspecifica = String.format("%s (%d / %d)", descripcion, completados, objetivo);
+                    String fechaFin = rs.getString("fecha_fin");
+
+                    metaEspecifica = String.format("%s (%d / %d)\nFinaliza: %s",
+                            descripcion, completados, objetivo, fechaFin);
                 }
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al obtener el resumen de inicio: " + e.getMessage());
+            AppLogger.severe("Error al obtener el resumen de inicio: " + e.getMessage());
         }
 
         return new Inicio(
@@ -172,9 +183,30 @@ public class InicioDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Error cargando datos para tabla " + config.getNombreTabla() + ": " + e.getMessage());
+            AppLogger.warning("Error cargando datos para tabla " + config.getNombreTabla() + ": " + e.getMessage());
         }
 
         return lista;
+    }
+
+    public boolean asignarConfiguracionAuxiliar(String nombreTabla, String columnaId, int id) {
+        String sql = "INSERT INTO configuracion_auxiliares_asignadas (nombre_tabla, columna_id, id_valor, fecha_asignacion) " +
+                "VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
+
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nombreTabla);
+            stmt.setString(2, columnaId);
+            stmt.setInt(3, id);
+            int filas = stmt.executeUpdate();
+
+            AppLogger.info("Asignación guardada para tabla: " + nombreTabla + " ID: " + id);
+            return filas > 0;
+
+        } catch (SQLException e) {
+            AppLogger.severe("Error al asignar configuración auxiliar: " + e.getMessage());
+            return false;
+        }
     }
 }

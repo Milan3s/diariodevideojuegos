@@ -128,4 +128,23 @@ public class ComboDAO {
         return lista;
     }
 
+    public static ObservableList<Integer> cargarAniosMejorasCanal() {
+        ObservableList<Integer> lista = FXCollections.observableArrayList();
+        String sql = "SELECT DISTINCT strftime('%Y', fecha_inicio) AS anio FROM mejoras_canal ORDER BY anio DESC";
+
+        try (Connection conn = DriverManager.getConnection(Conexion.getUrl()); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(rs.getInt("anio"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+    
+    
+
 }

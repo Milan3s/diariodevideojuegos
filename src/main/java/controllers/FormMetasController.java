@@ -15,36 +15,16 @@ import models.DatosAuxiliares;
 public class FormMetasController {
 
     private Runnable onGuardarCallback;
-    @FXML
-    private HBox botonera;
 
-    public void setOnGuardarCallback(Runnable callback) {
-        this.onGuardarCallback = callback;
-    }
-
-    @FXML
-    private AnchorPane formularioMetas;
-
-    @FXML
-    private VBox vboxConfiguracion;
-
-    @FXML
-    private TextField filtroTablasAuxiliares;
-
-    @FXML
-    private ComboBox<ConfiguracionAuxiliar> comboTablas;
-
-    @FXML
-    private TextField filtroCampoAuxiliar;
-
-    @FXML
-    private ComboBox<DatosAuxiliares> comboCampos;
-
-    @FXML
-    private Button btnGuardar;
-
-    @FXML
-    private Button btnCancelar;
+    @FXML private AnchorPane formularioMetas;
+    @FXML private VBox vboxConfiguracion;
+    @FXML private TextField filtroTablasAuxiliares;
+    @FXML private ComboBox<ConfiguracionAuxiliar> comboTablas;
+    @FXML private TextField filtroCampoAuxiliar;
+    @FXML private ComboBox<DatosAuxiliares> comboCampos;
+    @FXML private Button btnGuardar;
+    @FXML private Button btnCancelar;
+    @FXML private HBox botonera;
 
     private final InicioDAO dao = new InicioDAO();
     private ObservableList<ConfiguracionAuxiliar> configuracionesOriginales = FXCollections.observableArrayList();
@@ -53,6 +33,10 @@ public class FormMetasController {
     public void initialize() {
         cargarComboTablas();
         comboTablas.setOnAction(this::actualizarComboCampos);
+    }
+
+    public void setOnGuardarCallback(Runnable callback) {
+        this.onGuardarCallback = callback;
     }
 
     private void cargarComboTablas() {
@@ -111,15 +95,17 @@ public class FormMetasController {
             return;
         }
 
-        // Simular guardar real (aquí pondrías la lógica real)
-        mostrarAlerta("Asignado: " + seleccionado.getNombre() + " a " + config.getNombreVisual());
+        boolean exito = dao.asignarConfiguracionAuxiliar(config.getNombreTabla(), config.getColumnaId(), seleccionado.getId());
 
-        if (onGuardarCallback != null) {
-            onGuardarCallback.run();
+        if (exito) {
+            mostrarInfo("Asignación registrada correctamente.");
+            if (onGuardarCallback != null) {
+                onGuardarCallback.run();
+            }
+            formularioMetas.getScene().getWindow().hide();
+        } else {
+            mostrarAlerta("Error al guardar la asignación.");
         }
-
-        // Cerrar el formulario después de guardar
-        formularioMetas.getScene().getWindow().hide();
     }
 
     @FXML
@@ -128,10 +114,18 @@ public class FormMetasController {
     }
 
     private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setTitle("Advertencia");
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarInfo(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setTitle("Información");
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-}
+} 

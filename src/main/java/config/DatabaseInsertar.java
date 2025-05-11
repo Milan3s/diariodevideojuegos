@@ -21,6 +21,12 @@ public class DatabaseInsertar {
                         + "('Dificultades', 'dificultades_logros', 'id_dificultad', 'nombre'), "
                         + "('Años Metas', 'anios_metas_especificas', 'anio', 'anio');";
 
+                String sqlAsignaciones = "INSERT INTO configuracion_auxiliares_asignadas (nombre_tabla, columna_id, id_valor, fecha_asignacion) VALUES "
+                        + "('metas_twitch', 'id_meta', 1, '2025-05-01'), "
+                        + "('metas_especificas', 'id_meta_especifica', 1, '2025-05-01'), "
+                        + "('mejoras_canal', 'id_mejora', 1, '2025-05-01'), "
+                        + "('eventos_extensibles', 'id_extensible', 1, '2025-05-01');";
+
                 String sqlEstados = "INSERT INTO estados (tipo, nombre) VALUES "
                         + "('juego', 'Pendiente'), ('juego', 'Jugando'), ('juego', 'Completado'), ('juego', 'Abandonado'), "
                         + "('logro', 'Pendiente'), ('logro', 'Completado'), ('logro', 'Oculto'), "
@@ -71,15 +77,19 @@ public class DatabaseInsertar {
 
                 String sqlSeguidores = "INSERT INTO seguidores (cantidad, fecha_registro) VALUES (1000, '2025-05-01');";
 
-                String sqlMejoras = "INSERT INTO mejoras_canal "
-                        + "(descripcion, meta, actual, fecha_inicio, fecha_fin, cumplida) VALUES "
+                String sqlMejoras = "INSERT INTO mejoras_canal (descripcion, meta, actual, fecha_inicio, fecha_fin, cumplida) VALUES "
                         + "('Nuevo overlay animado', 1, 0, '2025-05-01', '2025-05-31', 0), "
                         + "('Rediseño de paneles de información', 1, 1, '2025-04-01', '2025-04-15', 1), "
                         + "('Automatización de agradecimientos', 1, 0, '2025-06-01', '2025-06-30', 0);";
 
+                String sqlAniosMejoras = "INSERT INTO anios_mejoras_canal (id_mejora, anio, tipo) "
+                        + "SELECT id_mejora, strftime('%Y', fecha_inicio), 'canal' FROM mejoras_canal "
+                        + "WHERE id_mejora NOT IN (SELECT id_mejora FROM anios_mejoras_canal);";
+
                 String sqlExtensibles = "INSERT INTO eventos_extensibles (motivo, fecha_evento) VALUES ('Evento benéfico', '2025-06-10');";
 
                 stmt.execute(sqlConfiguracionAuxiliares);
+                stmt.execute(sqlAsignaciones);
                 stmt.execute(sqlEstados);
                 stmt.execute(sqlDificultades);
                 stmt.execute(sqlModeradores);
@@ -95,6 +105,7 @@ public class DatabaseInsertar {
                 stmt.execute(sqlAniosEspecificas);
                 stmt.execute(sqlSeguidores);
                 stmt.execute(sqlMejoras);
+                stmt.execute(sqlAniosMejoras);
                 stmt.execute(sqlExtensibles);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Datos insertados correctamente.", ButtonType.OK);

@@ -2,26 +2,26 @@ package controllers;
 
 import config.AppLogger;
 import dao.InicioDAO;
-import java.io.IOException;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import models.Inicio;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 public class InicioController implements Initializable {
 
@@ -112,30 +112,29 @@ public class InicioController implements Initializable {
         return (fechaOriginal != null) ? fechaOriginal : "No registrada";
     }
 
-    // ---------------------------
-    // Métodos para abrir formularios con callback
-    // ---------------------------
+    // ---------- FORMULARIO MODAL GENÉRICO ----------
     private void abrirFormularioMeta(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetas.fxml"));
             Parent root = loader.load();
 
             FormMetasController controller = loader.getController();
-            controller.setOnGuardarCallback(this::cargarResumen);  // Refrescar al guardar
+            controller.setOnGuardarCallback(this::cargarResumen);  // Refresca al cerrar
 
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setScene(new Scene(root));
             modal.setTitle("Asignar Meta");
-
-            modal.setResizable(true); // ✅ Permitir maximizar
+            modal.setResizable(true);
             modal.showAndWait();
 
         } catch (IOException e) {
             AppLogger.severe("Error al abrir el formulario: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    // ---------- BOTONES ----------
     @FXML
     private void handleAsignarMetaSeguidores(ActionEvent event) {
         abrirFormularioMeta(event);
@@ -160,4 +159,5 @@ public class InicioController implements Initializable {
     private void handleProximoExtensible(ActionEvent event) {
         abrirFormularioMeta(event);
     }
+
 }

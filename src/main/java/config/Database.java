@@ -153,6 +153,14 @@ public class Database {
                 + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
                 + ");\n"
 
+                + "CREATE TABLE IF NOT EXISTS anios_mejoras_canal (\n"
+                + "    id_mejora INTEGER,\n"
+                + "    anio INTEGER,\n"
+                + "    tipo TEXT,\n"
+                + "    PRIMARY KEY (id_mejora, anio),\n"
+                + "    FOREIGN KEY (id_mejora) REFERENCES mejoras_canal(id_mejora)\n"
+                + ");\n"
+
                 + "CREATE TABLE IF NOT EXISTS mejoras_canal (\n"
                 + "    id_mejora INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    descripcion TEXT NOT NULL,\n"
@@ -200,6 +208,15 @@ public class Database {
                 + "    nombre_tabla TEXT NOT NULL,\n"
                 + "    columna_id TEXT NOT NULL,\n"
                 + "    columna_nombre TEXT NOT NULL\n"
+                + ");\n"
+
+                + "CREATE TABLE IF NOT EXISTS configuracion_auxiliares_asignadas (\n"
+                + "    id_configuracion INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    nombre_tabla TEXT NOT NULL,\n"
+                + "    columna_id TEXT NOT NULL,\n" 
+                + "    id_valor INTEGER NOT NULL,\n"
+                + "    fecha_asignacion TEXT DEFAULT CURRENT_TIMESTAMP\n"
                 + ");\n";
+
     }
 }

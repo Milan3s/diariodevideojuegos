@@ -50,6 +50,10 @@ public class MejorasdelcanalController implements Initializable {
     private MejorasDelCanal mejoraSeleccionada;
 
     private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    @FXML
+    private ComboBox<?> cboxFecha;
+    @FXML
+    private ComboBox<?> cboxSiNo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -243,5 +247,13 @@ public class MejorasdelcanalController implements Initializable {
         alert.setHeaderText(mensaje);
         alert.setContentText(e.getMessage());
         alert.showAndWait();
+    }
+
+    @FXML
+    private void handledcboxFecha(ActionEvent event) {
+    }
+
+    @FXML
+    private void hanledcboxSiNo(ActionEvent event) {
     }
 }
