@@ -13,6 +13,12 @@ import models.DatosAuxiliares;
 
 public class FormMetasController {
 
+    private Runnable onGuardarCallback;
+
+    public void setOnGuardarCallback(Runnable callback) {
+        this.onGuardarCallback = callback;
+    }
+
     @FXML
     private AnchorPane formularioMetas;
 
@@ -103,7 +109,15 @@ public class FormMetasController {
             return;
         }
 
+        // Simular guardar real (aquí pondrías la lógica real)
         mostrarAlerta("Asignado: " + seleccionado.getNombre() + " a " + config.getNombreVisual());
+
+        if (onGuardarCallback != null) {
+            onGuardarCallback.run();
+        }
+
+        // Cerrar el formulario después de guardar
+        formularioMetas.getScene().getWindow().hide();
     }
 
     @FXML

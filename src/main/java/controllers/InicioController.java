@@ -50,6 +50,7 @@ public class InicioController implements Initializable {
     private Label lblFechaExtensible;
     @FXML
     private Label lblMetaEspecifica;
+
     @FXML
     private Text tituloResumen;
     @FXML
@@ -111,12 +112,17 @@ public class InicioController implements Initializable {
         return (fechaOriginal != null) ? fechaOriginal : "No registrada";
     }
 
-    @FXML
-    private void handleAsignarMetaSeguidores(ActionEvent event) {
+    // ---------------------------
+    // Métodos para abrir formularios con callback
+    // ---------------------------
+    private void abrirFormularioMeta(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetas.fxml"));
             Parent root = loader.load();
-            
+
+            FormMetasController controller = loader.getController();
+            controller.setOnGuardarCallback(this::cargarResumen);  // Refrescar al guardar
+
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.setScene(new Scene(root));
@@ -127,77 +133,30 @@ public class InicioController implements Initializable {
         } catch (IOException e) {
             AppLogger.severe("Error al abrir el formulario: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleAsignarMetaSeguidores(ActionEvent event) {
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleMetaJuegos(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetas.fxml"));
-            Parent root = loader.load();
-            
-            Stage modal = new Stage();
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setScene(new Scene(root));
-            modal.setTitle("Asignar Meta");
-            modal.setResizable(false);
-            modal.showAndWait();
-
-        } catch (IOException e) {
-            AppLogger.severe("Error al abrir el formulario: " + e.getMessage());
-        }
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleMetaEspecifica(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetas.fxml"));
-            Parent root = loader.load();
-            
-            Stage modal = new Stage();
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setScene(new Scene(root));
-            modal.setTitle("Asignar Meta");
-            modal.setResizable(false);
-            modal.showAndWait();
-
-        } catch (IOException e) {
-            AppLogger.severe("Error al abrir el formulario: " + e.getMessage());
-        }
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleAsignarMejoraDelCanal(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetas.fxml"));
-            Parent root = loader.load();
-            
-            Stage modal = new Stage();
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setScene(new Scene(root));
-            modal.setTitle("Asignar Meta");
-            modal.setResizable(false);
-            modal.showAndWait();
-
-        } catch (IOException e) {
-            AppLogger.severe("Error al abrir el formulario: " + e.getMessage());
-        }
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleProximoExtensible(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetas.fxml"));
-            Parent root = loader.load();
-            
-            Stage modal = new Stage();
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setScene(new Scene(root));
-            modal.setTitle("Asignar Meta");
-            modal.setResizable(false);
-            modal.showAndWait();
-
-        } catch (IOException e) {
-            AppLogger.severe("Error al abrir el formulario: " + e.getMessage());
-        }
+        abrirFormularioMeta(event);
     }
 }
