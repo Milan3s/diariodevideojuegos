@@ -2,6 +2,7 @@ package controllers;
 
 import dao.MetasEspecificasDAO;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +16,11 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class MetasEspecificasController implements Initializable {
 
@@ -129,16 +135,70 @@ public class MetasEspecificasController implements Initializable {
 
     @FXML
     private void abrirModalAgregar(ActionEvent event) {
-        // TODO: lógica para abrir el modal de agregar
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetasEspecificas.fxml"));
+            Parent root = loader.load();
+
+            FormMetasEspecificasController controller = loader.getController();
+            controller.setOnGuardarCallback(() -> {
+                actualizarLista();
+                seleccionarMetaPorId(controller.getMetaGuardada().getId());
+            });
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Nueva Meta Específica");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error al abrir el formulario: " + e.getMessage());
+        }
+    }
+
+    private void seleccionarMetaPorId(int id) {
+        for (int i = 0; i < todasMetas.size(); i++) {
+            if (todasMetas.get(i).getId() == id) {
+                pagina = (i / ITEMS_POR_PAGINA) + 1;
+                cargarPagina();
+                int indexInPage = i % ITEMS_POR_PAGINA;
+                listaMetas.getSelectionModel().select(indexInPage);
+                listaMetas.scrollTo(indexInPage);
+                break;
+            }
+        }
     }
 
     @FXML
     private void editarMeta(ActionEvent event) {
         MetasEspecificas seleccionada = listaMetas.getSelectionModel().getSelectedItem();
         if (seleccionada == null) {
+            mostrarAlerta("Por favor, selecciona una meta para editar.");
             return;
         }
-        // TODO: lógica para editar
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetasEspecificas.fxml"));
+            Parent root = loader.load();
+
+            FormMetasEspecificasController controller = loader.getController();
+            controller.setMetaExistente(seleccionada); // Pre-cargar datos en el formulario
+            controller.setOnGuardarCallback(() -> {
+                actualizarLista(); // Recargar lista
+                seleccionarMetaPorId(controller.getMetaGuardada().getId()); // Volver a seleccionar
+            });
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Editar Meta Específica");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error al abrir el formulario: " + e.getMessage());
+        }
     }
 
     @FXML

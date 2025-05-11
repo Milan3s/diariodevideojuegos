@@ -1,7 +1,129 @@
-/*
- * Empty Stylesheet file.
- */
+.root {
+    -fx-background-color: white;
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+}
 
-.mainFxmlClass {
+/* ---------------------- TÍTULO DEL FORMULARIO ---------------------- */
+.inicio-titulo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
 
+/* ---------------------- CONTENEDORES ---------------------- */
+.form-vbox {
+    -fx-padding: 20;
+}
+
+.form-grid {
+    -fx-hgap: 15;
+    -fx-vgap: 15;
+}
+
+.lbl_metaespecifica{
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* ---------------------- CAMPOS DE TEXTO ---------------------- */
+.input-text {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 10;
+    -fx-cursor: text;
+    -fx-pref-height: 40px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.input-text:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ---------------------- COMBOBOX CONSOLAS ---------------------- */
+.combo-consolas {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-pref-height: 40px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.combo-consolas:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ---------------------- DATEPICKERS ---------------------- */
+.date-picker {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-pref-height: 40px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.date-picker:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ---------------------- RADIO BUTTONS ---------------------- */
+.radio-group {
+    -fx-alignment: center-left;
+}
+
+.radio-si, .radio-no {
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+}
+
+.radio-si:selected, .radio-no:selected {
+    -fx-font-weight: bold;
+}
+
+/* ---------------------- BOTONES ---------------------- */
+.btn-guardar, .btn-cancelar, .btn-agregar-consola {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-guardar:hover, .btn-cancelar:hover, .btn-agregar-consola:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ---------------------- ICONOS ---------------------- */
+.fontawesome-icon {
+    -fx-fill: black;
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.fontawesome-icon:hover {
+    -fx-fill: #555;
+}
+
+/* ---------------------- BOTONERA ---------------------- */
+.botonera {
+    -fx-spacing: 10;
+    -fx-alignment: center;
 }

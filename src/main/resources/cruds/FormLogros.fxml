@@ -12,23 +12,23 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="formularioLogros" prefHeight="600.0" prefWidth="920.0" styleClass="formulario-logros" stylesheets="@../styles/formlogros.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormLogrosController">
+<AnchorPane fx:id="formularioLogros" prefHeight="476.0" prefWidth="920.0" styleClass="formulario-logros" stylesheets="@../styles/formlogros.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormLogrosController">
 
-    <GridPane fx:id="gridFormulario" hgap="40" layoutX="24.0" layoutY="29.0" styleClass="grid-logros" vgap="15" AnchorPane.bottomAnchor="80" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+    <GridPane fx:id="gridFormulario" hgap="40" layoutX="24.0" layoutY="29.0" prefHeight="436.0" prefWidth="880.0" styleClass="grid-logros" vgap="15" AnchorPane.bottomAnchor="144.0" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
 
         <columnConstraints>
-            <ColumnConstraints prefWidth="150" />
-            <ColumnConstraints prefWidth="250" />
-            <ColumnConstraints prefWidth="150" />
-            <ColumnConstraints prefWidth="250" />
+            <ColumnConstraints prefWidth="150.0" />
+            <ColumnConstraints prefWidth="250.0" />
+            <ColumnConstraints prefWidth="150.0" />
+            <ColumnConstraints prefWidth="250.0" />
         </columnConstraints>
 
         <!-- FILA 0 -->
         <Label styleClass="label-logros" text="Nombre" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <TextField fx:id="txtNombre" promptText="Nombre del logro" styleClass="input-logros" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label styleClass="label-logros" text="Intentos" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <TextField fx:id="txtIntentos" promptText="Número de intentos" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Label styleClass="label-logros" text="Intentos" GridPane.columnIndex="2" />
+        <TextField fx:id="txtIntentos" promptText="Número de intentos" styleClass="input-logros" GridPane.columnIndex="3" />
 
         <!-- FILA 1 -->
         <Label styleClass="label-logros" text="Descripción" GridPane.columnIndex="0" GridPane.rowIndex="1" />
@@ -53,14 +53,14 @@
 
         <!-- FILA 4 -->
         <Label styleClass="label-logros" text="Fecha inicio" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <DatePicker fx:id="dateInicio" prefHeight="48.0" prefWidth="250.0" styleClass="input-logros" promptText="Fecha de inicio" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <DatePicker fx:id="dateInicio" prefHeight="48.0" prefWidth="250.0" promptText="Fecha de inicio" styleClass="input-logros" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
         <Label styleClass="label-logros" text="Estado" GridPane.columnIndex="2" GridPane.rowIndex="4" />
         <ComboBox fx:id="comboEstado" prefHeight="44.0" prefWidth="247.0" promptText="Selecciona un estado" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="4" />
 
         <!-- FILA 5 -->
         <Label styleClass="label-logros" text="Fecha fin" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <DatePicker fx:id="dateFin" prefHeight="48.0" prefWidth="246.0" styleClass="input-logros" promptText="Fecha de fin" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <DatePicker fx:id="dateFin" prefHeight="48.0" prefWidth="246.0" promptText="Fecha de fin" styleClass="input-logros" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
         <Label styleClass="label-logros" text="Dificultad" GridPane.columnIndex="2" GridPane.rowIndex="5" />
         <ComboBox fx:id="comboDificultad" prefHeight="44.0" prefWidth="247.0" promptText="Selecciona dificultad (opcional)" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="5" />
@@ -79,8 +79,8 @@
       </rowConstraints>
     </GridPane>
 
-    <!-- Botones -->
-    <HBox alignment="CENTER" layoutX="0" layoutY="0" spacing="12" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+       <!-- Botones -->
+    <HBox alignment="CENTER" layoutY="413.0" spacing="12" AnchorPane.bottomAnchor="85.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <Button fx:id="btnGuardar" onAction="#guardarLogro" styleClass="logros-button" text="Guardar">
             <graphic>
                 <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />

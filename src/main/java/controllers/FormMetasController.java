@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.ConfiguracionAuxiliar;
 import models.DatosAuxiliares;
@@ -14,6 +15,8 @@ import models.DatosAuxiliares;
 public class FormMetasController {
 
     private Runnable onGuardarCallback;
+    @FXML
+    private HBox botonera;
 
     public void setOnGuardarCallback(Runnable callback) {
         this.onGuardarCallback = callback;
@@ -47,7 +50,6 @@ public class FormMetasController {
     private ObservableList<ConfiguracionAuxiliar> configuracionesOriginales = FXCollections.observableArrayList();
     private ObservableList<DatosAuxiliares> camposOriginales = FXCollections.observableArrayList();
 
-    @FXML
     public void initialize() {
         cargarComboTablas();
         comboTablas.setOnAction(this::actualizarComboCampos);
