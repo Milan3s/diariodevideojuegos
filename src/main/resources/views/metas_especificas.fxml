@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane styleClass="mainFxmlClass" 
+            stylesheets="@../styles/metas_twitch.css" 
+            xmlns="http://javafx.com/javafx/23.0.1" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controllers.MetasEspecificasController">
+
+    <Text fx:id="tituloMetas" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Metas Específicas" />
+
+    <HBox layoutX="412.0" layoutY="120.0" spacing="10.0">
+        <Button fx:id="btnAgregar" onAction="#abrirModalAgregar" prefWidth="112.0" styleClass="logros-button" text="Añadir">
+            <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="control-icon" /></graphic>
+        </Button>
+        <Button fx:id="btnEditar" onAction="#editarMeta" prefWidth="116.0" styleClass="logros-button" text="Editar">
+            <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="control-icon" /></graphic>
+        </Button>
+        <Button fx:id="btnEliminar" onAction="#eliminarMeta" prefWidth="116.0" styleClass="logros-button" text="Eliminar">
+            <graphic><FontAwesomeIconView glyphName="TRASH" styleClass="control-icon" /></graphic>
+        </Button>
+    </HBox>
+
+    <ComboBox fx:id="comboAnios" layoutX="39.0" layoutY="120.0" prefHeight="42.0" prefWidth="367.0" promptText="Año" styleClass="combo-box-style" />
+
+    <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="182.0" prefWidth="367.0" promptText="Buscar..." styleClass="combo-box-style" />
+
+    <ListView fx:id="listaMetas" layoutX="39.0" layoutY="247.0" prefHeight="695.0" prefWidth="367.0" styleClass="lista-metas" />
+
+    <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
+        <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
+        <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
+        <Label fx:id="paginaActual" styleClass="numeracion" text="1" />
+        <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente" styleClass="paginado-button" text="▶" />
+        <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
+    </HBox>
+
+    <AnchorPane layoutX="412.0" layoutY="171.0" prefHeight="806.0" prefWidth="923.0" styleClass="detalle-card">
+
+        <VBox layoutX="22.0" layoutY="336.0" prefHeight="320.0" prefWidth="549.0" spacing="10">
+            <StackPane prefHeight="324.0" prefWidth="552.0">
+                <ImageView fx:id="imgBoxart" fitHeight="323.0" fitWidth="552.0" preserveRatio="true" />
+                <FontAwesomeIconView fx:id="iconoImagenNoDisponible" glyphName="BAN" styleClass="control-icon" visible="false" StackPane.alignment="CENTER" />
+            </StackPane>
+        </VBox>
+
+        <GridPane hgap="40" layoutX="22.0" layoutY="19.0" prefHeight="350.0" prefWidth="850.0" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" />
+                <ColumnConstraints percentWidth="50" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints /><RowConstraints />
+            </rowConstraints>
+
+            <!-- Columna 1 -->
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label styleClass="detalle-titulo" text="Descripción:" />
+                <Label fx:id="lblDescripcion" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label styleClass="detalle-titulo" text="Juegos objetivo:" />
+                <Label fx:id="lblJuegosObjetivo" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                <Label styleClass="detalle-titulo" text="Juegos completados:" />
+                <Label fx:id="lblJuegosCompletados" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <Label styleClass="detalle-titulo" text="Fabricante:" />
+                <Label fx:id="lblFabricante" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                <Label styleClass="detalle-titulo" text="Consola:" />
+                <Label fx:id="lblConsola" styleClass="detalle-valor" />
+            </HBox>
+
+            <!-- Columna 2 -->
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label styleClass="detalle-titulo" text="Inicio:" />
+                <Label fx:id="lblFechaInicio" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label styleClass="detalle-titulo" text="Fin:" />
+                <Label fx:id="lblFechaFin" styleClass="detalle-valor" />
+            </HBox>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label styleClass="detalle-titulo" text="Cumplida:" />
+                <Label fx:id="lblCumplida" styleClass="detalle-valor" />
+            </HBox>
+        </GridPane>
+    </AnchorPane>
+</AnchorPane>

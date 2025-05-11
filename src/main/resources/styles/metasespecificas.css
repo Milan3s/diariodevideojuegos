@@ -1,0 +1,124 @@
+.root {
+    -fx-background-color: white;
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+}
+
+/* -------------------------- TÍTULO -------------------------- */
+.inicio-titulo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* -------------------------- BOTONES -------------------------- */
+.especificas-button, .logros-button, .moderador-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0.3, 0, 2);
+    -fx-cursor: hand;
+}
+
+.especificas-button:hover, .logros-button:hover, .moderador-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* -------------------------- INPUTS -------------------------- */
+.combo-box-style, .busqueda-style, .form-input {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-pref-height: 42px;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.combo-box-style:hover, .busqueda-style:hover, .form-input:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* -------------------------- LISTA DE METAS -------------------------- */
+.lista-especificas {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 17px;
+}
+
+.lista-especificas .list-cell:filled:selected {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.lista-especificas .list-cell:filled:hover {
+    -fx-background-color: #222;
+    -fx-text-fill: white;
+}
+
+/* -------------------------- DETALLE -------------------------- */
+.detalle-card {
+    -fx-padding: 20;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 20px;
+}
+
+.detalle-titulo {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.detalle-valor {
+    -fx-font-size: 18px;
+}
+
+/* -------------------------- ICONOS -------------------------- */
+.control-icon {
+    -fx-fill: black;
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.control-icon:hover {
+    -fx-fill: #555;
+}
+
+/* -------------------------- PAGINACIÓN -------------------------- */
+.paginado-box {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+    -fx-padding: 0 10;
+}
+
+.paginado-button {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.paginado-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.numeracion {
+    -fx-font-size: 20px;
+}
