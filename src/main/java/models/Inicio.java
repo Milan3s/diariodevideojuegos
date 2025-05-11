@@ -1,7 +1,12 @@
 package models;
 
+/**
+ * Modelo que representa los datos mostrados en el panel de "Resumen del
+ * Diario". Incluye totales generales y el estado actual de metas relevantes.
+ */
 public class Inicio {
 
+    // === Totales generales ===
     private int totalJuegos;
     private int totalLogros;
     private int totalConsolas;
@@ -9,12 +14,18 @@ public class Inicio {
     private int totalMetas;
     private int totalSeguidores;
 
-    private String metaSeguidoresProgreso;
-    private String metaJuegosCompletadosDescripcion;
-    private String mejorasDelCanal;
-    private String fechaExtensible;
-    private String diasParaExtensible;
-    private String metaEspecifica;
+    // === Detalle de metas ===
+    private String metaSeguidoresProgreso;               // Ej: "Progreso: 30 / 50"
+    private String metaJuegosCompletadosDescripcion;     // Ej: "Completados: 1 / 5. Meta: 50 juegos"
+    private String mejorasDelCanal;                      // Última mejora realizada
+    private String fechaExtensible;                      // Fecha real del próximo extensible
+    private String diasParaExtensible;                   // Ej: "Faltan 5 días"
+    private String metaEspecifica;                       // Descripción de meta específica activa
+
+    // === Constructores ===
+    public Inicio() {
+        // constructor vacío requerido para controladores o DAOs
+    }
 
     public Inicio(
             int totalJuegos,
@@ -44,7 +55,7 @@ public class Inicio {
         this.metaEspecifica = metaEspecifica;
     }
 
-    // Getters
+    // === Getters ===
     public int getTotalJuegos() {
         return totalJuegos;
     }
@@ -93,8 +104,62 @@ public class Inicio {
         return metaEspecifica;
     }
 
-    // Setters
+    // === Setters ===
+    public void setTotalJuegos(int totalJuegos) {
+        this.totalJuegos = totalJuegos;
+    }
+
+    public void setTotalLogros(int totalLogros) {
+        this.totalLogros = totalLogros;
+    }
+
+    public void setTotalConsolas(int totalConsolas) {
+        this.totalConsolas = totalConsolas;
+    }
+
+    public void setTotalEventos(int totalEventos) {
+        this.totalEventos = totalEventos;
+    }
+
+    public void setTotalMetas(int totalMetas) {
+        this.totalMetas = totalMetas;
+    }
+
+    public void setTotalSeguidores(int totalSeguidores) {
+        this.totalSeguidores = totalSeguidores;
+    }
+
+    public void setMetaSeguidoresProgreso(String metaSeguidoresProgreso) {
+        this.metaSeguidoresProgreso = metaSeguidoresProgreso;
+    }
+
+    public void setMetaJuegosCompletadosDescripcion(String metaJuegosCompletadosDescripcion) {
+        this.metaJuegosCompletadosDescripcion = metaJuegosCompletadosDescripcion;
+    }
+
+    public void setMejorasDelCanal(String mejorasDelCanal) {
+        this.mejorasDelCanal = mejorasDelCanal;
+    }
+
+    public void setFechaExtensible(String fechaExtensible) {
+        this.fechaExtensible = fechaExtensible;
+    }
+
+    public void setDiasParaExtensible(String diasParaExtensible) {
+        this.diasParaExtensible = diasParaExtensible;
+    }
+
     public void setMetaEspecifica(String metaEspecifica) {
         this.metaEspecifica = metaEspecifica;
+    }
+
+    // === Métodos auxiliares opcionales ===
+    public int getTotalElementos() {
+        return totalJuegos + totalLogros + totalConsolas + totalEventos + totalMetas + totalSeguidores;
+    }
+
+    public boolean hayMetasActivas() {
+        return metaSeguidoresProgreso != null || metaJuegosCompletadosDescripcion != null
+                || mejorasDelCanal != null || metaEspecifica != null;
     }
 }

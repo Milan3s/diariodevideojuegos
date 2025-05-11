@@ -1,184 +1,121 @@
 package controllers;
 
-import dao.MetasDAO;
+import dao.InicioDAO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import javafx.scene.layout.AnchorPane;
-import models.Metas;
+import javafx.scene.layout.VBox;
+import models.ConfiguracionAuxiliar;
+import models.DatosAuxiliares;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+public class FormMetasController {
 
-public class FormMetasController implements Initializable {
+    @FXML
+    private AnchorPane formularioMetas;
 
-    @FXML private Text tituloFormulario;
+    @FXML
+    private VBox vboxConfiguracion;
 
-    @FXML private HBox boxMeta;
-    @FXML private HBox boxJuegos;
-    @FXML private HBox boxFabricante;
-    @FXML private HBox boxConsola;
-    @FXML private HBox boxFechas;
-    @FXML private HBox boxExtensible;
+    @FXML
+    private TextField filtroTablasAuxiliares;
 
-    @FXML private TextField txtDescripcionMeta;
-    @FXML private TextField txtValorMeta;
-    @FXML private TextField txtValorActual;
-    @FXML private TextField txtFabricanteMeta;
-    @FXML private TextField txtJuegosObjetivoMeta;
-    @FXML private TextField txtJuegosCompletadosMeta;
-    @FXML private ComboBox<?> comboConsolaMeta;
-    @FXML private TextField txtMotivoMeta;
-    @FXML private DatePicker dpInicioMeta;
-    @FXML private DatePicker dpFinMeta;
-    @FXML private DatePicker dpFechaEventoMeta;
+    @FXML
+    private ComboBox<ConfiguracionAuxiliar> comboTablas;
 
-    @FXML private Button btnGuardarMeta;
-    @FXML private Button btnCancelarMeta;
+    @FXML
+    private TextField filtroCampoAuxiliar;
 
-    @FXML private AnchorPane formularioMetas;
+    @FXML
+    private ComboBox<DatosAuxiliares> comboCampos;
 
-    private String tipoMeta;
-    private final MetasDAO metasDAO = new MetasDAO();
+    @FXML
+    private Button btnGuardar;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        ocultarTodosLosCampos();
-        configurarBotones();
+    @FXML
+    private Button btnCancelar;
+
+    private final InicioDAO dao = new InicioDAO();
+    private ObservableList<ConfiguracionAuxiliar> configuracionesOriginales = FXCollections.observableArrayList();
+    private ObservableList<DatosAuxiliares> camposOriginales = FXCollections.observableArrayList();
+
+    @FXML
+    public void initialize() {
+        cargarComboTablas();
+        comboTablas.setOnAction(this::actualizarComboCampos);
     }
 
-    private void configurarBotones() {
-        btnGuardarMeta.setOnAction(event -> guardarMeta());
-
-        btnCancelarMeta.setOnAction(event -> {
-            if (btnCancelarMeta.getScene() != null && btnCancelarMeta.getScene().getWindow() != null) {
-                btnCancelarMeta.getScene().getWindow().hide();
-            }
-        });
+    private void cargarComboTablas() {
+        configuracionesOriginales = dao.obtenerConfiguracionesDeMetas();
+        comboTablas.setItems(configuracionesOriginales);
     }
 
-    private void ocultarTodosLosCampos() {
-        if (boxMeta != null) boxMeta.setVisible(false);
-        if (boxJuegos != null) boxJuegos.setVisible(false);
-        if (boxFabricante != null) boxFabricante.setVisible(false);
-        if (boxConsola != null) boxConsola.setVisible(false);
-        if (boxFechas != null) boxFechas.setVisible(false);
-        if (boxExtensible != null) boxExtensible.setVisible(false);
-    }
-
-    public void prepararFormularioSeguidores() {
-        tipoMeta = "seguidores";
-        ocultarTodosLosCampos();
-        if (tituloFormulario != null) tituloFormulario.setText("Formulario de Meta: SEGUIDORES");
-        if (boxMeta != null) boxMeta.setVisible(true);
-        if (boxFechas != null) boxFechas.setVisible(true);
-    }
-
-    public void prepararFormularioJuegos() {
-        tipoMeta = "twitch";
-        ocultarTodosLosCampos();
-        if (tituloFormulario != null) tituloFormulario.setText("Formulario de Meta: JUEGOS");
-        if (boxMeta != null) boxMeta.setVisible(true);
-        if (boxFechas != null) boxFechas.setVisible(true);
-    }
-
-    public void prepararFormularioEspecifica() {
-        tipoMeta = "especifica";
-        ocultarTodosLosCampos();
-        if (tituloFormulario != null) tituloFormulario.setText("Formulario de Meta: ESPECÍFICA");
-        if (boxJuegos != null) boxJuegos.setVisible(true);
-        if (boxFabricante != null) boxFabricante.setVisible(true);
-        if (boxConsola != null) boxConsola.setVisible(true);
-        if (boxFechas != null) boxFechas.setVisible(true);
-    }
-
-    public void prepararFormularioMejora() {
-        tipoMeta = "mejora";
-        ocultarTodosLosCampos();
-        if (tituloFormulario != null) tituloFormulario.setText("Formulario de Meta: MEJORA");
-        if (boxFechas != null) boxFechas.setVisible(true);
-    }
-
-    public void prepararFormularioExtensible() {
-        tipoMeta = "extensible";
-        ocultarTodosLosCampos();
-        if (tituloFormulario != null) tituloFormulario.setText("Formulario de Meta: EXTENSIBLE");
-        if (boxExtensible != null) boxExtensible.setVisible(true);
-    }
-
-    private void guardarMeta() {
-        Metas meta = new Metas();
-        meta.setTipo(tipoMeta);
-        meta.setDescripcion(txtDescripcionMeta != null ? txtDescripcionMeta.getText() : "");
-
-        if ("twitch".equals(tipoMeta)) {
-            meta.setMeta(parseInt(txtValorMeta.getText()));
-            meta.setActual(parseInt(txtValorActual.getText()));
-            meta.setFechaInicio(dpInicioMeta.getValue());
-            meta.setFechaFin(dpFinMeta.getValue());
-
-        } else if ("especifica".equals(tipoMeta)) {
-            meta.setJuegosObjetivo(parseInt(txtJuegosObjetivoMeta.getText()));
-            meta.setJuegosCompletados(parseInt(txtJuegosCompletadosMeta.getText()));
-            meta.setFabricante(txtFabricanteMeta.getText());
-            meta.setIdConsola(comboConsolaMeta != null && !comboConsolaMeta.getSelectionModel().isEmpty()
-                    ? comboConsolaMeta.getSelectionModel().getSelectedIndex() + 1
-                    : null);
-            meta.setFechaInicio(dpInicioMeta.getValue());
-            meta.setFechaFin(dpFinMeta.getValue());
-
-        } else if ("mejora".equals(tipoMeta)) {
-            meta.setFechaInicio(dpInicioMeta.getValue());
-            meta.setFechaFin(dpFinMeta.getValue());
-
-        } else if ("extensible".equals(tipoMeta)) {
-            meta.setMotivo(txtMotivoMeta.getText());
-            meta.setFechaEvento(dpFechaEventoMeta.getValue());
-
-        } else if ("seguidores".equals(tipoMeta)) {
-            meta.setActual(parseInt(txtValorActual.getText()));
-            meta.setFechaInicio(dpInicioMeta.getValue());
-            meta.setFechaFin(dpFinMeta.getValue());
+    private void actualizarComboCampos(ActionEvent event) {
+        ConfiguracionAuxiliar seleccion = comboTablas.getSelectionModel().getSelectedItem();
+        if (seleccion != null) {
+            camposOriginales = dao.obtenerDatosPorConfiguracion(seleccion);
+            comboCampos.setItems(camposOriginales);
+            filtroCampoAuxiliar.clear();
         }
+    }
 
-        boolean exito = metasDAO.insertarMeta(meta);
-        if (exito) {
-            mostrarAlerta("Meta guardada correctamente.", Alert.AlertType.INFORMATION);
-            limpiarFormulario();
+    @FXML
+    private void handleTablasAuxiliares(ActionEvent event) {
+        String texto = filtroTablasAuxiliares.getText().toLowerCase().trim();
+        if (texto.isEmpty()) {
+            comboTablas.setItems(configuracionesOriginales);
         } else {
-            mostrarAlerta("Error al guardar la meta.", Alert.AlertType.ERROR);
+            ObservableList<ConfiguracionAuxiliar> filtradas = FXCollections.observableArrayList();
+            for (ConfiguracionAuxiliar config : configuracionesOriginales) {
+                if (config.getNombreVisual().toLowerCase().contains(texto)) {
+                    filtradas.add(config);
+                }
+            }
+            comboTablas.setItems(filtradas);
         }
     }
 
-    private void limpiarFormulario() {
-        if (txtDescripcionMeta != null) txtDescripcionMeta.clear();
-        if (txtValorMeta != null) txtValorMeta.clear();
-        if (txtValorActual != null) txtValorActual.clear();
-        if (txtJuegosObjetivoMeta != null) txtJuegosObjetivoMeta.clear();
-        if (txtJuegosCompletadosMeta != null) txtJuegosCompletadosMeta.clear();
-        if (txtFabricanteMeta != null) txtFabricanteMeta.clear();
-        if (comboConsolaMeta != null) comboConsolaMeta.getSelectionModel().clearSelection();
-        if (dpInicioMeta != null) dpInicioMeta.setValue(null);
-        if (dpFinMeta != null) dpFinMeta.setValue(null);
-        if (txtMotivoMeta != null) txtMotivoMeta.clear();
-        if (dpFechaEventoMeta != null) dpFechaEventoMeta.setValue(null);
-    }
-
-    private void mostrarAlerta(String mensaje, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle("Información");
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
-    }
-
-    private Integer parseInt(String value) {
-        try {
-            return Integer.parseInt(value.trim());
-        } catch (Exception e) {
-            return 0;
+    @FXML
+    private void handlefiltroCampoAuxiliar(ActionEvent event) {
+        String texto = filtroCampoAuxiliar.getText().toLowerCase().trim();
+        if (texto.isEmpty()) {
+            comboCampos.setItems(camposOriginales);
+        } else {
+            ObservableList<DatosAuxiliares> filtrados = FXCollections.observableArrayList();
+            for (DatosAuxiliares campo : camposOriginales) {
+                if (campo.getNombre().toLowerCase().contains(texto)) {
+                    filtrados.add(campo);
+                }
+            }
+            comboCampos.setItems(filtrados);
         }
+    }
+
+    @FXML
+    private void guardarDatoAuxiliar(ActionEvent event) {
+        ConfiguracionAuxiliar config = comboTablas.getValue();
+        DatosAuxiliares seleccionado = comboCampos.getValue();
+
+        if (config == null || seleccionado == null) {
+            mostrarAlerta("Debe seleccionar una tabla y un valor.");
+            return;
+        }
+
+        mostrarAlerta("Asignado: " + seleccionado.getNombre() + " a " + config.getNombreVisual());
+    }
+
+    @FXML
+    private void cancearDatoAuxiliar(ActionEvent event) {
+        formularioMetas.getScene().getWindow().hide();
+    }
+
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("Información");
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }
