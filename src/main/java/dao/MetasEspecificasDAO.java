@@ -24,7 +24,7 @@ public class MetasEspecificasDAO {
         if (filtro != null && !filtro.isEmpty()) {
             sql.append("AND LOWER(m.descripcion) LIKE ? ");
         }
-        sql.append("ORDER BY m.fecha_inicio DESC");
+        sql.append("ORDER BY m.fecha_inicio ASC");
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
 

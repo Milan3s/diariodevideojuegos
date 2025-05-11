@@ -12,7 +12,7 @@ public class MetasTwitchDAO {
 
     public ObservableList<MetasTwitch> obtenerMetas() {
         ObservableList<MetasTwitch> lista = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM metas_twitch ORDER BY anio DESC, mes DESC";
+        String sql = "SELECT * FROM metas_twitch ORDER BY anio DESC, mes ASC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 

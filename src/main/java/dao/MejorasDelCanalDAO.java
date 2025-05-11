@@ -12,7 +12,7 @@ public class MejorasDelCanalDAO {
 
     public ObservableList<MejorasDelCanal> obtenerMejoras() {
         ObservableList<MejorasDelCanal> lista = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM mejoras_canal ORDER BY fecha_inicio DESC";
+        String sql = "SELECT * FROM mejoras_canal ORDER BY fecha_inicio ASC";
 
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(sql);
