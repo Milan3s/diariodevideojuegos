@@ -127,7 +127,7 @@ public class SidebarController implements Initializable {
 
     @FXML
     private void handleMejorasCanal(ActionEvent event) {
-        cargarVista("/views/mejoras_canal.fxml");
+        cargarVista("/views/mejorasdelcanal.fxml");
     }
 
     @FXML

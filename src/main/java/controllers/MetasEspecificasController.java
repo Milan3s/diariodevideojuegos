@@ -95,7 +95,8 @@ public class MetasEspecificasController implements Initializable {
         int inicio = (pagina - 1) * ITEMS_POR_PAGINA;
         int fin = Math.min(inicio + ITEMS_POR_PAGINA, todasMetas.size());
         listaMetas.setItems(FXCollections.observableArrayList(todasMetas.subList(inicio, fin)));
-        paginaActual.setText(pagina + " / " + totalPaginas);
+        paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
+
     }
 
     private void mostrarDetalle(MetasEspecificas meta) {

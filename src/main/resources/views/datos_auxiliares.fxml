@@ -44,16 +44,16 @@
     </HBox>
 
     <!-- Paginación -->
-    <HBox layoutX="123.0" layoutY="942.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
+    <HBox layoutX="36.0" layoutY="942.0" prefHeight="42.0" prefWidth="483.0" spacing="10.0" styleClass="paginado-box">
         <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
         <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
-        <Label fx:id="paginaActual" styleClass="numeracion" text="1" />
+        <Label fx:id="paginaActual" alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="60.0" styleClass="numeracion" text="1" />
         <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente" styleClass="paginado-button" text="▶" />
         <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
     </HBox>
 
     <!-- Panel de detalles -->
-    <GridPane hgap="15" layoutX="536.0" layoutY="181.0" prefWidth="799.0" styleClass="detalle-card" vgap="15">
+    <GridPane hgap="15" layoutX="536.0" layoutY="181.0" prefHeight="801.0" prefWidth="799.0" styleClass="detalle-card" vgap="15">
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" minWidth="100.0" />
             <ColumnConstraints hgrow="ALWAYS" />

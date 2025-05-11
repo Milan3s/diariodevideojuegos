@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/mejorasdelcanal.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MejorasdelcanalController">
+
+    <Text fx:id="tituloMejoras" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Mejoras del Canal" />
+
+    <HBox layoutX="412.0" layoutY="120.0" spacing="10.0">
+        <Button fx:id="btnAgregar" onAction="#abrirModalAgregar" prefWidth="112.0" styleClass="logros-button" text="Añadir">
+            <graphic><FontAwesomeIconView glyphName="PLUS" styleClass="control-icon" /></graphic>
+        </Button>
+        <Button fx:id="btnEditar" onAction="#editarMejora" prefWidth="116.0" styleClass="logros-button" text="Editar">
+            <graphic><FontAwesomeIconView glyphName="PENCIL" styleClass="control-icon" /></graphic>
+        </Button>
+        <Button fx:id="btnEliminar" onAction="#eliminarMejora" prefWidth="116.0" styleClass="logros-button" text="Eliminar">
+            <graphic><FontAwesomeIconView glyphName="TRASH" styleClass="control-icon" /></graphic>
+        </Button>
+    </HBox>
+
+    <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="120.0" prefWidth="367.0" promptText="Buscar..." styleClass="combo-box-style" />
+
+    <ListView fx:id="listaMejoras" layoutX="39.0" layoutY="182.0" prefHeight="695.0" prefWidth="367.0" styleClass="lista-metas" />
+
+    <HBox layoutX="39.0" layoutY="886.0" prefHeight="42.0" prefWidth="364.0" spacing="10.0" styleClass="paginado-box">
+        <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
+        <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
+        <Label fx:id="paginaActual" alignment="CENTER" prefHeight="30.0" prefWidth="59.0" styleClass="numeracion" text="1" />
+        <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente" styleClass="paginado-button" text="▶" />
+        <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
+    </HBox>
+
+    <AnchorPane layoutX="412.0" layoutY="183.0" prefHeight="757.0" prefWidth="923.0" styleClass="detalle-card">
+        <GridPane hgap="40" layoutX="22.0" layoutY="19.0" prefHeight="200.0" prefWidth="850.0" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" />
+                <ColumnConstraints percentWidth="50" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+
+            <!-- Columna 1 -->
+            <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label styleClass="detalle-titulo" text="Descripción:" />
+                <Label fx:id="lblDescripcion" styleClass="detalle-valor" />
+            </HBox>
+
+            <!-- Columna 2 -->
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label styleClass="detalle-titulo" text="Fecha:" />
+                <Label fx:id="lblFecha" styleClass="detalle-valor" />
+            </HBox>
+        </GridPane>
+    </AnchorPane>
+</AnchorPane>

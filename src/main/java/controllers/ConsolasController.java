@@ -129,10 +129,29 @@ public class ConsolasController implements Initializable {
     }
 
     private void actualizarPaginado() {
+        int totalPaginas = (int) Math.ceil((double) consolasFiltradas.size() / ITEMS_POR_PAGINA);
+        if (totalPaginas == 0) {
+            totalPaginas = 1;
+        }
+
+        if (pagina < 1) {
+            pagina = 1;
+        }
+        if (pagina > totalPaginas) {
+            pagina = totalPaginas;
+        }
+
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, consolasFiltradas.size());
+
+        if (desde >= consolasFiltradas.size()) {
+            desde = 0;
+            hasta = Math.min(ITEMS_POR_PAGINA, consolasFiltradas.size());
+            pagina = 1;
+        }
+
         listaConsolas.setItems(FXCollections.observableArrayList(consolasFiltradas.subList(desde, hasta)));
-        paginaActual.setText(String.valueOf(pagina));
+        paginaActual.setText(pagina + " / " + totalPaginas);
     }
 
     private void configurarListView() {

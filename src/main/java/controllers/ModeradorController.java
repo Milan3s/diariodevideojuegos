@@ -87,11 +87,27 @@ public class ModeradorController implements Initializable {
     }
 
     private void actualizarPaginado() {
+        int totalPaginas = (int) Math.ceil((double) listaFiltrada.size() / ITEMS_POR_PAGINA);
+        if (pagina < 1) {
+            pagina = 1;
+        }
+        if (pagina > totalPaginas) {
+            pagina = totalPaginas;
+        }
+
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, listaFiltrada.size());
+
+        if (desde > hasta) {
+            desde = 0;
+            hasta = Math.min(ITEMS_POR_PAGINA, listaFiltrada.size());
+            pagina = 1;
+        }
+
         listaModeradores.setItems(FXCollections.observableArrayList(listaFiltrada.subList(desde, hasta)));
         listaModeradores.getSelectionModel().clearSelection();
-        paginaActual.setText(String.valueOf(pagina));
+
+        paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
     }
 
     private void configurarListView() {

@@ -98,7 +98,8 @@ public class MetasTwitchController implements Initializable {
 
         metasPaginadas.setAll(filtradas.subList(desde, hasta));
         listaMetas.setItems(metasPaginadas);
-        paginaActual.setText(String.valueOf(pagina));
+        paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
+
     }
 
     private void mostrarDetalle(MetasTwitch meta) {

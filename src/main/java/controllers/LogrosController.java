@@ -102,18 +102,28 @@ public class LogrosController implements Initializable {
     }
 
     private void actualizarPaginado() {
+        int totalPaginas = (int) Math.ceil((double) logrosFiltrados.size() / ITEMS_POR_PAGINA);
+        if (pagina < 1) {
+            pagina = 1;
+        }
+        if (pagina > totalPaginas) {
+            pagina = totalPaginas;
+        }
+
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, logrosFiltrados.size());
 
         if (desde > hasta) {
             desde = 0;
+            hasta = Math.min(ITEMS_POR_PAGINA, logrosFiltrados.size());
+            pagina = 1;
         }
 
         listaLogros.setItems(FXCollections.observableArrayList(logrosFiltrados.subList(desde, hasta)));
-        listaLogros.getSelectionModel().clearSelection();  // <-- deselect any selected item
-        limpiarDetalle();                                   // <-- limpia los detalles
+        listaLogros.getSelectionModel().clearSelection();
+        limpiarDetalle();
 
-        paginaActual.setText(String.valueOf(pagina));
+        paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
     }
 
     private void filtrarLogros(ActionEvent e) {

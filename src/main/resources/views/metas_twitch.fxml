@@ -44,10 +44,10 @@
     <ListView fx:id="listaMetas" layoutX="39.0" layoutY="247.0" prefHeight="695.0" prefWidth="367.0" styleClass="lista-metas" />
 
     <!-- Paginado -->
-    <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
+    <HBox layoutX="34.0" layoutY="945.0" prefHeight="42.0" prefWidth="364.0" spacing="10.0" styleClass="paginado-box">
         <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
         <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
-        <Label fx:id="paginaActual" styleClass="numeracion" text="1" />
+        <Label fx:id="paginaActual" alignment="CENTER" prefHeight="30.0" prefWidth="58.0" styleClass="numeracion" text="1" />
         <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente" styleClass="paginado-button" text="▶" />
         <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
     </HBox>

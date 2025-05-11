@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane styleClass="mainFxmlClass" 
-            stylesheets="@../styles/metas_twitch.css" 
-            xmlns="http://javafx.com/javafx/23.0.1" 
-            xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="controllers.MetasEspecificasController">
+<AnchorPane styleClass="mainFxmlClass" stylesheets="@../styles/metas_twitch.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MetasEspecificasController">
 
     <Text fx:id="tituloMetas" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Metas Específicas" />
 
@@ -32,10 +38,10 @@
 
     <ListView fx:id="listaMetas" layoutX="39.0" layoutY="247.0" prefHeight="695.0" prefWidth="367.0" styleClass="lista-metas" />
 
-    <HBox layoutX="69.0" layoutY="945.0" prefHeight="42.0" prefWidth="316.0" spacing="10.0" styleClass="paginado-box">
+    <HBox layoutX="42.0" layoutY="945.0" prefHeight="42.0" prefWidth="364.0" spacing="10.0" styleClass="paginado-box">
         <Button fx:id="btnPrimero" onAction="#irPrimeraPagina" styleClass="paginado-button" text="⏮ Primero" />
         <Button fx:id="btnAnterior" onAction="#irPaginaAnterior" styleClass="paginado-button" text="◀" />
-        <Label fx:id="paginaActual" styleClass="numeracion" text="1" />
+        <Label fx:id="paginaActual" alignment="CENTER" prefHeight="30.0" prefWidth="71.0" styleClass="numeracion" text="1" textAlignment="CENTER" />
         <Button fx:id="btnSiguiente" onAction="#irPaginaSiguiente" styleClass="paginado-button" text="▶" />
         <Button fx:id="btnUltimo" onAction="#irUltimaPagina" styleClass="paginado-button" text="Último ⏭" />
     </HBox>

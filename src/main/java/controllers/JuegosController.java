@@ -118,13 +118,25 @@ public class JuegosController implements Initializable {
     }
 
     private void actualizarPaginado() {
+        int totalPaginas = (int) Math.ceil((double) juegosFiltrados.size() / ITEMS_POR_PAGINA);
+        if (pagina < 1) {
+            pagina = 1;
+        }
+        if (pagina > totalPaginas) {
+            pagina = totalPaginas;
+        }
+
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, juegosFiltrados.size());
+
         if (desde > hasta) {
             desde = 0;
+            hasta = Math.min(ITEMS_POR_PAGINA, juegosFiltrados.size());
+            pagina = 1;
         }
+
         listaJuegos.setItems(FXCollections.observableArrayList(juegosFiltrados.subList(desde, hasta)));
-        paginaActual.setText(String.valueOf(pagina));
+        paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
     }
 
     @FXML
