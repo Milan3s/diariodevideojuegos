@@ -17,25 +17,44 @@ public class FormMetasController {
 
     private Runnable onGuardarCallback;
 
-    @FXML private AnchorPane formularioMetas;
-    @FXML private VBox vboxConfiguracion;
-    @FXML private TextField filtroTablasAuxiliares;
-    @FXML private ComboBox<ConfiguracionAuxiliar> comboTablas;
-    @FXML private TextField filtroCampoAuxiliar;
-    @FXML private ComboBox<DatosAuxiliares> comboCampos;
-    @FXML private Button btnGuardar;
-    @FXML private Button btnCancelar;
-    @FXML private HBox botonera;
+    @FXML
+    private AnchorPane formularioMetas;
+    @FXML
+    private VBox vboxConfiguracion;
+    @FXML
+    private TextField filtroTablasAuxiliares;
+    @FXML
+    private ComboBox<ConfiguracionAuxiliar> comboTablas;
+    @FXML
+    private TextField filtroCampoAuxiliar;
+    @FXML
+    private ComboBox<DatosAuxiliares> comboCampos;
+    @FXML
+    private Button btnGuardar;
+    @FXML
+    private Button btnCancelar;
+    @FXML
+    private HBox botonera;
 
     private final InicioDAO dao = new InicioDAO();
     private ObservableList<ConfiguracionAuxiliar> configuracionesOriginales = FXCollections.observableArrayList();
     private ObservableList<DatosAuxiliares> camposOriginales = FXCollections.observableArrayList();
 
-    public void initialize() {
-        cargarComboTablas();
-        comboTablas.setOnAction(this::actualizarComboCampos);
+    private ConfiguracionAuxiliar preseleccionPendiente;
 
-        // Configurar cómo se muestra cada objeto DatosAuxiliares
+    public void initialize() {
+        comboTablas.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(ConfiguracionAuxiliar object) {
+                return (object != null) ? object.getNombreVisual() : "";
+            }
+
+            @Override
+            public ConfiguracionAuxiliar fromString(String string) {
+                return null;
+            }
+        });
+
         comboCampos.setConverter(new StringConverter<>() {
             @Override
             public String toString(DatosAuxiliares object) {
@@ -47,6 +66,16 @@ public class FormMetasController {
                 return null;
             }
         });
+
+        comboTablas.setOnAction(this::actualizarComboCampos);
+
+        cargarComboTablas();
+
+        // Si se intentó preseleccionar antes del initialize, aplicarlo ahora
+        if (preseleccionPendiente != null) {
+            aplicarPreseleccion(preseleccionPendiente);
+            preseleccionPendiente = null;
+        }
     }
 
     public void setOnGuardarCallback(Runnable callback) {
@@ -147,13 +176,36 @@ public class FormMetasController {
     }
 
     public void preseleccionarConfiguracion(ConfiguracionAuxiliar seleccionPredefinida) {
-        if (seleccionPredefinida == null) return;
+        if (seleccionPredefinida == null) {
+            return;
+        }
 
         cargarComboTablas();
+
+        // Establece como texto en el filtro, pero no selecciona en el combo
+        filtroTablasAuxiliares.setText(seleccionPredefinida.getNombreVisual());
+
+        // Filtra la lista visualmente (opcional, si quieres que el usuario la vea destacada)
+        ObservableList<ConfiguracionAuxiliar> filtradas = FXCollections.observableArrayList();
+        for (ConfiguracionAuxiliar config : configuracionesOriginales) {
+            if (config.getNombreVisual().equalsIgnoreCase(seleccionPredefinida.getNombreVisual())) {
+                filtradas.add(config);
+            }
+        }
+        comboTablas.setItems(filtradas);
+        comboTablas.getSelectionModel().clearSelection(); // ⚠️ Clave: no seleccionar
+        comboCampos.getItems().clear();                   // ⚠️ Clave: no cargar campos
+        comboCampos.getSelectionModel().clearSelection();
+    }
+
+    private void aplicarPreseleccion(ConfiguracionAuxiliar seleccionPredefinida) {
+        if (seleccionPredefinida == null) {
+            return;
+        }
+
         comboTablas.setValue(seleccionPredefinida);
         camposOriginales = dao.obtenerDatosPorConfiguracion(seleccionPredefinida);
         comboCampos.setItems(camposOriginales);
-
         if (!camposOriginales.isEmpty()) {
             comboCampos.getSelectionModel().selectFirst();
         }

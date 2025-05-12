@@ -27,28 +27,48 @@ import java.util.ResourceBundle;
 
 public class InicioController implements Initializable {
 
-    @FXML private Label txt_juegos_total;
-    @FXML private Label txt_logros_total;
-    @FXML private Label txt_consolas_total;
-    @FXML private Label txt_eventos_total;
-    @FXML private Label txt_metas_total;
-    @FXML private Label txt_seguidores_total;
+    @FXML
+    private Label txt_juegos_total;
+    @FXML
+    private Label txt_logros_total;
+    @FXML
+    private Label txt_consolas_total;
+    @FXML
+    private Label txt_eventos_total;
+    @FXML
+    private Label txt_metas_total;
+    @FXML
+    private Label txt_seguidores_total;
 
-    @FXML private Label lblSeguidorestotales;
-    @FXML private Label lblJuegosCompletados;
-    @FXML private Label lblResultadoMejoraDelCanal;
-    @FXML private Label lblFaltanXDias;
-    @FXML private Label lblFechaExtensible;
-    @FXML private Label lblMetaEspecifica;
+    @FXML
+    private Label lblSeguidorestotales;
+    @FXML
+    private Label lblJuegosCompletados;
+    @FXML
+    private Label lblResultadoMejoraDelCanal;
+    @FXML
+    private Label lblFaltanXDias;
+    @FXML
+    private Label lblFechaExtensible;
+    @FXML
+    private Label lblMetaEspecifica;
 
-    @FXML private Text tituloResumen;
-    @FXML private GridPane gridResumen;
-    @FXML private GridPane gridMetasDetalle;
-    @FXML private Button btnAsignarMetaSeguidores;
-    @FXML private Button btnMetaJuegos;
-    @FXML private Button btnMetaEspecifica;
-    @FXML private Button btnAsignarMejoraDelCanal;
-    @FXML private Button btnProximoExtensible;
+    @FXML
+    private Text tituloResumen;
+    @FXML
+    private GridPane gridResumen;
+    @FXML
+    private GridPane gridMetasDetalle;
+    @FXML
+    private Button btnAsignarMetaSeguidores;
+    @FXML
+    private Button btnMetaJuegos;
+    @FXML
+    private Button btnMetaEspecifica;
+    @FXML
+    private Button btnAsignarMejoraDelCanal;
+    @FXML
+    private Button btnProximoExtensible;
 
     private final DatosAuxiliaresDAO auxDAO = new DatosAuxiliaresDAO();
 
@@ -96,16 +116,13 @@ public class InicioController implements Initializable {
         return (fechaOriginal != null) ? fechaOriginal : "No registrada";
     }
 
-    private void abrirFormularioMeta(ActionEvent event, ConfiguracionAuxiliar seleccionPredefinida) {
+    private void abrirFormularioMeta(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/cruds/FormMetas.fxml"));
             Parent root = loader.load();
 
             FormMetasController controller = loader.getController();
             controller.setOnGuardarCallback(this::cargarResumen);
-            if (seleccionPredefinida != null) {
-                controller.preseleccionarConfiguracion(seleccionPredefinida);
-            }
 
             Stage modal = new Stage();
             modal.initModality(Modality.APPLICATION_MODAL);
@@ -123,26 +140,27 @@ public class InicioController implements Initializable {
     // ---------- BOTONES ----------
     @FXML
     private void handleAsignarMetaSeguidores(ActionEvent event) {
-        abrirFormularioMeta(event, auxDAO.obtenerConfiguracionVisual("Metas Twitch"));
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleMetaJuegos(ActionEvent event) {
-        abrirFormularioMeta(event, auxDAO.obtenerConfiguracionVisual("Metas de Juegos"));
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleMetaEspecifica(ActionEvent event) {
-        abrirFormularioMeta(event, auxDAO.obtenerConfiguracionVisual("Metas Especificas"));
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleAsignarMejoraDelCanal(ActionEvent event) {
-        abrirFormularioMeta(event, auxDAO.obtenerConfiguracionVisual("Mejoras del Canal"));
+        abrirFormularioMeta(event);
     }
 
     @FXML
     private void handleProximoExtensible(ActionEvent event) {
-        abrirFormularioMeta(event, auxDAO.obtenerConfiguracionVisual("Eventos Extensibles"));
+        abrirFormularioMeta(event);
     }
+
 }
