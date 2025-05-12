@@ -29,6 +29,7 @@ public class InicioDAO {
         String fechaExtensible = "No registrada";
         String diasParaExtensible = "No disponible";
         String metaEspecifica = "No hay metas específicas registradas";
+        String metaJuegosDescripcion = "No hay metas de juegos registradas";
 
         try (Connection conn = Conexion.obtenerConexion()) {
 
@@ -129,6 +130,23 @@ public class InicioDAO {
                 }
             }
 
+            // Última meta de juegos asignada
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT mj.descripcion, mj.juegos_completados, mj.juegos_objetivo, mj.fecha_fin FROM configuracion_auxiliares_asignadas ca " +
+                            "JOIN metas_juegos mj ON ca.id_valor = mj.id_meta_juegos " +  // CORRECTO
+                            "WHERE ca.nombre_tabla = 'metas_juegos' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String descripcion = rs.getString("descripcion");
+                    int completados = rs.getInt("juegos_completados");
+                    int objetivo = rs.getInt("juegos_objetivo");
+                    String fechaFin = rs.getString("fecha_fin");
+
+                    metaJuegosDescripcion = String.format("%s (%d / %d)\nFinaliza: %s",
+                            descripcion, completados, objetivo, fechaFin);
+                }
+            }
+
         } catch (SQLException e) {
             AppLogger.severe("Error al obtener el resumen de inicio: " + e.getMessage());
         }
@@ -145,7 +163,8 @@ public class InicioDAO {
                 mejorasDelCanal,
                 fechaExtensible,
                 diasParaExtensible,
-                metaEspecifica
+                metaEspecifica,
+                metaJuegosDescripcion
         );
     }
 
@@ -162,6 +181,7 @@ public class InicioDAO {
         lista.add(new ConfiguracionAuxiliar(2, "Metas Especificas", "metas_especificas", "id_meta_especifica", "descripcion"));
         lista.add(new ConfiguracionAuxiliar(3, "Mejoras del Canal", "mejoras_canal", "id_mejora", "descripcion"));
         lista.add(new ConfiguracionAuxiliar(4, "Eventos Extensibles", "eventos_extensibles", "id_extensible", "motivo"));
+        lista.add(new ConfiguracionAuxiliar(5, "Metas de Juegos", "metas_juegos", "id_meta_juegos", "descripcion")); // corregido
         return lista;
     }
 

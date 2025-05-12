@@ -6,6 +6,7 @@ import models.DatosAuxiliares;
 
 import java.sql.*;
 import java.util.*;
+import models.ConfiguracionAuxiliar;
 
 public class DatosAuxiliaresDAO {
 
@@ -13,9 +14,7 @@ public class DatosAuxiliaresDAO {
         List<String> tipos = new ArrayList<>();
         String sql = "SELECT nombre_visual FROM configuracion_auxiliares ORDER BY nombre_visual";
 
-        try (Connection conn = Conexion.obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 tipos.add(rs.getString("nombre_visual"));
@@ -30,16 +29,23 @@ public class DatosAuxiliaresDAO {
 
     private TablaAuxiliar obtenerConfiguracion(String nombreVisual) {
         String sql = "SELECT nombre_tabla, columna_id, columna_nombre FROM configuracion_auxiliares WHERE nombre_visual = ?";
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, nombreVisual);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
+                    String tabla = rs.getString("nombre_tabla");
+                    String columnaId = rs.getString("columna_id");
+                    String columnaNombre = rs.getString("columna_nombre");
+
+                    // Verificar si la columna nombre existe, si no, usar descripcion
+                    String columnaMostrar = existeColumna(conn, tabla, columnaNombre) ? columnaNombre
+                            : existeColumna(conn, tabla, "descripcion") ? "descripcion" : columnaNombre;
+
                     return new TablaAuxiliar(
-                            rs.getString("nombre_tabla"),
-                            rs.getString("columna_id"),
-                            rs.getString("columna_nombre"),
+                            tabla,
+                            columnaId,
+                            columnaMostrar,
                             nombreVisual
                     );
                 }
@@ -51,17 +57,35 @@ public class DatosAuxiliaresDAO {
         return null;
     }
 
+    private boolean existeColumna(Connection conn, String tabla, String columna) {
+        try {
+            DatabaseMetaData metaData = conn.getMetaData();
+            try (ResultSet columns = metaData.getColumns(null, null, tabla, columna)) {
+                return columns.next();
+            }
+        } catch (SQLException e) {
+            AppLogger.warning("Error al verificar columna " + columna + " en tabla " + tabla + ": " + e.getMessage());
+            return false;
+        }
+    }
+
     public List<DatosAuxiliares> listar(String nombreVisual) {
         List<DatosAuxiliares> resultados = new ArrayList<>();
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) return resultados;
+        if (config == null) {
+            return resultados;
+        }
 
-        String sql = config.tabla.equalsIgnoreCase("estados")
-                ? "SELECT " + config.columnaId + ", " + config.columnaNombre + ", tipo FROM " + config.tabla + " WHERE tipo = ? ORDER BY " + config.columnaNombre
-                : "SELECT " + config.columnaId + ", " + config.columnaNombre + " FROM " + config.tabla + " ORDER BY " + config.columnaNombre;
+        String sql;
+        if (config.tabla.equalsIgnoreCase("estados")) {
+            sql = String.format("SELECT %s, %s, tipo FROM %s WHERE tipo = ? ORDER BY %s",
+                    config.columnaId, config.columnaNombre, config.tabla, config.columnaNombre);
+        } else {
+            sql = String.format("SELECT %s, %s FROM %s ORDER BY %s",
+                    config.columnaId, config.columnaNombre, config.tabla, config.columnaNombre);
+        }
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             if (config.tabla.equalsIgnoreCase("estados")) {
                 stmt.setString(1, inferirTipoDesdeVisual(config.tipoVisual));
@@ -85,19 +109,22 @@ public class DatosAuxiliaresDAO {
 
     public int insertarYObtenerId(String nombreVisual, String valor) {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) return -1;
+        if (config == null) {
+            return -1;
+        }
 
         String sql;
         boolean esEstado = config.tabla.equalsIgnoreCase("estados");
 
         if (esEstado) {
-            sql = "INSERT INTO " + config.tabla + " (" + config.columnaNombre + ", tipo) VALUES (?, ?)";
+            sql = String.format("INSERT INTO %s (%s, tipo) VALUES (?, ?)",
+                    config.tabla, config.columnaNombre);
         } else {
-            sql = "INSERT INTO " + config.tabla + " (" + config.columnaNombre + ") VALUES (?)";
+            sql = String.format("INSERT INTO %s (%s) VALUES (?)",
+                    config.tabla, config.columnaNombre);
         }
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, valor);
             if (esEstado) {
@@ -122,12 +149,14 @@ public class DatosAuxiliaresDAO {
 
     public boolean editar(String nombreVisual, int id, String nuevoValor) {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) return false;
+        if (config == null) {
+            return false;
+        }
 
-        String sql = "UPDATE " + config.tabla + " SET " + config.columnaNombre + " = ? WHERE " + config.columnaId + " = ?";
+        String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?",
+                config.tabla, config.columnaNombre, config.columnaId);
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, nuevoValor);
             pstmt.setInt(2, id);
@@ -141,12 +170,14 @@ public class DatosAuxiliaresDAO {
 
     public boolean eliminar(String nombreVisual, int id) {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) return false;
+        if (config == null) {
+            return false;
+        }
 
-        String sql = "DELETE FROM " + config.tabla + " WHERE " + config.columnaId + " = ?";
+        String sql = String.format("DELETE FROM %s WHERE %s = ?",
+                config.tabla, config.columnaId);
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, id);
             return pstmt.executeUpdate() > 0;
@@ -159,12 +190,14 @@ public class DatosAuxiliaresDAO {
 
     public boolean existeRegistro(String tipoVisual, String nombre) {
         TablaAuxiliar config = obtenerConfiguracion(tipoVisual);
-        if (config == null) return false;
+        if (config == null) {
+            return false;
+        }
 
-        String sql = "SELECT COUNT(*) FROM " + config.tabla + " WHERE " + config.columnaNombre + " = ?";
+        String sql = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?",
+                config.tabla, config.columnaNombre);
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nombre);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -179,14 +212,16 @@ public class DatosAuxiliaresDAO {
 
     public DatosAuxiliares buscarPorNombre(String tipoVisual, String nombre) {
         TablaAuxiliar config = obtenerConfiguracion(tipoVisual);
-        if (config == null) return null;
+        if (config == null) {
+            return null;
+        }
 
-        String sql = "SELECT " + config.columnaId + ", " + config.columnaNombre
-                + (config.tabla.equalsIgnoreCase("estados") ? ", tipo" : "")
-                + " FROM " + config.tabla + " WHERE " + config.columnaNombre + " = ?";
+        String sql = String.format("SELECT %s, %s%s FROM %s WHERE %s = ?",
+                config.columnaId, config.columnaNombre,
+                config.tabla.equalsIgnoreCase("estados") ? ", tipo" : "",
+                config.tabla, config.columnaNombre);
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nombre);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -204,7 +239,31 @@ public class DatosAuxiliaresDAO {
         return null;
     }
 
+    public ConfiguracionAuxiliar obtenerConfiguracionVisual(String nombreVisual) {
+        String sql = "SELECT id_configuracion, nombre_visual, nombre_tabla, columna_id, columna_nombre FROM configuracion_auxiliares WHERE nombre_visual = ?";
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nombreVisual);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new ConfiguracionAuxiliar(
+                            rs.getInt("id_configuracion"),
+                            rs.getString("nombre_visual"),
+                            rs.getString("nombre_tabla"),
+                            rs.getString("columna_id"),
+                            rs.getString("columna_nombre")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            AppLogger.severe("Error al obtener configuración auxiliar para: " + nombreVisual + ": " + e.getMessage());
+        }
+        return null;
+    }
+
     private static class TablaAuxiliar {
+
         final String tabla;
         final String columnaId;
         final String columnaNombre;
@@ -219,12 +278,22 @@ public class DatosAuxiliaresDAO {
     }
 
     private String inferirTipoDesdeVisual(String visual) {
-        if (visual == null) return null;
+        if (visual == null) {
+            return null;
+        }
         visual = visual.toLowerCase();
-        if (visual.contains("juego")) return "juego";
-        if (visual.contains("logro")) return "logro";
-        if (visual.contains("moderador")) return "moderador";
-        if (visual.contains("consola")) return "consola";
+        if (visual.contains("juego")) {
+            return "juego";
+        }
+        if (visual.contains("logro")) {
+            return "logro";
+        }
+        if (visual.contains("moderador")) {
+            return "moderador";
+        }
+        if (visual.contains("consola")) {
+            return "consola";
+        }
         return "general";
     }
 }

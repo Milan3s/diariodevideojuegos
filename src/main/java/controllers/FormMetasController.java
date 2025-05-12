@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import models.ConfiguracionAuxiliar;
 import models.DatosAuxiliares;
 
@@ -33,6 +34,19 @@ public class FormMetasController {
     public void initialize() {
         cargarComboTablas();
         comboTablas.setOnAction(this::actualizarComboCampos);
+
+        // Configurar cómo se muestra cada objeto DatosAuxiliares
+        comboCampos.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(DatosAuxiliares object) {
+                return (object != null) ? object.getNombre() : "";
+            }
+
+            @Override
+            public DatosAuxiliares fromString(String string) {
+                return null;
+            }
+        });
     }
 
     public void setOnGuardarCallback(Runnable callback) {
@@ -50,6 +64,9 @@ public class FormMetasController {
             camposOriginales = dao.obtenerDatosPorConfiguracion(seleccion);
             comboCampos.setItems(camposOriginales);
             filtroCampoAuxiliar.clear();
+            if (!camposOriginales.isEmpty()) {
+                comboCampos.getSelectionModel().selectFirst();
+            }
         }
     }
 
@@ -128,4 +145,17 @@ public class FormMetasController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-} 
+
+    public void preseleccionarConfiguracion(ConfiguracionAuxiliar seleccionPredefinida) {
+        if (seleccionPredefinida == null) return;
+
+        cargarComboTablas();
+        comboTablas.setValue(seleccionPredefinida);
+        camposOriginales = dao.obtenerDatosPorConfiguracion(seleccionPredefinida);
+        comboCampos.setItems(camposOriginales);
+
+        if (!camposOriginales.isEmpty()) {
+            comboCampos.getSelectionModel().selectFirst();
+        }
+    }
+}

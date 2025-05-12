@@ -19,13 +19,15 @@ public class DatabaseInsertar {
                         + "('Estados | Moderador', 'estados', 'id_estado', 'nombre'), "
                         + "('Estados | Consola', 'estados', 'id_estado', 'nombre'), "
                         + "('Dificultades', 'dificultades_logros', 'id_dificultad', 'nombre'), "
-                        + "('Años Metas', 'anios_metas_especificas', 'anio', 'anio');";
+                        + "('Años Metas', 'anios_metas_especificas', 'anio', 'anio'), "
+                        + "('Metas de Juegos', 'metas_juegos', 'id_meta_juegos', 'descripcion');";
 
                 String sqlAsignaciones = "INSERT INTO configuracion_auxiliares_asignadas (nombre_tabla, columna_id, id_valor, fecha_asignacion) VALUES "
                         + "('metas_twitch', 'id_meta', 1, '2025-05-01'), "
                         + "('metas_especificas', 'id_meta_especifica', 1, '2025-05-01'), "
                         + "('mejoras_canal', 'id_mejora', 1, '2025-05-01'), "
-                        + "('eventos_extensibles', 'id_extensible', 1, '2025-05-01');";
+                        + "('eventos_extensibles', 'id_extensible', 1, '2025-05-01'), "
+                        + "('metas_juegos', 'id_meta_juegos', 1, '2025-05-01');";
 
                 String sqlEstados = "INSERT INTO estados (tipo, nombre) VALUES "
                         + "('juego', 'Pendiente'), ('juego', 'Jugando'), ('juego', 'Completado'), ('juego', 'Abandonado'), "
@@ -88,6 +90,9 @@ public class DatabaseInsertar {
 
                 String sqlExtensibles = "INSERT INTO eventos_extensibles (motivo, fecha_evento) VALUES ('Evento benéfico', '2025-06-10');";
 
+                String sqlMetasJuegos = "INSERT INTO metas_juegos (descripcion, juegos_objetivo, juegos_completados, fecha_inicio, fecha_fin, cumplida) VALUES "
+                        + "('Meta juegos 2025', 50, 1, '2025-01-01', '2025-12-31', 0);";
+
                 stmt.execute(sqlConfiguracionAuxiliares);
                 stmt.execute(sqlAsignaciones);
                 stmt.execute(sqlEstados);
@@ -107,6 +112,7 @@ public class DatabaseInsertar {
                 stmt.execute(sqlMejoras);
                 stmt.execute(sqlAniosMejoras);
                 stmt.execute(sqlExtensibles);
+                stmt.execute(sqlMetasJuegos);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Datos insertados correctamente.", ButtonType.OK);
                 alert.showAndWait();
