@@ -42,6 +42,10 @@
     -fx-pref-height: 42px;
     -fx-border-radius: 0;
     -fx-background-radius: 0;
+    -fx-cursor: hand;
+}
+.combo-box-style{
+     
 }
 
 .combo-box-style:hover, #campoBusqueda:hover {

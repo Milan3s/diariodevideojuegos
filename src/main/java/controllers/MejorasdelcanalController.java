@@ -19,6 +19,7 @@ import models.MejorasDelCanal;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -37,9 +38,12 @@ public class MejorasdelcanalController implements Initializable {
     private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
     @FXML
     private Label paginaActual;
-
     @FXML
     private Label lblDescripcion, lblMeta, lblActual, lblFechaInicio, lblFechaFin, lblCumplida;
+    @FXML
+    private ComboBox<String> cboxFecha;
+    @FXML
+    private ComboBox<String> cboxSiNo;
 
     private final MejorasDelCanalDAO dao = new MejorasDelCanalDAO();
     private final ObservableList<MejorasDelCanal> mejorasOriginales = FXCollections.observableArrayList();
@@ -50,16 +54,28 @@ public class MejorasdelcanalController implements Initializable {
     private MejorasDelCanal mejoraSeleccionada;
 
     private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    @FXML
-    private ComboBox<?> cboxFecha;
-    @FXML
-    private ComboBox<?> cboxSiNo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         campoBusqueda.setOnKeyReleased(this::filtrarMejoras);
         listaMejoras.setOnMouseClicked(this::mostrarDetalle);
+        cargarCombos();
         cargarMejoras();
+    }
+
+    private void cargarCombos() {
+        ObservableList<String> fechasRaw = dao.obtenerFechasUnicas("fecha_inicio");
+        ObservableList<String> fechasFormateadas = fechasRaw.stream()
+                .map(f -> LocalDate.parse(f).format(formatoFecha))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        fechasFormateadas.add(0, "Todos"); // <- Agrega opción "Todos"
+        cboxFecha.setItems(fechasFormateadas);
+        cboxFecha.setPromptText("Fechas");
+
+        ObservableList<String> opcionesCumplida = dao.obtenerValoresCumplida();
+        opcionesCumplida.add(0, "Todos"); // <- Agrega opción "Todos"
+        cboxSiNo.setItems(opcionesCumplida);
+        cboxSiNo.setPromptText("Opciones");
     }
 
     private void cargarMejoras() {
@@ -69,14 +85,15 @@ public class MejorasdelcanalController implements Initializable {
 
     private void aplicarFiltros() {
         String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
+        String fechaSeleccionada = cboxFecha.getValue();
+        String cumplidaSeleccionada = cboxSiNo.getValue();
 
-        if (texto.isEmpty()) {
-            mejorasFiltradas.setAll(mejorasOriginales);
-        } else {
-            mejorasFiltradas.setAll(mejorasOriginales.stream()
-                    .filter(m -> m.getDescripcion().toLowerCase().contains(texto))
-                    .collect(Collectors.toList()));
-        }
+        mejorasFiltradas.setAll(mejorasOriginales.stream()
+                .filter(m -> texto.isEmpty() || m.getDescripcion().toLowerCase().contains(texto))
+                .filter(m -> fechaSeleccionada == null || fechaSeleccionada.equals("Todos") || m.getFechaInicio().format(formatoFecha).equals(fechaSeleccionada))
+                .filter(m -> cumplidaSeleccionada == null || cumplidaSeleccionada.equals("Todos") || (m.isCumplida() ? "Sí" : "No").equals(cumplidaSeleccionada))
+                .collect(Collectors.toList())
+        );
 
         pagina = 1;
         actualizarPaginado();
@@ -232,6 +249,16 @@ public class MejorasdelcanalController implements Initializable {
         aplicarFiltros();
     }
 
+    @FXML
+    private void handledcboxFecha(ActionEvent event) {
+        aplicarFiltros();
+    }
+
+    @FXML
+    private void hanledcboxSiNo(ActionEvent event) {
+        aplicarFiltros();
+    }
+
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -247,13 +274,5 @@ public class MejorasdelcanalController implements Initializable {
         alert.setHeaderText(mensaje);
         alert.setContentText(e.getMessage());
         alert.showAndWait();
-    }
-
-    @FXML
-    private void handledcboxFecha(ActionEvent event) {
-    }
-
-    @FXML
-    private void hanledcboxSiNo(ActionEvent event) {
     }
 }

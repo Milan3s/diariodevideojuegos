@@ -55,9 +55,12 @@
 
                     <Button fx:id="btnModerador" onAction="#handleModerador" prefWidth="180"
                             styleClass="sidebar-button" text="Moderador" />
-
+                    
                     <Button fx:id="btnDatosAuxiliares" onAction="#handleDatosAuxiliares" prefWidth="180"
                             styleClass="sidebar-button" text="Datos auxiliares" />
+                    
+                    <Button fx:id="btnVerEventos" onAction="#handleVerEventos" prefWidth="180"
+                            styleClass="sidebar-button" text="Ver Eventos" />
                 </VBox>
             </left>
 

@@ -41,13 +41,14 @@
                 <Label fx:id="txt_eventos_total" styleClass="card-value" />
             </VBox>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="155.0" prefWidth="184.0" styleClass="card-inicio" GridPane.columnIndex="0" GridPane.rowIndex="2">
+
+        <HBox alignment="CENTER" prefHeight="155.0" prefWidth="184.0" styleClass="card-inicio" GridPane.rowIndex="3">
             <VBox alignment="CENTER" spacing="5">
                 <Text styleClass="card-label" text="Metas" />
                 <Label fx:id="txt_metas_total" styleClass="card-value" />
             </VBox>
         </HBox>
-        <HBox alignment="CENTER" styleClass="card-inicio" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <HBox alignment="CENTER" styleClass="card-inicio" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <VBox alignment="CENTER" spacing="5">
                 <Text styleClass="card-label" text="Seguidores" />
                 <Label fx:id="txt_seguidores_total" styleClass="card-value" />
@@ -61,6 +62,7 @@
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
+         <RowConstraints />
         </rowConstraints>
     </GridPane>
 

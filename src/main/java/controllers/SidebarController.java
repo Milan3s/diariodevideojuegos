@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.File;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
@@ -15,7 +16,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class SidebarController implements Initializable {
 
@@ -64,6 +68,8 @@ public class SidebarController implements Initializable {
     private Button btnEventosExtensibles;
 
     private boolean submenuInicioVisible = false;
+    @FXML
+    private Button btnVerEventos;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -147,4 +153,43 @@ public class SidebarController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void handleVerEventos(ActionEvent event) {
+        // Mostrar confirmación
+        Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+        alerta.setTitle("Abrir aplicación de eventos");
+        alerta.setHeaderText("¿Deseas abrir el calendario de eventos?");
+        alerta.setContentText("Se ejecutará la aplicación de eventos externa.");
+
+        Optional<ButtonType> resultado = alerta.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            try {
+                // Construir ruta completa al EXE
+                String userHome = System.getProperty("user.home");
+                File exe = new File(userHome + "/Documents/diariodevideojuegos/eventos/Eventos.exe");
+
+                if (exe.exists()) {
+                    new ProcessBuilder(exe.getAbsolutePath()).start();
+                } else {
+                    mostrarAlerta("No se encontró el archivo:\n" + exe.getAbsolutePath());
+                }
+
+            } catch (IOException e) {
+                mostrarAlerta("Ocurrió un error al ejecutar la aplicación de eventos:\n" + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+// Método de utilidad para mostrar alertas informativas
+    private void mostrarAlerta(String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        alerta.setTitle("Error");
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
 }
