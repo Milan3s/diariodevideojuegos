@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="631.0" prefWidth="1252.0" styleClass="root" stylesheets="@../styles/vistas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InicioController">
+<AnchorPane prefHeight="861.0" prefWidth="1301.0" styleClass="root" stylesheets="@../styles/vistas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InicioController">
 
     <!-- Título -->
     <Text fx:id="tituloResumen" layoutX="30.0" layoutY="40.0" styleClass="inicio-titulo" text="Resumen del Diario" />
@@ -65,70 +65,77 @@
     </GridPane>
 
     <!-- Grid secundario: Detalles con botones debajo -->
-    <GridPane fx:id="gridMetasDetalle" hgap="30" layoutX="520.0" layoutY="60.0" prefWidth="700.0" styleClass="inicio-grid" vgap="20">
+    <GridPane fx:id="gridMetasDetalle" hgap="30" layoutX="520.0" layoutY="134.0" prefHeight="641.0" prefWidth="722.0" styleClass="inicio-grid" vgap="20">
 
         <!-- Meta de seguidores -->
         <VBox spacing="10" GridPane.rowIndex="0">
-            <HBox alignment="TOP_LEFT" styleClass="card-inicio">
-                <VBox prefWidth="400.0" spacing="5">
+            <HBox alignment="TOP_LEFT" prefHeight="83.0" prefWidth="731.0" styleClass="card-inicio">
+                <VBox prefHeight="41.0" prefWidth="631.0" spacing="5">
                     <Text text="Meta de seguidores:" />
-                    <Label fx:id="lblSeguidorestotales" maxWidth="400.0" wrapText="true" />
+                    <Label fx:id="lblSeguidorestotales" maxWidth="603.0" prefHeight="38.0" prefWidth="588.0" wrapText="true" />
                 </VBox>
             </HBox>
         </VBox>
 
         <!-- Meta de juegos -->
         <VBox spacing="10" GridPane.rowIndex="1">
-            <HBox alignment="TOP_LEFT" styleClass="card-inicio">
-                <VBox prefWidth="400.0" spacing="5">
+            <HBox alignment="TOP_LEFT" prefHeight="108.0" prefWidth="630.0" styleClass="card-inicio">
+                <VBox prefHeight="41.0" prefWidth="623.0" spacing="5">
                     <Text text="Meta de juegos:" />
-                    <Label fx:id="lblJuegosCompletados" maxWidth="400.0" wrapText="true" />
+                    <Label fx:id="lblJuegosCompletados" maxWidth="618.0" prefHeight="19.0" prefWidth="618.0" wrapText="true" />
                 </VBox>
             </HBox>
         </VBox>
 
         <!-- Meta específica -->
         <VBox spacing="10" GridPane.rowIndex="2">
-            <HBox alignment="TOP_LEFT" styleClass="card-inicio">
-                <VBox prefWidth="400.0" spacing="5">
+            <HBox alignment="TOP_LEFT" prefHeight="200.0" prefWidth="630.0" styleClass="card-inicio">
+                <VBox prefHeight="130.0" prefWidth="588.0" spacing="5">
                     <Text text="Meta específica:" />
-                    <Label fx:id="lblMetaEspecifica" maxWidth="400.0" wrapText="true" />
+                    <Label fx:id="lblMetaEspecifica" maxWidth="610.0" prefHeight="74.0" prefWidth="588.0" wrapText="true" />
                 </VBox>
             </HBox>
         </VBox>
+
 
         <!-- Mejora del canal -->
         <VBox spacing="10" GridPane.rowIndex="3">
-            <HBox alignment="TOP_LEFT" styleClass="card-inicio">
-                <VBox prefWidth="400.0" spacing="5">
+            <HBox alignment="TOP_LEFT" prefHeight="136.0" prefWidth="677.0" styleClass="card-inicio">
+                <VBox prefHeight="41.0" prefWidth="673.0" spacing="5">
                     <Text text="Mejora del Canal:" />
-                    <Label fx:id="lblResultadoMejoraDelCanal" maxWidth="400.0" wrapText="true" />
+                    <Label fx:id="lblResultadoMejoraDelCanal" maxWidth="636.0" prefHeight="19.0" prefWidth="636.0" wrapText="true" />
                 </VBox>
             </HBox>
         </VBox>
 
-        <!-- Próximo extensible -->
+        <!-- Próximo extensible -->        
         <VBox spacing="10" GridPane.rowIndex="4">
             <HBox alignment="TOP_LEFT" styleClass="card-inicio">
                 <VBox prefWidth="400.0" spacing="5">
                     <Text text="Próximo Extensible:" />
-                    <Label fx:id="lblFaltanXDias" maxWidth="400.0" wrapText="true" />
+
                     <HBox spacing="5">
-                        <Text styleClass="label-subtitulo" text="Fecha:" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre:" />
+                        <Label fx:id="lblNombre" prefHeight="19.0" prefWidth="300.0" />
+                    </HBox>
+
+                    <HBox spacing="5">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Faltan:" />
+                        <Label fx:id="lblDias" prefHeight="19.0" prefWidth="300.0" />
+                    </HBox>
+
+                    <HBox spacing="5">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha:" />
                         <Label fx:id="lblFechaExtensible" maxWidth="300.0" wrapText="true" />
                     </HBox>
                 </VBox>
             </HBox>
         </VBox>
-      <Button fx:id="btnAsignarMetaSeguidores" mnemonicParsing="false" onAction="#handleAsignarMetaSeguidores" text="Asignar" GridPane.columnIndex="1" />
-      <Button fx:id="btnMetaJuegos" mnemonicParsing="false" onAction="#handleMetaJuegos" text="Asignar" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Button fx:id="btnMetaEspecifica" mnemonicParsing="false" onAction="#handleMetaEspecifica" text="Asignar" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Button fx:id="btnAsignarMejoraDelCanal" mnemonicParsing="false" onAction="#handleAsignarMejoraDelCanal" text="Asignar" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Button fx:id="btnProximoExtensible" mnemonicParsing="false" onAction="#handleProximoExtensible" text="Asignar" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
 
         <columnConstraints>
             <ColumnConstraints />
-         <ColumnConstraints />
+            <ColumnConstraints />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints />
@@ -138,5 +145,7 @@
             <RowConstraints />
         </rowConstraints>
     </GridPane>
+    <Button fx:id="btnAsignarMetas" layoutX="548.0" layoutY="90.0" mnemonicParsing="false" onAction="#handleAsignarMetas" text="Asignar" />
+    <Text layoutX="548.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aquí podrás asignar las metas y eventos" />
 
 </AnchorPane>

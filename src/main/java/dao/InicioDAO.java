@@ -10,6 +10,7 @@ import models.Inicio;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
@@ -28,6 +29,7 @@ public class InicioDAO {
         String mejorasDelCanal = "Sin mejoras registradas";
         String fechaExtensible = "No registrada";
         String diasParaExtensible = "No disponible";
+        String nombreExtensible = "No registrado";
         String metaEspecifica = "No hay metas específicas registradas";
         String metaJuegosDescripcion = "No hay metas de juegos registradas";
 
@@ -40,30 +42,28 @@ public class InicioDAO {
             totalMetas = ejecutarConteo(conn, "SELECT COUNT(*) FROM metas_twitch");
             totalSeguidores = ejecutarConteo(conn, "SELECT SUM(cantidad) FROM seguidores");
 
-            // Meta seguidores desde asignación
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT mt.meta, mt.actual FROM configuracion_auxiliares_asignadas ca " +
-                            "JOIN metas_twitch mt ON ca.id_valor = mt.id_meta " +
-                            "WHERE ca.nombre_tabla = 'metas_twitch' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
-                 ResultSet rs = stmt.executeQuery()) {
+                    "SELECT s.cantidad, s.fecha_registro FROM configuracion_auxiliares_asignadas ca "
+                    + "JOIN seguidores s ON ca.id_valor = s.id_seguidores "
+                    + "WHERE ca.nombre_tabla = 'seguidores' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    int meta = rs.getInt("meta");
-                    int actual = rs.getInt("actual");
-                    if (meta > 0) {
-                        int progreso = Math.min((actual * 100) / meta, 100);
-                        metaSeguidoresProgreso = actual + " / " + meta + " - " + progreso + "%";
-                    } else {
-                        metaSeguidoresProgreso = "Meta inválida";
+                    int cantidad = rs.getInt("cantidad");
+                    String fecha = rs.getString("fecha_registro");
+                    String fechaFormateada = fecha;
+                    try {
+                        fechaFormateada = LocalDate.parse(fecha).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    } catch (DateTimeParseException e) {
+                        fechaFormateada = "Fecha inválida";
                     }
+                    metaSeguidoresProgreso = cantidad + " seguidores (" + fechaFormateada + ")";
+
                 }
             }
 
-            // Meta de juegos completados
             int juegosCompletados = 0;
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT COUNT(*) FROM juegos j JOIN estados e ON j.id_estado = e.id_estado " +
-                            "WHERE e.tipo = 'juego' AND e.nombre = 'Completado'");
-                 ResultSet rs = stmt.executeQuery()) {
+                    "SELECT COUNT(*) FROM juegos j JOIN estados e ON j.id_estado = e.id_estado "
+                    + "WHERE e.tipo = 'juego' AND e.nombre = 'Completado'"); ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     juegosCompletados = rs.getInt(1);
                 }
@@ -82,30 +82,27 @@ public class InicioDAO {
                 }
             }
 
-            // Última mejora del canal desde asignación
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT mc.descripcion FROM configuracion_auxiliares_asignadas ca " +
-                            "JOIN mejoras_canal mc ON ca.id_valor = mc.id_mejora " +
-                            "WHERE ca.nombre_tabla = 'mejoras_canal' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
-                 ResultSet rs = stmt.executeQuery()) {
+                    "SELECT mc.descripcion FROM configuracion_auxiliares_asignadas ca "
+                    + "JOIN mejoras_canal mc ON ca.id_valor = mc.id_mejora "
+                    + "WHERE ca.nombre_tabla = 'mejoras_canal' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     mejorasDelCanal = rs.getString("descripcion");
                 }
             }
 
-            // Próximo evento extensible desde asignación
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT ee.fecha_evento FROM configuracion_auxiliares_asignadas ca " +
-                            "JOIN eventos_extensibles ee ON ca.id_valor = ee.id_extensible " +
-                            "WHERE ca.nombre_tabla = 'eventos_extensibles' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
-                 ResultSet rs = stmt.executeQuery()) {
+                    "SELECT ee.motivo, ee.fecha_evento FROM configuracion_auxiliares_asignadas ca "
+                    + "JOIN eventos_extensibles ee ON ca.id_valor = ee.id_extensible "
+                    + "WHERE ca.nombre_tabla = 'eventos_extensibles' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
+                    nombreExtensible = rs.getString("motivo");
                     String fechaStr = rs.getString("fecha_evento");
                     fechaExtensible = fechaStr;
                     try {
                         LocalDate fechaEvento = LocalDate.parse(fechaStr);
                         long dias = ChronoUnit.DAYS.between(LocalDate.now(), fechaEvento);
-                        diasParaExtensible = dias >= 0 ? "Faltan " + dias + " días" : "Ya ocurrió";
+                        diasParaExtensible = dias >= 0 ? +dias + " días" : "Ya ocurrió";
                     } catch (DateTimeParseException e) {
                         fechaExtensible = "Fecha inválida";
                         diasParaExtensible = "Desconocido";
@@ -113,12 +110,10 @@ public class InicioDAO {
                 }
             }
 
-            // Última meta específica asignada
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT me.descripcion, me.juegos_completados, me.juegos_objetivo, me.fecha_fin FROM configuracion_auxiliares_asignadas ca " +
-                            "JOIN metas_especificas me ON ca.id_valor = me.id_meta_especifica " +
-                            "WHERE ca.nombre_tabla = 'metas_especificas' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
-                 ResultSet rs = stmt.executeQuery()) {
+                    "SELECT me.descripcion, me.juegos_completados, me.juegos_objetivo, me.fecha_fin FROM configuracion_auxiliares_asignadas ca "
+                    + "JOIN metas_especificas me ON ca.id_valor = me.id_meta_especifica "
+                    + "WHERE ca.nombre_tabla = 'metas_especificas' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String descripcion = rs.getString("descripcion");
                     int completados = rs.getInt("juegos_completados");
@@ -130,12 +125,10 @@ public class InicioDAO {
                 }
             }
 
-            // Última meta de juegos asignada
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT mj.descripcion, mj.juegos_completados, mj.juegos_objetivo, mj.fecha_fin FROM configuracion_auxiliares_asignadas ca " +
-                            "JOIN metas_juegos mj ON ca.id_valor = mj.id_meta_juegos " +  // CORRECTO
-                            "WHERE ca.nombre_tabla = 'metas_juegos' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
-                 ResultSet rs = stmt.executeQuery()) {
+                    "SELECT mj.descripcion, mj.juegos_completados, mj.juegos_objetivo, mj.fecha_fin FROM configuracion_auxiliares_asignadas ca "
+                    + "JOIN metas_juegos mj ON ca.id_valor = mj.id_meta_juegos "
+                    + "WHERE ca.nombre_tabla = 'metas_juegos' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String descripcion = rs.getString("descripcion");
                     int completados = rs.getInt("juegos_completados");
@@ -164,13 +157,13 @@ public class InicioDAO {
                 fechaExtensible,
                 diasParaExtensible,
                 metaEspecifica,
-                metaJuegosDescripcion
+                metaJuegosDescripcion,
+                nombreExtensible
         );
     }
 
     private int ejecutarConteo(Connection conn, String sql) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             return rs.next() ? rs.getInt(1) : 0;
         }
     }
@@ -181,20 +174,21 @@ public class InicioDAO {
         lista.add(new ConfiguracionAuxiliar(2, "Metas Especificas", "metas_especificas", "id_meta_especifica", "descripcion"));
         lista.add(new ConfiguracionAuxiliar(3, "Mejoras del Canal", "mejoras_canal", "id_mejora", "descripcion"));
         lista.add(new ConfiguracionAuxiliar(4, "Eventos Extensibles", "eventos_extensibles", "id_extensible", "motivo"));
-        lista.add(new ConfiguracionAuxiliar(5, "Metas de Juegos", "metas_juegos", "id_meta_juegos", "descripcion")); // corregido
+        lista.add(new ConfiguracionAuxiliar(5, "Metas de Juegos", "metas_juegos", "id_meta_juegos", "descripcion"));
+        lista.add(new ConfiguracionAuxiliar(6, "Meta de Seguidores", "seguidores", "id_seguidores", "cantidad"));
         return lista;
     }
 
     public ObservableList<DatosAuxiliares> obtenerDatosPorConfiguracion(ConfiguracionAuxiliar config) {
         ObservableList<DatosAuxiliares> lista = FXCollections.observableArrayList();
-        if (config == null) return lista;
+        if (config == null) {
+            return lista;
+        }
 
-        String sql = "SELECT " + config.getColumnaId() + ", " + config.getColumnaNombre() +
-                " FROM " + config.getNombreTabla() + " ORDER BY " + config.getColumnaNombre();
+        String sql = "SELECT " + config.getColumnaId() + ", " + config.getColumnaNombre()
+                + " FROM " + config.getNombreTabla() + " ORDER BY " + config.getColumnaNombre();
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 int id = rs.getInt(config.getColumnaId());
@@ -210,11 +204,10 @@ public class InicioDAO {
     }
 
     public boolean asignarConfiguracionAuxiliar(String nombreTabla, String columnaId, int id) {
-        String sql = "INSERT INTO configuracion_auxiliares_asignadas (nombre_tabla, columna_id, id_valor, fecha_asignacion) " +
-                "VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
+        String sql = "INSERT INTO configuracion_auxiliares_asignadas (nombre_tabla, columna_id, id_valor, fecha_asignacion) "
+                + "VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nombreTabla);
             stmt.setString(2, columnaId);

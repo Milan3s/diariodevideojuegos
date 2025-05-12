@@ -47,11 +47,13 @@ public class InicioController implements Initializable {
     @FXML
     private Label lblResultadoMejoraDelCanal;
     @FXML
-    private Label lblFaltanXDias;
-    @FXML
     private Label lblFechaExtensible;
     @FXML
     private Label lblMetaEspecifica;
+    @FXML
+    private Label lblNombre;
+    @FXML
+    private Label lblDias;
 
     @FXML
     private Text tituloResumen;
@@ -59,18 +61,10 @@ public class InicioController implements Initializable {
     private GridPane gridResumen;
     @FXML
     private GridPane gridMetasDetalle;
-    @FXML
-    private Button btnAsignarMetaSeguidores;
-    @FXML
-    private Button btnMetaJuegos;
-    @FXML
-    private Button btnMetaEspecifica;
-    @FXML
-    private Button btnAsignarMejoraDelCanal;
-    @FXML
-    private Button btnProximoExtensible;
 
     private final DatosAuxiliaresDAO auxDAO = new DatosAuxiliaresDAO();
+    @FXML
+    private Button btnAsignarMetas;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -95,9 +89,10 @@ public class InicioController implements Initializable {
         lblSeguidorestotales.setText(defaultText(resumen.getMetaSeguidoresProgreso(), "No disponible"));
         lblJuegosCompletados.setText(defaultText(resumen.getMetaJuegosCompletadosDescripcion(), "No disponible"));
         lblResultadoMejoraDelCanal.setText(defaultText(resumen.getMejorasDelCanal(), "Sin mejoras registradas"));
-        lblFaltanXDias.setText(defaultText(resumen.getDiasParaExtensible(), "No disponible"));
+        lblDias.setText(defaultText(resumen.getDiasParaExtensible(), "No disponible"));
         lblFechaExtensible.setText(formatearFecha(resumen.getFechaExtensible()));
         lblMetaEspecifica.setText(defaultText(resumen.getMetaEspecifica(), "No hay metas específicas registradas"));
+        lblNombre.setText(defaultText(resumen.getNombreExtensible(), "No registrado"));
     }
 
     private String defaultText(String value, String fallback) {
@@ -137,29 +132,8 @@ public class InicioController implements Initializable {
         }
     }
 
-    // ---------- BOTONES ----------
     @FXML
-    private void handleAsignarMetaSeguidores(ActionEvent event) {
-        abrirFormularioMeta(event);
-    }
-
-    @FXML
-    private void handleMetaJuegos(ActionEvent event) {
-        abrirFormularioMeta(event);
-    }
-
-    @FXML
-    private void handleMetaEspecifica(ActionEvent event) {
-        abrirFormularioMeta(event);
-    }
-
-    @FXML
-    private void handleAsignarMejoraDelCanal(ActionEvent event) {
-        abrirFormularioMeta(event);
-    }
-
-    @FXML
-    private void handleProximoExtensible(ActionEvent event) {
+    private void handleAsignarMetas(ActionEvent event) {
         abrirFormularioMeta(event);
     }
 

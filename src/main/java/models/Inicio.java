@@ -15,40 +15,18 @@ public class Inicio {
     private int totalSeguidores;
 
     // === Detalle de metas ===
-    private String metaSeguidoresProgreso;               // Ej: "Progreso: 30 / 50"
-    private String metaJuegosCompletadosDescripcion;     // Ej: "Completados: 1 / 5. Meta: 50 juegos"
-    private String mejorasDelCanal;                      // Última mejora realizada
-    private String fechaExtensible;                      // Fecha real del próximo extensible
-    private String diasParaExtensible;                   // Ej: "Faltan 5 días"
-    private String metaEspecifica;                       // Descripción de meta específica activa
-    private String metaJuegosDescripcion;                // Descripción de meta de juegos activa
+    private String metaSeguidoresProgreso;
+    private String metaJuegosCompletadosDescripcion;
+    private String mejorasDelCanal;
+    private String fechaExtensible;
+    private String diasParaExtensible;
+    private String metaEspecifica;
+    private String metaJuegosDescripcion;
+    private String nombreExtensible;
 
-    // === Constructores ===
     public Inicio() {
-        // constructor vacío requerido para controladores o DAOs
     }
 
-    // Constructor original (mantenido para compatibilidad)
-    public Inicio(
-            int totalJuegos,
-            int totalLogros,
-            int totalConsolas,
-            int totalEventos,
-            int totalMetas,
-            int totalSeguidores,
-            String metaSeguidoresProgreso,
-            String metaJuegosCompletadosDescripcion,
-            String mejorasDelCanal,
-            String fechaExtensible,
-            String diasParaExtensible,
-            String metaEspecifica
-    ) {
-        this(totalJuegos, totalLogros, totalConsolas, totalEventos, totalMetas, totalSeguidores,
-                metaSeguidoresProgreso, metaJuegosCompletadosDescripcion, mejorasDelCanal,
-                fechaExtensible, diasParaExtensible, metaEspecifica, "No hay metas de juegos registradas");
-    }
-
-    // Nuevo constructor con el campo adicional
     public Inicio(
             int totalJuegos,
             int totalLogros,
@@ -62,7 +40,8 @@ public class Inicio {
             String fechaExtensible,
             String diasParaExtensible,
             String metaEspecifica,
-            String metaJuegosDescripcion
+            String metaJuegosDescripcion,
+            String nombreExtensible
     ) {
         this.totalJuegos = totalJuegos;
         this.totalLogros = totalLogros;
@@ -77,9 +56,9 @@ public class Inicio {
         this.diasParaExtensible = diasParaExtensible;
         this.metaEspecifica = metaEspecifica;
         this.metaJuegosDescripcion = metaJuegosDescripcion;
+        this.nombreExtensible = nombreExtensible;
     }
 
-    // === Getters ===
     public int getTotalJuegos() {
         return totalJuegos;
     }
@@ -132,7 +111,10 @@ public class Inicio {
         return metaJuegosDescripcion;
     }
 
-    // === Setters ===
+    public String getNombreExtensible() {
+        return nombreExtensible;
+    }
+
     public void setTotalJuegos(int totalJuegos) {
         this.totalJuegos = totalJuegos;
     }
@@ -185,13 +167,16 @@ public class Inicio {
         this.metaJuegosDescripcion = metaJuegosDescripcion;
     }
 
-    // === Métodos auxiliares opcionales ===
+    public void setNombreExtensible(String nombreExtensible) {
+        this.nombreExtensible = nombreExtensible;
+    }
+
     public int getTotalElementos() {
         return totalJuegos + totalLogros + totalConsolas + totalEventos + totalMetas + totalSeguidores;
     }
 
     public boolean hayMetasActivas() {
         return metaSeguidoresProgreso != null || metaJuegosCompletadosDescripcion != null
-                || mejorasDelCanal != null || metaEspecifica != null || metaJuegosDescripcion != null;
+                || mejorasDelCanal != null || metaEspecifica != null || metaJuegosDescripcion != null || nombreExtensible != null;
     }
 }
