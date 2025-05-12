@@ -1,0 +1,85 @@
+/* Fondo general del formulario */
+.formulario-base {
+    -fx-background-color: white;
+    -fx-font-family: 'Raleway';
+    -fx-text-fill: black;
+}
+
+/* Título principal */
+.form-titulo {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* Grid del formulario */
+.form-grid {
+    -fx-background-color: transparent;
+}
+
+/* Etiquetas del formulario */
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* Campos de entrada comunes (TextField y DatePicker) */
+.form-input, .form-input .text-field, .date-picker .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-padding: 6px;
+}
+
+/* Botón del DatePicker */
+.date-picker .arrow-button {
+    -fx-background-color: #e0e0e0; /* color suave */
+    -fx-border-width: 0; /* sin borde */
+    -fx-padding: 0 8px; /* horizontal: más espacio */
+    -fx-pref-width: 28px; /* ← aumenta el ancho del botón */
+}
+
+
+/* Icono del botón del DatePicker (flecha) */
+.date-picker .arrow-button .arrow {
+    -fx-background-color: black;
+}
+
+/* ComboBox y celdas */
+.combo-box .list-cell {
+    -fx-text-fill: black;
+    -fx-background-color: white;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+}
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: black;
+}
+
+/* Botones generales */
+.consolas-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 16px;
+    -fx-cursor: hand;
+}
+
+.consolas-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Icono dentro del botón (FontAwesome) */
+.consolas-button .fontawesome-icon-view {
+    -fx-fill: black;
+    -fx-padding: 0 10px 0 0;
+}

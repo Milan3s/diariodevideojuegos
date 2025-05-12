@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="formularioEvento" prefHeight="300.0" prefWidth="500.0" styleClass="formulario-base" stylesheets="@../styles/formeventosextensibles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormEventosExtensiblesController">
+
+     <Text layoutX="116.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="form-titulo" text="Formulario Eventos Extensibles" />
+          
+    <GridPane fx:id="gridFormulario" hgap="30" layoutX="20.0" layoutY="81.0" prefHeight="128.0" prefWidth="426.0" styleClass="form-grid" vgap="20">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+
+        <!-- Campo motivo -->
+        <Label styleClass="form-label" text="Motivo del evento" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="txtMotivo" prefHeight="34.0" prefWidth="197.0" promptText="Ej. Especial de aniversario" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <!-- Campo fecha -->
+        <Label styleClass="form-label" text="Fecha del evento" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <DatePicker fx:id="dateFechaEvento" prefHeight="34.0" prefWidth="228.0" promptText="dd-MM-yyyy" styleClass="form-input2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <columnConstraints>
+            <ColumnConstraints prefWidth="160.0" />
+            <ColumnConstraints prefWidth="260.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+    </GridPane>
+
+    <!-- Botones -->
+    <Button fx:id="btnGuardar" layoutX="119.0" layoutY="230.0" onAction="#guardarEvento" prefHeight="34.0" prefWidth="111.0" styleClass="consolas-button" text="Guardar">
+        <graphic>
+            <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnCancelar" layoutX="247.0" layoutY="230.0" onAction="#cancelar" prefHeight="34.0" prefWidth="129.0" styleClass="consolas-button" text="Cancelar">
+        <graphic>
+            <FontAwesomeIconView glyphName="CLOSE" styleClass="control-icon" />
+        </graphic>
+    </Button>
+
+   
+</AnchorPane>
