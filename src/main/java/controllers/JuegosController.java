@@ -35,10 +35,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class JuegosController implements Initializable {
+
+    // En la parte superior:
+    private final DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @FXML
     private ListView<Juego> listaJuegos;
@@ -99,7 +103,6 @@ public class JuegosController implements Initializable {
     }
 
     private void cargarCombos() {
-        // Combo Estado
         ObservableList<Estado> estados = ComboDAO.cargarEstadosPorTipo("juego");
         estados.add(0, new Estado(-1, "Todos"));
         comboEstado.setItems(estados);
@@ -122,7 +125,6 @@ public class JuegosController implements Initializable {
 
         comboEstado.getSelectionModel().selectFirst();
 
-        // Combo Consola
         ObservableList<Consola> consolas = ComboDAO.cargarConsolas();
         consolas.add(0, new Consola(-1, "Todos", ""));
         comboConsola.setItems(consolas);
@@ -158,20 +160,9 @@ public class JuegosController implements Initializable {
 
         juegosFiltrados.setAll(todosLosJuegos.stream()
                 .filter(j -> texto.isEmpty() || j.getNombre().toLowerCase().contains(texto))
-                .filter(j -> {
-                    if (estadoSel == null || estadoSel.getId() == -1) {
-                        return true;
-                    }
-                    return j.getEstado() != null && j.getEstado().getId() == estadoSel.getId();
-                })
-                .filter(j -> {
-                    if (consolaSel == null || consolaSel.getId() == -1) {
-                        return true;
-                    }
-                    return j.getConsola() != null && j.getConsola().getId() == consolaSel.getId();
-                })
-                .collect(Collectors.toList())
-        );
+                .filter(j -> estadoSel == null || estadoSel.getId() == -1 || (j.getEstado() != null && j.getEstado().getId() == estadoSel.getId()))
+                .filter(j -> consolaSel == null || consolaSel.getId() == -1 || (j.getConsola() != null && j.getConsola().getId() == consolaSel.getId()))
+                .collect(Collectors.toList()));
 
         pagina = 1;
         actualizarPaginado();
@@ -241,8 +232,6 @@ public class JuegosController implements Initializable {
             if (nuevo != null) {
                 juegoSeleccionado = nuevo;
                 mostrarDetalle(nuevo);
-            } else {
-
             }
         });
     }
@@ -255,9 +244,10 @@ public class JuegosController implements Initializable {
 
         if (juego.getFechaLanzamiento() != null && !juego.getFechaLanzamiento().isEmpty()) {
             try {
-                LocalDate fecha = LocalDate.parse(juego.getFechaLanzamiento());
-                lblFecha.setText(fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            } catch (Exception e) {
+                DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate fecha = LocalDate.parse(juego.getFechaLanzamiento(), formato);
+                lblFecha.setText(fecha.format(formato));
+            } catch (DateTimeParseException e) {
                 lblFecha.setText("Fecha inválida");
             }
         } else {
@@ -436,8 +426,8 @@ public class JuegosController implements Initializable {
 
     @FXML
     private void limpiarFiltros(ActionEvent event) {
-        comboEstado.getSelectionModel().selectFirst();   // selecciona "Todos" pero se muestra "Estados"
-        comboConsola.getSelectionModel().selectFirst();  // selecciona "Todos" pero se muestra "Consolas"
+        comboEstado.getSelectionModel().selectFirst();
+        comboConsola.getSelectionModel().selectFirst();
         campoBusqueda.clear();
         listaJuegos.getSelectionModel().clearSelection();
         detenerVideo(null);
@@ -458,5 +448,4 @@ public class JuegosController implements Initializable {
 
         aplicarFiltros();
     }
-
 }
