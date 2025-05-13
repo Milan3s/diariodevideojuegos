@@ -2,14 +2,24 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.media.MediaView?>
 
-<AnchorPane id="formularioJuego" fx:id="formularioJuego" prefHeight="762.0" prefWidth="884.0" styleClass="formulario-base" stylesheets="@../styles/formjuegos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormJuegosController">
+<AnchorPane id="formularioJuego" fx:id="formularioJuego" prefHeight="835.0" prefWidth="911.0" styleClass="formulario-base" stylesheets="@../styles/formjuegos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormJuegosController">
 
-    <GridPane fx:id="gridFormulario" hgap="40" layoutX="24.0" layoutY="29.0" prefHeight="621.0" prefWidth="857.0" styleClass="form-grid" vgap="15">
+    <GridPane fx:id="gridFormulario" hgap="40" layoutX="21.0" layoutY="125.0" prefHeight="621.0" prefWidth="857.0" styleClass="form-grid" vgap="15">
         <padding>
             <Insets bottom="10" left="10" right="10" top="10" />
         </padding>
@@ -33,13 +43,13 @@
         <TextField fx:id="txtModoJuego" promptText="Ej. Un jugador, Multijugador" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
         <Label styleClass="form-label" text="Fecha lanzamiento" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <DatePicker fx:id="dateFechaLanzamiento" prefHeight="39.0" prefWidth="159.0" styleClass="form-input-fecha" promptText="Selecciona una fecha" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <DatePicker fx:id="dateFechaLanzamiento" prefHeight="39.0" prefWidth="159.0" promptText="Selecciona una fecha" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
         <Label styleClass="form-label" text="Estado" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <ComboBox fx:id="comboEstado" prefHeight="25.0" prefWidth="255.0" styleClass="form-input" promptText="Selecciona un estado" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <ComboBox fx:id="comboEstado" prefHeight="25.0" prefWidth="255.0" promptText="Selecciona un estado" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
         <Label styleClass="form-label" text="Consola" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-        <ComboBox fx:id="comboConsola" prefHeight="25.0" prefWidth="255.0" styleClass="form-input" promptText="Selecciona una consola" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+        <ComboBox fx:id="comboConsola" prefHeight="25.0" prefWidth="255.0" promptText="Selecciona una consola" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
         <Label styleClass="form-label" text="¿Recomendado?" GridPane.columnIndex="2" GridPane.rowIndex="4" />
         <HBox spacing="15" GridPane.columnIndex="2" GridPane.rowIndex="5">
@@ -83,15 +93,16 @@
         </rowConstraints>
     </GridPane>
 
-    <Button fx:id="btnGuardar" layoutX="318.0" layoutY="690.0" onAction="#guardarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Guardar">
+    <Button fx:id="btnGuardar" layoutX="329.0" layoutY="760.0" onAction="#guardarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Guardar">
         <graphic>
             <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
         </graphic>
     </Button>
-    <Button fx:id="btnCancelar" layoutX="446.0" layoutY="690.0" onAction="#cancelarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Cancelar">
+    <Button fx:id="btnCancelar" layoutX="457.0" layoutY="760.0" onAction="#cancelarJuego" prefHeight="34.0" prefWidth="120.0" styleClass="juegos-button" text="Cancelar">
         <graphic>
             <FontAwesomeIconView glyphName="CLOSE" styleClass="control-icon" />
         </graphic>
     </Button>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="37.0" prefHeight="17.0" prefWidth="891.0" styleClass="inicio-titulo" text="Formulario Juegos" textAlignment="CENTER" />
 
 </AnchorPane>

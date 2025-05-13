@@ -9,11 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="formularioMetas" prefHeight="404.0" prefWidth="356.0" styleClass="formulario-meta" stylesheets="@../styles/formmetas.css" 
-            xmlns="http://javafx.com/javafx/23.0.1" 
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMetasController">
+<AnchorPane fx:id="formularioMetas" prefHeight="455.0" prefWidth="356.0" styleClass="formulario-meta" stylesheets="@../styles/formmetas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMetasController">
 
-    <VBox fx:id="vboxConfiguracion" layoutX="30.0" layoutY="30.0" prefWidth="300" spacing="10.0" styleClass="form-vbox">
+    <VBox fx:id="vboxConfiguracion" layoutX="30.0" layoutY="94.0" prefWidth="300" spacing="10.0" styleClass="form-vbox">
 
         <Label fx:id="labelTabla" styleClass="form-label" text="Seleccionar tabla auxiliar:" />
 
@@ -28,7 +26,7 @@
         <ComboBox fx:id="comboCampos" prefHeight="40.0" prefWidth="302.0" promptText="Seleccione uno" styleClass="combo-box-style combo-consolas" />
     </VBox>
 
-    <HBox fx:id="botonera" alignment="CENTER" layoutX="30.0" layoutY="331.0" prefHeight="40.0" prefWidth="300.0" spacing="12" styleClass="botonera">
+    <HBox fx:id="botonera" alignment="CENTER" layoutX="30.0" layoutY="394.0" prefHeight="40.0" prefWidth="300.0" spacing="12" styleClass="botonera">
 
         <Button fx:id="btnGuardar" onAction="#guardarDatoAuxiliar" prefHeight="38.0" prefWidth="130.0" styleClass="logros-button btn-guardar" text="Guardar">
             <graphic>
@@ -42,5 +40,6 @@
             </graphic>
         </Button>
     </HBox>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="32.0" prefHeight="35.0" prefWidth="330.0" styleClass="inicio-titulo" text="Formulario Metas" textAlignment="CENTER" />
 
 </AnchorPane>

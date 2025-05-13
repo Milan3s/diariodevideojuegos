@@ -5,6 +5,11 @@
     -fx-text-fill: black;
     -fx-padding: 20px;
 }
+.inicio-titulo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
 
 /* Contenedor principal (VBox) */
 .form-grid {

@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="formularioConsola" fx:id="formularioConsola" prefHeight="676.0" prefWidth="922.0" styleClass="formulario-base" stylesheets="@../styles/formconsolas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormConsolasController">
+<AnchorPane id="formularioConsola" fx:id="formularioConsola" prefHeight="761.0" prefWidth="922.0" styleClass="formulario-base" stylesheets="@../styles/formconsolas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormConsolasController">
 
-    <GridPane fx:id="gridFormulario" hgap="40" layoutX="24.0" layoutY="29.0" prefWidth="857.0" styleClass="form-grid" vgap="15">
+    <GridPane fx:id="gridFormulario" hgap="40" layoutX="28.0" layoutY="111.0" prefWidth="857.0" styleClass="form-grid" vgap="15">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
@@ -59,7 +59,7 @@
         <TextField fx:id="txtAlmacenamiento" promptText="Capacidad y tipo de almacenamiento" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="4" />
 
         <Label styleClass="form-label" text="Fecha Lanzamiento" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-        <DatePicker fx:id="dateFechaLanzamiento" promptText="Selecciona una fecha" prefHeight="35.0" prefWidth="250.0" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+        <DatePicker fx:id="dateFechaLanzamiento" prefHeight="35.0" prefWidth="250.0" promptText="Selecciona una fecha" styleClass="form-input-fecha" GridPane.columnIndex="3" GridPane.rowIndex="5" />
 
         <Label styleClass="form-label" text="Estado" GridPane.columnIndex="2" GridPane.rowIndex="6" />
         <ComboBox fx:id="comboEstado" prefHeight="25.0" prefWidth="258.0" promptText="Elige una opción" styleClass="form-input" GridPane.columnIndex="3" GridPane.rowIndex="6" />
@@ -90,16 +90,17 @@
     </GridPane>
 
     <!-- Botón Guardar -->
-    <Button fx:id="btnGuardar" layoutX="316.0" layoutY="608.0" onAction="#guardarConsola" prefHeight="34" prefWidth="140" styleClass="consolas-button">
+    <Button fx:id="btnGuardar" layoutX="316.0" layoutY="693.0" onAction="#guardarConsola" prefHeight="34" prefWidth="140" styleClass="consolas-button">
         <graphic>
             <FontAwesomeIconView glyphName="SAVE" size="16" />
         </graphic>
         <text>Guardar</text>
     </Button>
-   <Button fx:id="btnCancelar" layoutX="466.0" layoutY="608.0" onAction="#cancelarConsola" prefHeight="34" prefWidth="140" styleClass="consolas-button" text="Cancelar">
+   <Button fx:id="btnCancelar" layoutX="466.0" layoutY="693.0" onAction="#cancelarConsola" prefHeight="34" prefWidth="140" styleClass="consolas-button" text="Cancelar">
       <graphic>
          <FontAwesomeIconView glyphName="CLOSE" size="16" />
       </graphic>
    </Button>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="21.0" layoutY="39.0" prefHeight="17.0" prefWidth="891.0" styleClass="inicio-titulo" text="Formulario Consolas" textAlignment="CENTER" />
 
 </AnchorPane>

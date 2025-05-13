@@ -5,6 +5,15 @@
     -fx-text-fill: black;
 }
 
+
+
+.inicio-titulo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+
 /* Etiquetas */
 .label-logros {
     -fx-font-size: 14px;

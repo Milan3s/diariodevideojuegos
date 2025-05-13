@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="formularioModerador" prefHeight="331.0" prefWidth="622.0" styleClass="formulario-base" stylesheets="@../styles/formoderador.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormModeradorController">
+<AnchorPane fx:id="formularioModerador" prefHeight="420.0" prefWidth="622.0" styleClass="formulario-base" stylesheets="@../styles/formoderador.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormModeradorController">
 
-    <GridPane fx:id="gridFormulario" hgap="20" layoutX="30" layoutY="30" prefHeight="174.0" prefWidth="510.0" styleClass="form-grid" vgap="15">
+    <GridPane fx:id="gridFormulario" hgap="20" layoutX="74.0" layoutY="128.0" prefHeight="197.0" prefWidth="432.0" styleClass="form-grid" vgap="15">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
@@ -40,15 +40,16 @@
         <ComboBox fx:id="comboEstado" prefHeight="44.0" prefWidth="300.0" promptText="Seleccione estado" styleClass="combo-box-style" GridPane.columnIndex="1" GridPane.rowIndex="2" />
     </GridPane>
 
-     <Button fx:id="btnCancelar" layoutX="330.0" layoutY="251.0" onAction="#cancelar" styleClass="moderador-button" text="Cancelar">
+     <Button fx:id="btnCancelar" layoutX="315.0" layoutY="346.0" onAction="#cancelar" styleClass="moderador-button" text="Cancelar">
          <graphic>
              <FontAwesomeIconView glyphName="TIMES" styleClass="control-icon" />
          </graphic>
      </Button>
 
-     <Button fx:id="btnGuardar" layoutX="156.0" layoutY="251.0" onAction="#guardarModerador" styleClass="moderador-button" text="Guardar">
+     <Button fx:id="btnGuardar" layoutX="175.0" layoutY="346.0" onAction="#guardarModerador" styleClass="moderador-button" text="Guardar">
          <graphic>
              <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
          </graphic>
      </Button>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="122.0" layoutY="51.0" prefHeight="35.0" prefWidth="330.0" styleClass="inicio-titulo" text="Formulario Datos Auxiliares" textAlignment="CENTER" />
 </AnchorPane>

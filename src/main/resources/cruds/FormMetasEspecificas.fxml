@@ -17,12 +17,10 @@
 
 <AnchorPane fx:id="formAnchor" prefHeight="652.0" prefWidth="751.0" stylesheets="@../styles/formmetasespecificas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMetasEspecificasController">
 
-    <VBox fx:id="mainContainer" alignment="TOP_CENTER" spacing="20.0" styleClass="form-vbox" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+    <VBox fx:id="mainContainer" alignment="TOP_CENTER" layoutX="29.0" layoutY="138.0" prefHeight="497.0" prefWidth="702.0" spacing="20.0" styleClass="form-vbox" AnchorPane.bottomAnchor="137.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="138.0">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
-
-        <Label fx:id="tituloFormulario" styleClass="inicio-titulo" text="Formulario Meta Específica" />
 
         <GridPane fx:id="gridFormulario" hgap="15.0" prefHeight="337.0" prefWidth="600.0" styleClass="form-grid" vgap="15.0">
             <columnConstraints>
@@ -77,18 +75,20 @@
                 <RowConstraints />
             </rowConstraints>
         </GridPane>
-
-        <HBox fx:id="botonera" alignment="CENTER" spacing="10.0" styleClass="botonera">
-            <Button fx:id="btnGuardar" onAction="#guardarMeta" styleClass="btn-guardar" text="Guardar">
-                <graphic>
-                    <FontAwesomeIconView glyphName="SAVE" />
-                </graphic>
-            </Button>
-            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="btn-cancelar" text="Cancelar">
-                <graphic>
-                    <FontAwesomeIconView glyphName="TIMES" />
-                </graphic>
-            </Button>
-        </HBox>
     </VBox>
+
+     <Label fx:id="tituloFormulario" layoutX="223.0" layoutY="56.0" styleClass="inicio-titulo" text="Formulario Meta Específica" />
+
+     <HBox fx:id="botonera" alignment="CENTER" layoutX="262.0" layoutY="671.0" spacing="10.0" styleClass="botonera">
+         <Button fx:id="btnGuardar" onAction="#guardarMeta" styleClass="btn-guardar" text="Guardar">
+             <graphic>
+                 <FontAwesomeIconView glyphName="SAVE" />
+             </graphic>
+         </Button>
+         <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="btn-cancelar" text="Cancelar">
+             <graphic>
+                 <FontAwesomeIconView glyphName="TIMES" />
+             </graphic>
+         </Button>
+     </HBox>
 </AnchorPane>

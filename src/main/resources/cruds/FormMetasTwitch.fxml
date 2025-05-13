@@ -13,13 +13,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMetasTwitchController">
+<AnchorPane prefHeight="448.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormMetasTwitchController">
 
     <VBox alignment="TOP_CENTER" spacing="20.0" stylesheets="@../styles/formmetastwitch.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
-
+   
         <Label styleClass="inicio-titulo" text="Formulario Meta de Twitch" />
 
         <GridPane hgap="15.0" vgap="15.0">

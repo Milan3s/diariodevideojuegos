@@ -5,6 +5,13 @@
     -fx-text-fill: black;
 }
 
+
+.inicio-titulo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
 /* Grid de formulario */
 .form-grid {
     -fx-background-color: transparent;

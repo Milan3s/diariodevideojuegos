@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="formularioLogros" prefHeight="476.0" prefWidth="920.0" styleClass="formulario-logros" stylesheets="@../styles/formlogros.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormLogrosController">
+<AnchorPane fx:id="formularioLogros" prefHeight="625.0" prefWidth="920.0" styleClass="formulario-logros" stylesheets="@../styles/formlogros.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FormLogrosController">
 
-    <GridPane fx:id="gridFormulario" hgap="40" layoutX="24.0" layoutY="29.0" prefHeight="436.0" prefWidth="880.0" styleClass="grid-logros" vgap="15" AnchorPane.bottomAnchor="144.0" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+    <GridPane fx:id="gridFormulario" hgap="40" layoutX="20.0" layoutY="96.0" prefHeight="418.0" prefWidth="880.0" styleClass="grid-logros" vgap="15" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="96.0">
 
         <columnConstraints>
             <ColumnConstraints prefWidth="150.0" />
@@ -66,8 +66,8 @@
         <ComboBox fx:id="comboDificultad" prefHeight="44.0" prefWidth="247.0" promptText="Selecciona dificultad (opcional)" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="5" />
 
         <!-- FILA 6 -->
-        <Label styleClass="label-logros" text="Consola" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-        <ComboBox fx:id="comboConsola" prefHeight="44.0" prefWidth="263.0" promptText="Selecciona consola" styleClass="input-logros" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+        <Label styleClass="label-logros" text="Consola" GridPane.rowIndex="6" />
+        <ComboBox fx:id="comboConsola" prefHeight="44.0" prefWidth="263.0" promptText="Selecciona consola" styleClass="input-logros" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <rowConstraints>
          <RowConstraints />
          <RowConstraints />
@@ -80,7 +80,7 @@
     </GridPane>
 
        <!-- Botones -->
-    <HBox alignment="CENTER" layoutY="413.0" spacing="12" AnchorPane.bottomAnchor="85.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <HBox alignment="CENTER" layoutY="548.0" spacing="12" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <Button fx:id="btnGuardar" onAction="#guardarLogro" styleClass="logros-button" text="Guardar">
             <graphic>
                 <FontAwesomeIconView glyphName="SAVE" styleClass="control-icon" />
@@ -92,4 +92,5 @@
             </graphic>
         </Button>
     </HBox>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="891.0" styleClass="inicio-titulo" text="Formulario Logros" textAlignment="CENTER" />
 </AnchorPane>
