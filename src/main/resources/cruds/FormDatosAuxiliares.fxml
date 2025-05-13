@@ -33,5 +33,5 @@
             </Button>
         </HBox>
     </VBox>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="55.0" layoutY="34.0" prefHeight="17.0" prefWidth="374.0" styleClass="inicio-titulo" text="Formulario Juegos" textAlignment="CENTER" />
+   <Label fx:id="lblTitulo" alignment="CENTER" contentDisplay="CENTER" layoutX="55.0" layoutY="34.0" prefHeight="17.0" prefWidth="374.0" styleClass="inicio-titulo" text="Formulario Juegos" textAlignment="CENTER" />
 </AnchorPane>

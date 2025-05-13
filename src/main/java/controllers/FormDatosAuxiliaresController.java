@@ -17,6 +17,8 @@ public class FormDatosAuxiliaresController implements Initializable {
 
     @FXML
     private Label lblTitulo;
+    
+    
     @FXML
     private ComboBox<String> comboTablaDestino;
     @FXML

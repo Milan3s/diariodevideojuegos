@@ -43,9 +43,10 @@ public class InicioDAO {
             totalSeguidores = ejecutarConteo(conn, "SELECT SUM(cantidad) FROM seguidores");
 
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT s.cantidad, s.fecha_registro FROM configuracion_auxiliares_asignadas ca "
-                    + "JOIN seguidores s ON ca.id_valor = s.id_seguidores "
-                    + "WHERE ca.nombre_tabla = 'seguidores' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
+                    "SELECT s.cantidad, s.fecha_registro FROM configuracion_auxiliares_asignadas ca " +
+                    "JOIN seguidores s ON ca.id_valor = s.id_seguidores " +
+                    "WHERE ca.nombre_tabla = 'seguidores' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     int cantidad = rs.getInt("cantidad");
                     String fecha = rs.getString("fecha_registro");
@@ -56,14 +57,14 @@ public class InicioDAO {
                         fechaFormateada = "Fecha inválida";
                     }
                     metaSeguidoresProgreso = cantidad + " seguidores (" + fechaFormateada + ")";
-
                 }
             }
 
             int juegosCompletados = 0;
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT COUNT(*) FROM juegos j JOIN estados e ON j.id_estado = e.id_estado "
-                    + "WHERE e.tipo = 'juego' AND e.nombre = 'Completado'"); ResultSet rs = stmt.executeQuery()) {
+                    "SELECT COUNT(*) FROM juegos j JOIN estados e ON j.id_estado = e.id_estado " +
+                    "WHERE e.tipo = 'juego' AND e.nombre = 'Completado'");
+                 ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     juegosCompletados = rs.getInt(1);
                 }
@@ -83,26 +84,28 @@ public class InicioDAO {
             }
 
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT mc.descripcion FROM configuracion_auxiliares_asignadas ca "
-                    + "JOIN mejoras_canal mc ON ca.id_valor = mc.id_mejora "
-                    + "WHERE ca.nombre_tabla = 'mejoras_canal' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
+                    "SELECT mc.descripcion FROM configuracion_auxiliares_asignadas ca " +
+                    "JOIN mejoras_canal mc ON ca.id_valor = mc.id_mejora " +
+                    "WHERE ca.nombre_tabla = 'mejoras_canal' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     mejorasDelCanal = rs.getString("descripcion");
                 }
             }
 
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT ee.motivo, ee.fecha_evento FROM configuracion_auxiliares_asignadas ca "
-                    + "JOIN eventos_extensibles ee ON ca.id_valor = ee.id_extensible "
-                    + "WHERE ca.nombre_tabla = 'eventos_extensibles' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
+                    "SELECT ee.motivo, ee.fecha_evento FROM configuracion_auxiliares_asignadas ca " +
+                    "JOIN eventos_extensibles ee ON ca.id_valor = ee.id_extensible " +
+                    "WHERE ca.nombre_tabla = 'eventos_extensibles' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     nombreExtensible = rs.getString("motivo");
                     String fechaStr = rs.getString("fecha_evento");
-                    fechaExtensible = fechaStr;
                     try {
                         LocalDate fechaEvento = LocalDate.parse(fechaStr);
                         long dias = ChronoUnit.DAYS.between(LocalDate.now(), fechaEvento);
-                        diasParaExtensible = dias >= 0 ? +dias + " días" : "Ya ocurrió";
+                        diasParaExtensible = dias >= 0 ? dias + " días" : "Ya ocurrió";
+                        fechaExtensible = fechaEvento.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                     } catch (DateTimeParseException e) {
                         fechaExtensible = "Fecha inválida";
                         diasParaExtensible = "Desconocido";
@@ -111,32 +114,44 @@ public class InicioDAO {
             }
 
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT me.descripcion, me.juegos_completados, me.juegos_objetivo, me.fecha_fin FROM configuracion_auxiliares_asignadas ca "
-                    + "JOIN metas_especificas me ON ca.id_valor = me.id_meta_especifica "
-                    + "WHERE ca.nombre_tabla = 'metas_especificas' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
+                    "SELECT me.descripcion, me.juegos_completados, me.juegos_objetivo, me.fecha_fin FROM configuracion_auxiliares_asignadas ca " +
+                    "JOIN metas_especificas me ON ca.id_valor = me.id_meta_especifica " +
+                    "WHERE ca.nombre_tabla = 'metas_especificas' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String descripcion = rs.getString("descripcion");
                     int completados = rs.getInt("juegos_completados");
                     int objetivo = rs.getInt("juegos_objetivo");
                     String fechaFin = rs.getString("fecha_fin");
-
+                    String fechaFormateada = fechaFin;
+                    try {
+                        fechaFormateada = LocalDate.parse(fechaFin).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    } catch (DateTimeParseException e) {
+                        fechaFormateada = "Fecha inválida";
+                    }
                     metaEspecifica = String.format("%s (%d / %d)\nFinaliza: %s",
-                            descripcion, completados, objetivo, fechaFin);
+                            descripcion, completados, objetivo, fechaFormateada);
                 }
             }
 
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT mj.descripcion, mj.juegos_completados, mj.juegos_objetivo, mj.fecha_fin FROM configuracion_auxiliares_asignadas ca "
-                    + "JOIN metas_juegos mj ON ca.id_valor = mj.id_meta_juegos "
-                    + "WHERE ca.nombre_tabla = 'metas_juegos' ORDER BY ca.fecha_asignacion DESC LIMIT 1"); ResultSet rs = stmt.executeQuery()) {
+                    "SELECT mj.descripcion, mj.juegos_completados, mj.juegos_objetivo, mj.fecha_fin FROM configuracion_auxiliares_asignadas ca " +
+                    "JOIN metas_juegos mj ON ca.id_valor = mj.id_meta_juegos " +
+                    "WHERE ca.nombre_tabla = 'metas_juegos' ORDER BY ca.fecha_asignacion DESC LIMIT 1");
+                 ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String descripcion = rs.getString("descripcion");
                     int completados = rs.getInt("juegos_completados");
                     int objetivo = rs.getInt("juegos_objetivo");
                     String fechaFin = rs.getString("fecha_fin");
-
+                    String fechaFormateada = fechaFin;
+                    try {
+                        fechaFormateada = LocalDate.parse(fechaFin).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    } catch (DateTimeParseException e) {
+                        fechaFormateada = "Fecha inválida";
+                    }
                     metaJuegosDescripcion = String.format("%s (%d / %d)\nFinaliza: %s",
-                            descripcion, completados, objetivo, fechaFin);
+                            descripcion, completados, objetivo, fechaFormateada);
                 }
             }
 

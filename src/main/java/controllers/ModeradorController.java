@@ -21,28 +21,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ModeradorController implements Initializable {
 
-    @FXML
-    private Text tituloLogros;
-    @FXML
-    private TextField campoBusqueda;
-    @FXML
-    private ComboBox<Estado> comboEstado;
-    @FXML
-    private Button btnLimpiar, btnAgregar, btnReadmitir, btnEliminar, btnEditar, btnDarDeBaja;
-    @FXML
-    private ListView<Moderador> listaModeradores;
-    @FXML
-    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
-    @FXML
-    private Label paginaActual;
-    @FXML
-    private Label lblNombre, lblEmail, lblEstado, lblFechaAlta, lblFechaBaja;
+    @FXML private Text tituloLogros;
+    @FXML private TextField campoBusqueda;
+    @FXML private ComboBox<Estado> comboEstado;
+    @FXML private Button btnLimpiar, btnAgregar, btnReadmitir, btnEliminar, btnEditar, btnDarDeBaja;
+    @FXML private ListView<Moderador> listaModeradores;
+    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML private Label paginaActual;
+    @FXML private Label lblNombre, lblEmail, lblEstado, lblFechaAlta, lblFechaBaja;
 
     private final ModeradorDAO dao = new ModeradorDAO();
     private final ObservableList<Moderador> listaOriginal = FXCollections.observableArrayList();
@@ -64,6 +55,23 @@ public class ModeradorController implements Initializable {
         ObservableList<Estado> estados = ComboDAO.cargarEstadosModeradores();
         estados.add(0, estadoTodos);
         comboEstado.setItems(estados);
+
+        comboEstado.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null || item.getId() == -1) ? "Estados" : item.getNombre());
+            }
+        });
+
+        comboEstado.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getNombre());
+            }
+        });
+
         comboEstado.getSelectionModel().selectFirst();
         comboEstado.setOnAction(e -> aplicarFiltros());
     }
@@ -78,31 +86,28 @@ public class ModeradorController implements Initializable {
         Estado estadoSeleccionado = comboEstado.getSelectionModel().getSelectedItem();
 
         listaFiltrada.setAll(listaOriginal.stream()
-                .filter(m -> texto.isEmpty() || m.getNombre().toLowerCase().contains(texto))
-                .filter(m -> estadoSeleccionado == null || estadoSeleccionado.getId() == -1 || (m.getEstado() != null && m.getEstado().getId() == estadoSeleccionado.getId()))
-                .collect(Collectors.toList()));
+            .filter(m -> texto.isEmpty() || m.getNombre().toLowerCase().contains(texto))
+            .filter(m -> estadoSeleccionado == null || estadoSeleccionado.getId() == -1 ||
+                (m.getEstado() != null && m.getEstado().getId() == estadoSeleccionado.getId()))
+            .collect(Collectors.toList()));
 
         pagina = 1;
         actualizarPaginado();
     }
 
     private void actualizarPaginado() {
-        int totalPaginas = (int) Math.ceil((double) listaFiltrada.size() / ITEMS_POR_PAGINA);
-        if (pagina < 1) {
+        if (listaFiltrada.isEmpty()) {
+            listaModeradores.setItems(FXCollections.observableArrayList());
             pagina = 1;
+            paginaActual.setText("1 / 1");
+            return;
         }
-        if (pagina > totalPaginas) {
-            pagina = totalPaginas;
-        }
+
+        int totalPaginas = (int) Math.ceil((double) listaFiltrada.size() / ITEMS_POR_PAGINA);
+        pagina = Math.max(1, Math.min(pagina, totalPaginas));
 
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, listaFiltrada.size());
-
-        if (desde > hasta) {
-            desde = 0;
-            hasta = Math.min(ITEMS_POR_PAGINA, listaFiltrada.size());
-            pagina = 1;
-        }
 
         listaModeradores.setItems(FXCollections.observableArrayList(listaFiltrada.subList(desde, hasta)));
         listaModeradores.getSelectionModel().clearSelection();
@@ -134,13 +139,11 @@ public class ModeradorController implements Initializable {
     }
 
     private String formatearFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) {
-            return "";
-        }
+        if (fecha == null || fecha.isBlank()) return "";
         try {
             return LocalDate.parse(fecha).format(formatter);
         } catch (Exception e) {
-            return fecha; // Por si está ya en formato legible
+            return fecha;
         }
     }
 

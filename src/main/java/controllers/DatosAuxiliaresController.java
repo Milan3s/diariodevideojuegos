@@ -139,15 +139,10 @@ public class DatosAuxiliaresController implements Initializable {
     }
 
     private void actualizarPaginado() {
-        if (datosFiltrados == null || datosFiltrados.isEmpty()) {
-            listaAuxiliares.setItems(FXCollections.observableArrayList());
-            paginaActual.setText("1");
-            listaAuxiliares.getSelectionModel().clearSelection();
-            mostrarDetalle(null);
-            return;
-        }
-
         int totalPaginas = (int) Math.ceil((double) datosFiltrados.size() / ITEMS_POR_PAGINA);
+        if (pagina < 1) {
+            pagina = 1;
+        }
         if (pagina > totalPaginas) {
             pagina = totalPaginas;
         }
@@ -155,19 +150,18 @@ public class DatosAuxiliaresController implements Initializable {
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
         int hasta = Math.min(desde + ITEMS_POR_PAGINA, datosFiltrados.size());
 
-        if (desde >= hasta || desde >= datosFiltrados.size()) {
-            listaAuxiliares.setItems(FXCollections.observableArrayList());
-            paginaActual.setText(String.valueOf(pagina));
-            listaAuxiliares.getSelectionModel().clearSelection();
-            mostrarDetalle(null);
-            return;
+        if (desde > hasta || desde >= datosFiltrados.size()) {
+            desde = 0;
+            hasta = Math.min(ITEMS_POR_PAGINA, datosFiltrados.size());
+            pagina = 1;
         }
 
         List<DatosAuxiliares> paginaActualDatos = datosFiltrados.subList(desde, hasta);
         listaAuxiliares.setItems(FXCollections.observableArrayList(paginaActualDatos));
-        paginaActual.setText(String.valueOf(pagina));
         listaAuxiliares.getSelectionModel().clearSelection();
         mostrarDetalle(null);
+
+        paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
     }
 
     private void mostrarDetalle(DatosAuxiliares dato) {

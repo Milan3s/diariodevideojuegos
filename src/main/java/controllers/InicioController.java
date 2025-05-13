@@ -15,14 +15,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import models.ConfiguracionAuxiliar;
 import models.Inicio;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 public class InicioController implements Initializable {
@@ -90,25 +86,13 @@ public class InicioController implements Initializable {
         lblJuegosCompletados.setText(defaultText(resumen.getMetaJuegosCompletadosDescripcion(), "No disponible"));
         lblResultadoMejoraDelCanal.setText(defaultText(resumen.getMejorasDelCanal(), "Sin mejoras registradas"));
         lblDias.setText(defaultText(resumen.getDiasParaExtensible(), "No disponible"));
-        lblFechaExtensible.setText(formatearFecha(resumen.getFechaExtensible()));
+        lblFechaExtensible.setText(defaultText(resumen.getFechaExtensible(), "No registrada"));
         lblMetaEspecifica.setText(defaultText(resumen.getMetaEspecifica(), "No hay metas específicas registradas"));
         lblNombre.setText(defaultText(resumen.getNombreExtensible(), "No registrado"));
     }
 
     private String defaultText(String value, String fallback) {
         return (value != null && !value.isBlank()) ? value : fallback;
-    }
-
-    private String formatearFecha(String fechaOriginal) {
-        if (fechaOriginal != null && fechaOriginal.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            try {
-                LocalDate fecha = LocalDate.parse(fechaOriginal);
-                return fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            } catch (DateTimeParseException e) {
-                return "Formato inválido";
-            }
-        }
-        return (fechaOriginal != null) ? fechaOriginal : "No registrada";
     }
 
     private void abrirFormularioMeta(ActionEvent event) {
@@ -136,5 +120,4 @@ public class InicioController implements Initializable {
     private void handleAsignarMetas(ActionEvent event) {
         abrirFormularioMeta(event);
     }
-
 }

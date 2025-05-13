@@ -75,7 +75,26 @@ public class LogrosController implements Initializable {
         ObservableList<Estado> estados = ComboDAO.cargarEstadosPorTipo("logro");
         estados.add(0, new Estado(-1, "Todos"));
         comboEstado.setItems(estados);
-        comboEstado.getSelectionModel().selectFirst();
+
+        // Mostrar "Estados" en lugar de "Todos" cuando se selecciona
+        comboEstado.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || item == null || item.getId() == -1) ? "Estados" : item.getNombre());
+            }
+        });
+
+        // Mostrar solo los nombres en la lista desplegable
+        comboEstado.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Estado item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getNombre());
+            }
+        });
+
+        comboEstado.getSelectionModel().selectFirst(); // Selecciona "Todos"
     }
 
     private void cargarLogros() {

@@ -30,7 +30,7 @@ public class DatabaseInsertar {
                         + "('metas_juegos', 'id_meta_juegos', 1, '2025-05-01');";
 
                 String sqlEstados = "INSERT INTO estados (tipo, nombre) VALUES "
-                        + "('juego', 'Pendiente'), ('juego', 'Jugando'), ('juego', 'Completado'), ('juego', 'Abandonado'), "
+                        + "('juego', 'Pendiente'), ('juego', 'Jugando'), ('juego', 'Completado'), ('juego', 'Abandonado'), ('juego', 'Ponzoña'), "
                         + "('logro', 'Pendiente'), ('logro', 'Completado'), ('logro', 'Oculto'), "
                         + "('moderador', 'Activo'), ('moderador', 'Inactivo'), ('moderador', 'En revisión'), ('moderador', 'Dado de baja'), "
                         + "('consola', 'Con chip'), ('consola', 'Sin chip'), ('consola', 'Original'), ('consola', 'FPGA');";
