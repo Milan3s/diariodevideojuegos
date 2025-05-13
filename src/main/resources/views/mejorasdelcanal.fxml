@@ -35,7 +35,7 @@
         </Button>
     </HBox>
 
-    <TextField fx:id="campoBusqueda" layoutX="38.0" layoutY="129.0" prefWidth="383.0" promptText="Buscar..." styleClass="combo-box-style" />
+    <TextField fx:id="campoBusqueda" layoutX="39.0" layoutY="194.0" prefWidth="383.0" promptText="Buscar..." styleClass="combo-box-style" />
 
     <ListView fx:id="listaMejoras" layoutX="39.0" layoutY="249.0" prefHeight="628.0" prefWidth="383.0" styleClass="lista-metas" />
 
@@ -90,7 +90,7 @@
             </rowConstraints>
         </GridPane>
     </AnchorPane>
-   <ComboBox fx:id="cboxFecha" layoutX="39.0" layoutY="183.0" onAction="#handledcboxFecha" prefHeight="52.0" prefWidth="201.0" styleClass="combo-box-style" />
-   <ComboBox fx:id="cboxSiNo" layoutX="253.0" layoutY="183.0" onAction="#hanledcboxSiNo" prefHeight="42.0" prefWidth="166.0" styleClass="combo-box-style" />
+   <ComboBox fx:id="cboxFecha" layoutX="41.0" layoutY="129.0" onAction="#handledcboxFecha" prefHeight="52.0" prefWidth="201.0" styleClass="combo-box-style" />
+   <ComboBox fx:id="cboxSiNo" layoutX="255.0" layoutY="129.0" onAction="#hanledcboxSiNo" prefHeight="42.0" prefWidth="166.0" styleClass="combo-box-style" />
 
 </AnchorPane>

@@ -35,9 +35,9 @@
         </Button>
     </HBox>
 
-    <ComboBox fx:id="comboFechas" layoutX="41.0" layoutY="171.0" prefHeight="52.0" prefWidth="364.0" promptText="Año del evento" styleClass="combo-box-style" />
+    <ComboBox fx:id="comboFechas" layoutX="41.0" layoutY="120.0" prefHeight="52.0" prefWidth="364.0" promptText="Año del evento" styleClass="combo-box-style" />
 
-    <TextField fx:id="campoBusqueda" layoutX="42.0" layoutY="120.0" prefWidth="364.0" promptText="Buscar..." styleClass="combo-box-style" />
+    <TextField fx:id="campoBusqueda" layoutX="41.0" layoutY="183.0" prefWidth="364.0" promptText="Buscar..." styleClass="combo-box-style" />
 
     <ListView fx:id="listaEventos" layoutX="39.0" layoutY="235.0" prefHeight="707.0" prefWidth="367.0" styleClass="lista-metas" />
 

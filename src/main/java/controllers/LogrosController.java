@@ -121,7 +121,18 @@ public class LogrosController implements Initializable {
     }
 
     private void actualizarPaginado() {
-        int totalPaginas = (int) Math.ceil((double) logrosFiltrados.size() / ITEMS_POR_PAGINA);
+        int totalLogros = logrosFiltrados.size();
+        int totalPaginas = (int) Math.ceil((double) totalLogros / ITEMS_POR_PAGINA);
+
+        if (totalPaginas == 0) {
+            pagina = 1;
+            listaLogros.setItems(FXCollections.observableArrayList());
+            limpiarDetalle();
+            paginaActual.setText("1 / 1");
+            return;
+        }
+
+        // Asegurar que la página esté dentro del rango válido
         if (pagina < 1) {
             pagina = 1;
         }
@@ -130,19 +141,18 @@ public class LogrosController implements Initializable {
         }
 
         int desde = (pagina - 1) * ITEMS_POR_PAGINA;
-        int hasta = Math.min(desde + ITEMS_POR_PAGINA, logrosFiltrados.size());
+        int hasta = Math.min(desde + ITEMS_POR_PAGINA, totalLogros);
 
-        if (desde > hasta) {
-            desde = 0;
-            hasta = Math.min(ITEMS_POR_PAGINA, logrosFiltrados.size());
-            pagina = 1;
+        // Prevenir posibles errores si desde >= hasta
+        if (desde >= hasta || desde < 0) {
+            listaLogros.setItems(FXCollections.observableArrayList());
+        } else {
+            listaLogros.setItems(FXCollections.observableArrayList(logrosFiltrados.subList(desde, hasta)));
         }
 
-        listaLogros.setItems(FXCollections.observableArrayList(logrosFiltrados.subList(desde, hasta)));
         listaLogros.getSelectionModel().clearSelection();
         limpiarDetalle();
-
-        paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
+        paginaActual.setText(pagina + " / " + totalPaginas);
     }
 
     private void filtrarLogros(ActionEvent e) {
