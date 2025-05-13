@@ -20,20 +20,34 @@ import models.EventoExtensible;
 
 public class EventosExtensiblesController implements Initializable {
 
-    @FXML private Text tituloEventos;
-    @FXML private Button btnAgregar;
-    @FXML private Button btnEditar;
-    @FXML private Button btnEliminar;
-    @FXML private TextField campoBusqueda;
-    @FXML private ListView<EventoExtensible> listaEventos;
-    @FXML private Button btnPrimero;
-    @FXML private Button btnAnterior;
-    @FXML private Label paginaActual;
-    @FXML private Button btnSiguiente;
-    @FXML private Button btnUltimo;
-    @FXML private Label lblMotivo;
-    @FXML private Label lblFechaEvento;
-    @FXML private ComboBox<String> comboFechas;
+    @FXML
+    private Text tituloEventos;
+    @FXML
+    private Button btnAgregar;
+    @FXML
+    private Button btnEditar;
+    @FXML
+    private Button btnEliminar;
+    @FXML
+    private TextField campoBusqueda;
+    @FXML
+    private ListView<EventoExtensible> listaEventos;
+    @FXML
+    private Button btnPrimero;
+    @FXML
+    private Button btnAnterior;
+    @FXML
+    private Label paginaActual;
+    @FXML
+    private Button btnSiguiente;
+    @FXML
+    private Button btnUltimo;
+    @FXML
+    private Label lblMotivo;
+    @FXML
+    private Label lblFechaEvento;
+    @FXML
+    private ComboBox<String> comboFechas;
 
     private List<EventoExtensible> eventosFiltrados = new ArrayList<>();
     private static final int ELEMENTOS_POR_PAGINA = 10;
@@ -66,13 +80,16 @@ public class EventosExtensiblesController implements Initializable {
     private void cargarFechas() {
         List<String> fechasRaw = EventosExtensiblesDAO.obtenerFechasDisponibles();
         List<String> fechasFormateadas = new ArrayList<>();
+
+        fechasFormateadas.add("Filtrar por fecha"); // ← opción visible como título
+        fechasFormateadas.add("Todas");
+
         for (String f : fechasRaw) {
             fechasFormateadas.add(formatearFechaVisual(f));
         }
-        fechasFormateadas.add(0, "Todas");
+
         comboFechas.setItems(FXCollections.observableArrayList(fechasFormateadas));
-        comboFechas.setPromptText("Filtrar por fecha");
-        comboFechas.getSelectionModel().selectFirst();
+        comboFechas.getSelectionModel().select(0); // ← mostrar "Filtrar por fecha"
     }
 
     private void cargarEventos() {
@@ -82,7 +99,7 @@ public class EventosExtensiblesController implements Initializable {
     }
 
     private void filtrar() {
-        String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase() : "";
+        String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
         String fechaSeleccionada = comboFechas.getValue();
 
         List<EventoExtensible> base = EventosExtensiblesDAO.obtenerTodos();
@@ -90,8 +107,12 @@ public class EventosExtensiblesController implements Initializable {
 
         for (EventoExtensible e : base) {
             boolean coincideTexto = e.getMotivo().toLowerCase().contains(texto);
-            boolean coincideFecha = fechaSeleccionada == null || fechaSeleccionada.equals("Todas")
+            boolean sinFiltroFecha = fechaSeleccionada == null
+                    || fechaSeleccionada.equals("Todas")
+                    || fechaSeleccionada.equals("Filtrar por fecha");
+            boolean coincideFecha = sinFiltroFecha
                     || formatearFechaVisual(e.getFechaEvento()).equals(fechaSeleccionada);
+
             if (coincideTexto && coincideFecha) {
                 eventosFiltrados.add(e);
             }

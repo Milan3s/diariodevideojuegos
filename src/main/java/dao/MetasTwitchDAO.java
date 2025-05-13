@@ -14,9 +14,7 @@ public class MetasTwitchDAO {
         ObservableList<MetasTwitch> lista = FXCollections.observableArrayList();
         String sql = "SELECT * FROM metas_twitch ORDER BY fecha_inicio ASC";
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 MetasTwitch meta = new MetasTwitch(
@@ -40,10 +38,9 @@ public class MetasTwitchDAO {
 
     public Integer insertarMetaYDevolverId(MetasTwitch meta) {
         String sql = "INSERT INTO metas_twitch (descripcion, meta, actual, fecha_inicio, fecha_fin) "
-                   + "VALUES (?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, meta.getDescripcion());
             stmt.setInt(2, meta.getMeta());
@@ -69,10 +66,9 @@ public class MetasTwitchDAO {
 
     public boolean actualizarMeta(MetasTwitch meta) {
         String sql = "UPDATE metas_twitch SET descripcion = ?, meta = ?, actual = ?, fecha_inicio = ?, fecha_fin = ? "
-                   + "WHERE id_meta = ?";
+                + "WHERE id_meta = ?";
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, meta.getDescripcion());
             stmt.setInt(2, meta.getMeta());
@@ -92,8 +88,7 @@ public class MetasTwitchDAO {
     public boolean eliminarMeta(int idMeta) {
         String sql = "DELETE FROM metas_twitch WHERE id_meta = ?";
 
-        try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, idMeta);
             return stmt.executeUpdate() > 0;
@@ -103,4 +98,22 @@ public class MetasTwitchDAO {
             return false;
         }
     }
+
+    public ObservableList<String> obtenerAniosDisponibles() {
+        ObservableList<String> anios = FXCollections.observableArrayList();
+        String sql = "SELECT DISTINCT anio FROM metas_twitch ORDER BY anio DESC";
+
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                anios.add(rs.getString("anio"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return anios;
+    }
+
 }

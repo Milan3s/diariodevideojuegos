@@ -2,63 +2,47 @@ package controllers;
 
 import dao.MetasEspecificasDAO;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import java.io.IOException;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import models.MetasEspecificas;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 public class MetasEspecificasController implements Initializable {
 
-    @FXML
-    private Text tituloMetas;
-    @FXML
-    private Button btnAgregar, btnEditar, btnEliminar;
-    @FXML
-    private ComboBox<Integer> comboAnios;
-    @FXML
-    private TextField campoBusqueda;
-    @FXML
-    private ListView<MetasEspecificas> listaMetas;
-    @FXML
-    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
-    @FXML
-    private Label paginaActual;
-    @FXML
-    private ImageView imgBoxart;
-    @FXML
-    private FontAwesomeIconView iconoImagenNoDisponible;
+    @FXML private Text tituloMetas;
+    @FXML private Button btnAgregar, btnEditar, btnEliminar;
+    @FXML private ComboBox<String> comboAnios;
+    @FXML private TextField campoBusqueda;
+    @FXML private ListView<MetasEspecificas> listaMetas;
+    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML private Label paginaActual;
+    @FXML private ImageView imgBoxart;
+    @FXML private FontAwesomeIconView iconoImagenNoDisponible;
 
-    @FXML
-    private Label lblDescripcion;
-    @FXML
-    private Label lblJuegosObjetivo;
-    @FXML
-    private Label lblJuegosCompletados;
-    @FXML
-    private Label lblFabricante;
-    @FXML
-    private Label lblConsola;
-    @FXML
-    private Label lblFechaInicio;
-    @FXML
-    private Label lblFechaFin;
-    @FXML
-    private Label lblCumplida;
+    @FXML private Label lblDescripcion;
+    @FXML private Label lblJuegosObjetivo;
+    @FXML private Label lblJuegosCompletados;
+    @FXML private Label lblFabricante;
+    @FXML private Label lblConsola;
+    @FXML private Label lblFechaInicio;
+    @FXML private Label lblFechaFin;
+    @FXML private Label lblCumplida;
 
     private final MetasEspecificasDAO dao = new MetasEspecificasDAO();
     private final int ITEMS_POR_PAGINA = 10;
@@ -77,14 +61,32 @@ public class MetasEspecificasController implements Initializable {
 
     private void cargarAnios() {
         List<Integer> anios = dao.obtenerAniosDisponibles();
-        comboAnios.setItems(FXCollections.observableArrayList(anios));
-        comboAnios.getItems().add(0, null);
-        comboAnios.setPromptText("Año");
+        ObservableList<String> opciones = FXCollections.observableArrayList();
+
+        opciones.add("Filtrar por año"); // Estética
+        opciones.add("Todas");           // Filtro completo
+
+        for (Integer anio : anios) {
+            opciones.add(anio.toString());
+        }
+
+        comboAnios.setItems(opciones);
+        comboAnios.getSelectionModel().selectFirst(); // Mostrar "Filtrar por año"
     }
 
     private void actualizarLista() {
         String filtro = campoBusqueda.getText().toLowerCase().trim();
-        Integer anio = comboAnios.getValue();
+        String seleccion = comboAnios.getValue();
+        Integer anio = null;
+
+        if (seleccion != null && !seleccion.equals("Todas") && !seleccion.equals("Filtrar por año")) {
+            try {
+                anio = Integer.parseInt(seleccion);
+            } catch (NumberFormatException ignored) {
+                anio = null;
+            }
+        }
+
         todasMetas = dao.obtenerTodas(anio, filtro);
         totalPaginas = (int) Math.ceil((double) todasMetas.size() / ITEMS_POR_PAGINA);
         pagina = Math.min(Math.max(pagina, 1), Math.max(1, totalPaginas));
@@ -96,7 +98,6 @@ public class MetasEspecificasController implements Initializable {
         int fin = Math.min(inicio + ITEMS_POR_PAGINA, todasMetas.size());
         listaMetas.setItems(FXCollections.observableArrayList(todasMetas.subList(inicio, fin)));
         paginaActual.setText(pagina + " / " + (totalPaginas == 0 ? 1 : totalPaginas));
-
     }
 
     private void mostrarDetalle(MetasEspecificas meta) {
@@ -121,7 +122,7 @@ public class MetasEspecificasController implements Initializable {
         lblFechaInicio.setText(meta.getFechaInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         lblFechaFin.setText(meta.getFechaFin().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         lblCumplida.setText(meta.isCumplida() ? "Sí" : "No");
-        imgBoxart.setImage(null); // La imagen aún no se usa
+        imgBoxart.setImage(null); // Imagen aún no implementada
     }
 
     private void buscar() {
@@ -184,10 +185,10 @@ public class MetasEspecificasController implements Initializable {
             Parent root = loader.load();
 
             FormMetasEspecificasController controller = loader.getController();
-            controller.setMetaExistente(seleccionada); // Pre-cargar datos en el formulario
+            controller.setMetaExistente(seleccionada);
             controller.setOnGuardarCallback(() -> {
-                actualizarLista(); // Recargar lista
-                seleccionarMetaPorId(controller.getMetaGuardada().getId()); // Volver a seleccionar
+                actualizarLista();
+                seleccionarMetaPorId(controller.getMetaGuardada().getId());
             });
 
             Stage stage = new Stage();

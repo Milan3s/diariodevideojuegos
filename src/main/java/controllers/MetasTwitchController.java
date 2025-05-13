@@ -24,15 +24,26 @@ import java.util.ResourceBundle;
 
 public class MetasTwitchController implements Initializable {
 
-    @FXML private TextField campoBusqueda;
-    @FXML private Button btnAgregar, btnEditar, btnEliminar;
-    @FXML private ListView<MetasTwitch> listaMetas;
-    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
-    @FXML private Label paginaActual;
-    @FXML private Text tituloMetas;
-    @FXML private ImageView imgBoxart;
-    @FXML private Label lblDescripcion, lblMeta, lblActual, lblFechaInicio, lblFechaFin, lblFechaRegistro;
-    @FXML private javafx.scene.text.Text txtNoDisponible;
+    @FXML
+    private TextField campoBusqueda;
+    @FXML
+    private ComboBox<String> comboAnios;
+    @FXML
+    private Button btnAgregar, btnEditar, btnEliminar;
+    @FXML
+    private ListView<MetasTwitch> listaMetas;
+    @FXML
+    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML
+    private Label paginaActual;
+    @FXML
+    private Text tituloMetas;
+    @FXML
+    private ImageView imgBoxart;
+    @FXML
+    private Label lblDescripcion, lblMeta, lblActual, lblFechaInicio, lblFechaFin, lblFechaRegistro;
+    @FXML
+    private Text txtNoDisponible;
 
     private final MetasTwitchDAO dao = new MetasTwitchDAO();
     private ObservableList<MetasTwitch> todasLasMetas = FXCollections.observableArrayList();
@@ -48,7 +59,18 @@ public class MetasTwitchController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         listaMetas.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> mostrarDetalle(newVal));
         campoBusqueda.setOnKeyReleased(this::buscar);
+        comboAnios.setOnAction(e -> aplicarFiltroYActualizarPaginacion());
+        cargarComboAnios();
         cargarMetas();
+    }
+
+    private void cargarComboAnios() {
+        ObservableList<String> opciones = FXCollections.observableArrayList();
+        opciones.add("Filtrar por año");
+        opciones.add("Todos");
+        opciones.addAll(dao.obtenerAniosDisponibles());
+        comboAnios.setItems(opciones);
+        comboAnios.getSelectionModel().selectFirst();
     }
 
     private void cargarMetas() {
@@ -58,12 +80,20 @@ public class MetasTwitchController implements Initializable {
 
     private void aplicarFiltroYActualizarPaginacion() {
         String filtro = campoBusqueda.getText().toLowerCase();
+        String seleccionAnio = comboAnios.getValue();
 
-        ObservableList<MetasTwitch> filtradas = todasLasMetas.filtered(meta ->
-                meta.getDescripcion().toLowerCase().contains(filtro)
-                        || String.valueOf(meta.getMeta()).contains(filtro)
-                        || String.valueOf(meta.getActual()).contains(filtro)
-        );
+        ObservableList<MetasTwitch> filtradas = todasLasMetas.filtered(meta -> {
+            boolean coincideFiltro = meta.getDescripcion().toLowerCase().contains(filtro)
+                    || String.valueOf(meta.getMeta()).contains(filtro)
+                    || String.valueOf(meta.getActual()).contains(filtro);
+
+            boolean coincideAnio = true;
+            if (seleccionAnio != null && !seleccionAnio.equals("Todas") && !seleccionAnio.equals("Filtrar por año")) {
+                coincideAnio = String.valueOf(meta.getFechaInicio().getYear()).equals(seleccionAnio);
+            }
+
+            return coincideFiltro && coincideAnio;
+        });
 
         totalPaginas = (int) Math.ceil((double) filtradas.size() / elementosPorPagina);
         pagina = Math.max(1, Math.min(pagina, totalPaginas));
@@ -183,26 +213,30 @@ public class MetasTwitchController implements Initializable {
         }
     }
 
-    @FXML private void irPrimeraPagina(ActionEvent event) {
+    @FXML
+    private void irPrimeraPagina(ActionEvent event) {
         pagina = 1;
         aplicarFiltroYActualizarPaginacion();
     }
 
-    @FXML private void irPaginaAnterior(ActionEvent event) {
+    @FXML
+    private void irPaginaAnterior(ActionEvent event) {
         if (pagina > 1) {
             pagina--;
             aplicarFiltroYActualizarPaginacion();
         }
     }
 
-    @FXML private void irPaginaSiguiente(ActionEvent event) {
+    @FXML
+    private void irPaginaSiguiente(ActionEvent event) {
         if (pagina < totalPaginas) {
             pagina++;
             aplicarFiltroYActualizarPaginacion();
         }
     }
 
-    @FXML private void irUltimaPagina(ActionEvent event) {
+    @FXML
+    private void irUltimaPagina(ActionEvent event) {
         pagina = totalPaginas;
         aplicarFiltroYActualizarPaginacion();
     }
