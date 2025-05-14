@@ -138,4 +138,21 @@ public class MejorasDelCanalDAO {
         return valores;
     }
 
+    public ObservableList<String> obtenerAniosDisponibles() {
+        ObservableList<String> anios = FXCollections.observableArrayList();
+        String sql = "SELECT DISTINCT anio FROM anios_mejoras_canal ORDER BY anio DESC";
+
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                anios.add(rs.getString("anio"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return anios;
+    }
+
 }

@@ -174,4 +174,21 @@ public class MetasEspecificasDAO {
         return null;
     }
 
+    public List<Integer> obtenerAniosDesdeAuxiliar() {
+        List<Integer> anios = new ArrayList<>();
+        String sql = "SELECT DISTINCT anio FROM anios_metas_twitch ORDER BY anio DESC";
+
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                anios.add(rs.getInt("anio"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return anios;
+    }
+
 }

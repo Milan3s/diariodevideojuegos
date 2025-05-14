@@ -24,7 +24,10 @@ public class MetasTwitchDAO {
                         rs.getInt("actual"),
                         LocalDate.parse(rs.getString("fecha_inicio").substring(0, 10)),
                         LocalDate.parse(rs.getString("fecha_fin").substring(0, 10)),
-                        rs.getString("fecha_registro") != null ? LocalDate.parse(rs.getString("fecha_registro").substring(0, 10)) : null
+                        rs.getString("fecha_registro") != null
+                        ? LocalDate.parse(rs.getString("fecha_registro").substring(0, 10))
+                        : null,
+                        rs.getInt("anio")
                 );
                 lista.add(meta);
             }
@@ -37,8 +40,8 @@ public class MetasTwitchDAO {
     }
 
     public Integer insertarMetaYDevolverId(MetasTwitch meta) {
-        String sql = "INSERT INTO metas_twitch (descripcion, meta, actual, fecha_inicio, fecha_fin) "
-                + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO metas_twitch (descripcion, meta, actual, fecha_inicio, fecha_fin, anio) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -47,13 +50,15 @@ public class MetasTwitchDAO {
             stmt.setInt(3, meta.getActual());
             stmt.setString(4, meta.getFechaInicio().toString());
             stmt.setString(5, meta.getFechaFin().toString());
+            stmt.setInt(6, meta.getAnio());
 
             int filas = stmt.executeUpdate();
 
             if (filas > 0) {
-                ResultSet rs = stmt.getGeneratedKeys();
-                if (rs.next()) {
-                    return rs.getInt(1);
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
                 }
             }
 
@@ -65,8 +70,8 @@ public class MetasTwitchDAO {
     }
 
     public boolean actualizarMeta(MetasTwitch meta) {
-        String sql = "UPDATE metas_twitch SET descripcion = ?, meta = ?, actual = ?, fecha_inicio = ?, fecha_fin = ? "
-                + "WHERE id_meta = ?";
+        String sql = "UPDATE metas_twitch SET descripcion = ?, meta = ?, actual = ?, "
+                + "fecha_inicio = ?, fecha_fin = ?, anio = ? WHERE id_meta = ?";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -75,7 +80,8 @@ public class MetasTwitchDAO {
             stmt.setInt(3, meta.getActual());
             stmt.setString(4, meta.getFechaInicio().toString());
             stmt.setString(5, meta.getFechaFin().toString());
-            stmt.setInt(6, meta.getIdMeta());
+            stmt.setInt(6, meta.getAnio());
+            stmt.setInt(7, meta.getIdMeta());
 
             return stmt.executeUpdate() > 0;
 
@@ -101,7 +107,7 @@ public class MetasTwitchDAO {
 
     public ObservableList<String> obtenerAniosDisponibles() {
         ObservableList<String> anios = FXCollections.observableArrayList();
-        String sql = "SELECT DISTINCT anio FROM metas_twitch ORDER BY anio DESC";
+        String sql = "SELECT DISTINCT anio FROM anios_metas_twitch ORDER BY anio DESC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 

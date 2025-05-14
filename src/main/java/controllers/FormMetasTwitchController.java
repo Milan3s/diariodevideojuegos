@@ -67,6 +67,8 @@ public class FormMetasTwitchController implements Initializable {
             return;
         }
 
+        int anio = pickerInicio.getValue().getYear();
+
         MetasTwitch meta = new MetasTwitch(
                 metaExistente != null ? metaExistente.getIdMeta() : 0,
                 txtDescripcion.getText().trim(),
@@ -74,7 +76,8 @@ public class FormMetasTwitchController implements Initializable {
                 Integer.parseInt(txtActual.getText().trim()),
                 pickerInicio.getValue(),
                 pickerFin.getValue(),
-                LocalDate.now()
+                LocalDate.now(),
+                anio
         );
 
         boolean exito = false;

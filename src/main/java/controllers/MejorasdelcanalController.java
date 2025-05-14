@@ -64,16 +64,13 @@ public class MejorasdelcanalController implements Initializable {
     }
 
     private void cargarCombos() {
-        ObservableList<String> fechasRaw = dao.obtenerFechasUnicas("fecha_inicio");
-        ObservableList<String> fechasFormateadas = fechasRaw.stream()
-                .map(f -> LocalDate.parse(f).format(formatoFecha))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
-        fechasFormateadas.add(0, "Todos"); // <- Agrega opción "Todos"
-        cboxFecha.setItems(fechasFormateadas);
-        cboxFecha.setPromptText("Fechas");
+        ObservableList<String> aniosDisponibles = dao.obtenerAniosDisponibles();
+        aniosDisponibles.add(0, "Todos");
+        cboxFecha.setItems(aniosDisponibles);
+        cboxFecha.setPromptText("Filtrar por Año");
 
         ObservableList<String> opcionesCumplida = dao.obtenerValoresCumplida();
-        opcionesCumplida.add(0, "Todos"); // <- Agrega opción "Todos"
+        opcionesCumplida.add(0, "Todos");
         cboxSiNo.setItems(opcionesCumplida);
         cboxSiNo.setPromptText("Opciones");
     }
@@ -85,12 +82,12 @@ public class MejorasdelcanalController implements Initializable {
 
     private void aplicarFiltros() {
         String texto = campoBusqueda.getText() != null ? campoBusqueda.getText().toLowerCase().trim() : "";
-        String fechaSeleccionada = cboxFecha.getValue();
+        String anioSeleccionado = cboxFecha.getValue();
         String cumplidaSeleccionada = cboxSiNo.getValue();
 
         mejorasFiltradas.setAll(mejorasOriginales.stream()
                 .filter(m -> texto.isEmpty() || m.getDescripcion().toLowerCase().contains(texto))
-                .filter(m -> fechaSeleccionada == null || fechaSeleccionada.equals("Todos") || m.getFechaInicio().format(formatoFecha).equals(fechaSeleccionada))
+                .filter(m -> anioSeleccionado == null || anioSeleccionado.equals("Todos") || String.valueOf(m.getFechaInicio().getYear()).equals(anioSeleccionado))
                 .filter(m -> cumplidaSeleccionada == null || cumplidaSeleccionada.equals("Todos") || (m.isCumplida() ? "Sí" : "No").equals(cumplidaSeleccionada))
                 .collect(Collectors.toList())
         );

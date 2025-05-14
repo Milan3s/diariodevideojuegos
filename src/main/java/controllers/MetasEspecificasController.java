@@ -25,24 +25,41 @@ import java.util.ResourceBundle;
 
 public class MetasEspecificasController implements Initializable {
 
-    @FXML private Text tituloMetas;
-    @FXML private Button btnAgregar, btnEditar, btnEliminar;
-    @FXML private ComboBox<String> comboAnios;
-    @FXML private TextField campoBusqueda;
-    @FXML private ListView<MetasEspecificas> listaMetas;
-    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
-    @FXML private Label paginaActual;
-    @FXML private ImageView imgBoxart;
-    @FXML private FontAwesomeIconView iconoImagenNoDisponible;
+    @FXML
+    private Text tituloMetas;
+    @FXML
+    private Button btnAgregar, btnEditar, btnEliminar;
+    @FXML
+    private ComboBox<String> comboAnios;
+    @FXML
+    private TextField campoBusqueda;
+    @FXML
+    private ListView<MetasEspecificas> listaMetas;
+    @FXML
+    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML
+    private Label paginaActual;
+    @FXML
+    private ImageView imgBoxart;
+    @FXML
+    private FontAwesomeIconView iconoImagenNoDisponible;
 
-    @FXML private Label lblDescripcion;
-    @FXML private Label lblJuegosObjetivo;
-    @FXML private Label lblJuegosCompletados;
-    @FXML private Label lblFabricante;
-    @FXML private Label lblConsola;
-    @FXML private Label lblFechaInicio;
-    @FXML private Label lblFechaFin;
-    @FXML private Label lblCumplida;
+    @FXML
+    private Label lblDescripcion;
+    @FXML
+    private Label lblJuegosObjetivo;
+    @FXML
+    private Label lblJuegosCompletados;
+    @FXML
+    private Label lblFabricante;
+    @FXML
+    private Label lblConsola;
+    @FXML
+    private Label lblFechaInicio;
+    @FXML
+    private Label lblFechaFin;
+    @FXML
+    private Label lblCumplida;
 
     private final MetasEspecificasDAO dao = new MetasEspecificasDAO();
     private final int ITEMS_POR_PAGINA = 10;
@@ -60,18 +77,18 @@ public class MetasEspecificasController implements Initializable {
     }
 
     private void cargarAnios() {
-        List<Integer> anios = dao.obtenerAniosDisponibles();
+        List<Integer> anios = dao.obtenerAniosDesdeAuxiliar(); // ← ahora se toma desde anios_metas_especificas
         ObservableList<String> opciones = FXCollections.observableArrayList();
 
-        opciones.add("Filtrar por año"); // Estética
-        opciones.add("Todas");           // Filtro completo
+        opciones.add("Filtrar por año"); // Estética (prompt)
+        opciones.add("Todas");
 
         for (Integer anio : anios) {
             opciones.add(anio.toString());
         }
 
         comboAnios.setItems(opciones);
-        comboAnios.getSelectionModel().selectFirst(); // Mostrar "Filtrar por año"
+        comboAnios.getSelectionModel().selectFirst();
     }
 
     private void actualizarLista() {

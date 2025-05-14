@@ -24,26 +24,16 @@ import java.util.ResourceBundle;
 
 public class MetasTwitchController implements Initializable {
 
-    @FXML
-    private TextField campoBusqueda;
-    @FXML
-    private ComboBox<String> comboAnios;
-    @FXML
-    private Button btnAgregar, btnEditar, btnEliminar;
-    @FXML
-    private ListView<MetasTwitch> listaMetas;
-    @FXML
-    private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
-    @FXML
-    private Label paginaActual;
-    @FXML
-    private Text tituloMetas;
-    @FXML
-    private ImageView imgBoxart;
-    @FXML
-    private Label lblDescripcion, lblMeta, lblActual, lblFechaInicio, lblFechaFin, lblFechaRegistro;
-    @FXML
-    private Text txtNoDisponible;
+    @FXML private TextField campoBusqueda;
+    @FXML private ComboBox<String> comboAnios;
+    @FXML private Button btnAgregar, btnEditar, btnEliminar;
+    @FXML private ListView<MetasTwitch> listaMetas;
+    @FXML private Button btnPrimero, btnAnterior, btnSiguiente, btnUltimo;
+    @FXML private Label paginaActual;
+    @FXML private Text tituloMetas;
+    @FXML private ImageView imgBoxart;
+    @FXML private Label lblDescripcion, lblMeta, lblActual, lblFechaInicio, lblFechaFin, lblFechaRegistro;
+    @FXML private Text txtNoDisponible;
 
     private final MetasTwitchDAO dao = new MetasTwitchDAO();
     private ObservableList<MetasTwitch> todasLasMetas = FXCollections.observableArrayList();
@@ -60,6 +50,7 @@ public class MetasTwitchController implements Initializable {
         listaMetas.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> mostrarDetalle(newVal));
         campoBusqueda.setOnKeyReleased(this::buscar);
         comboAnios.setOnAction(e -> aplicarFiltroYActualizarPaginacion());
+
         cargarComboAnios();
         cargarMetas();
     }
@@ -69,6 +60,7 @@ public class MetasTwitchController implements Initializable {
         opciones.add("Filtrar por año");
         opciones.add("Todos");
         opciones.addAll(dao.obtenerAniosDisponibles());
+
         comboAnios.setItems(opciones);
         comboAnios.getSelectionModel().selectFirst();
     }
@@ -79,7 +71,7 @@ public class MetasTwitchController implements Initializable {
     }
 
     private void aplicarFiltroYActualizarPaginacion() {
-        String filtro = campoBusqueda.getText().toLowerCase();
+        String filtro = campoBusqueda.getText().toLowerCase().trim();
         String seleccionAnio = comboAnios.getValue();
 
         ObservableList<MetasTwitch> filtradas = todasLasMetas.filtered(meta -> {
@@ -88,8 +80,13 @@ public class MetasTwitchController implements Initializable {
                     || String.valueOf(meta.getActual()).contains(filtro);
 
             boolean coincideAnio = true;
-            if (seleccionAnio != null && !seleccionAnio.equals("Todas") && !seleccionAnio.equals("Filtrar por año")) {
-                coincideAnio = String.valueOf(meta.getFechaInicio().getYear()).equals(seleccionAnio);
+            if (seleccionAnio != null && !seleccionAnio.equals("Todos") && !seleccionAnio.equals("Filtrar por año")) {
+                try {
+                    int anioFiltro = Integer.parseInt(seleccionAnio);
+                    coincideAnio = meta.getAnio() == anioFiltro;
+                } catch (NumberFormatException ignored) {
+                    coincideAnio = true;
+                }
             }
 
             return coincideFiltro && coincideAnio;
