@@ -14,10 +14,11 @@ public class DatosAuxiliaresDAO {
     public List<String> obtenerTiposVisuales() {
         List<String> tipos = new ArrayList<>();
         String sql = "SELECT nombre_visual FROM configuracion_auxiliares "
-                + "WHERE LOWER(nombre_visual) LIKE '%estado%' "
-                + "   OR LOWER(nombre_visual) LIKE '%dificultad%' "
-                + "   OR LOWER(nombre_visual) LIKE '%año%' "
-                + "ORDER BY nombre_visual";
+                   + "WHERE LOWER(nombre_visual) LIKE '%estado%' "
+                   + "   OR LOWER(nombre_visual) LIKE '%dificultad%' "
+                   + "   OR LOWER(nombre_visual) LIKE '%año%' "
+                   + "   OR LOWER(nombre_visual) LIKE '%cumplida%' "
+                   + "ORDER BY nombre_visual";
 
         try (Connection conn = Conexion.obtenerConexion(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -32,16 +33,14 @@ public class DatosAuxiliaresDAO {
 
     public void limpiarConfiguracionesNoUsadas() {
         String sql = "DELETE FROM configuracion_auxiliares "
-                + "WHERE LOWER(nombre_visual) NOT LIKE '%estado%' "
-                + "  AND LOWER(nombre_visual) NOT LIKE '%dificultad%' "
-                + "  AND LOWER(nombre_visual) NOT LIKE '%año%' "
-                + "  AND nombre_tabla NOT IN ("
-                + "      'estados', "
-                + "      'dificultades_logros', "
-                + "      'anios_metas_twitch', "
-                + "      'anios_metas_especificas', "
-                + "      'anios_mejoras_canal'"
-                + "  )";
+                   + "WHERE LOWER(nombre_visual) NOT LIKE '%estado%' "
+                   + "  AND LOWER(nombre_visual) NOT LIKE '%dificultad%' "
+                   + "  AND LOWER(nombre_visual) NOT LIKE '%año%' "
+                   + "  AND LOWER(nombre_visual) NOT LIKE '%cumplida%' "
+                   + "  AND nombre_tabla NOT IN ("
+                   + "      'estados', 'dificultades_logros', 'anios_metas_twitch', "
+                   + "      'anios_metas_especificas', 'anios_mejoras_canal', 'estado_cumplida'"
+                   + ")";
 
         try (Connection conn = Conexion.obtenerConexion(); Statement stmt = conn.createStatement()) {
             int eliminados = stmt.executeUpdate(sql);
@@ -74,9 +73,7 @@ public class DatosAuxiliaresDAO {
     public List<DatosAuxiliares> listar(String nombreVisual) {
         List<DatosAuxiliares> resultados = new ArrayList<>();
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) {
-            return resultados;
-        }
+        if (config == null) return resultados;
 
         String sql;
         if (config.tabla.equalsIgnoreCase("estados")) {
@@ -109,20 +106,16 @@ public class DatosAuxiliaresDAO {
 
     public int insertarYObtenerId(String nombreVisual, String valor) {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) {
-            return -1;
-        }
+        if (config == null) return -1;
 
         String sql = String.format("INSERT INTO %s (%s) VALUES (?)", config.tabla, config.columnaNombre);
 
-        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, valor);
             int filas = pstmt.executeUpdate();
             if (filas > 0) {
-                try {
-                    return Integer.parseInt(valor);
-                } catch (NumberFormatException e) {
-                    return -1;
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) return rs.getInt(1);
                 }
             }
         } catch (SQLException e) {
@@ -134,9 +127,7 @@ public class DatosAuxiliaresDAO {
 
     public boolean editar(String nombreVisual, int id, String nuevoValor) {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) {
-            return false;
-        }
+        if (config == null) return false;
 
         String sql = String.format("UPDATE %s SET %s = ? WHERE %s = ?", config.tabla, config.columnaNombre, config.columnaId);
 
@@ -152,9 +143,7 @@ public class DatosAuxiliaresDAO {
 
     public boolean eliminar(String nombreVisual, int id) {
         TablaAuxiliar config = obtenerConfiguracion(nombreVisual);
-        if (config == null) {
-            return false;
-        }
+        if (config == null) return false;
 
         String sql = String.format("DELETE FROM %s WHERE %s = ?", config.tabla, config.columnaId);
 
@@ -169,9 +158,7 @@ public class DatosAuxiliaresDAO {
 
     public boolean existeRegistro(String tipoVisual, String nombre) {
         TablaAuxiliar config = obtenerConfiguracion(tipoVisual);
-        if (config == null) {
-            return false;
-        }
+        if (config == null) return false;
 
         String sql = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", config.tabla, config.columnaNombre);
 
@@ -188,9 +175,7 @@ public class DatosAuxiliaresDAO {
 
     public DatosAuxiliares buscarPorNombre(String tipoVisual, String nombre) {
         TablaAuxiliar config = obtenerConfiguracion(tipoVisual);
-        if (config == null) {
-            return null;
-        }
+        if (config == null) return null;
 
         String sql = String.format("SELECT %s FROM %s WHERE %s = ?", config.columnaNombre, config.tabla, config.columnaNombre);
 
@@ -198,13 +183,7 @@ public class DatosAuxiliaresDAO {
             stmt.setString(1, nombre);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    int valor;
-                    try {
-                        valor = Integer.parseInt(rs.getString(config.columnaNombre));
-                    } catch (NumberFormatException e) {
-                        valor = -1;
-                    }
-                    return new DatosAuxiliares(valor, nombre, null, tipoVisual);
+                    return new DatosAuxiliares(rs.getInt(config.columnaNombre), nombre, null, tipoVisual);
                 }
             }
         } catch (SQLException e) {
@@ -236,27 +215,16 @@ public class DatosAuxiliaresDAO {
     }
 
     private String inferirTipoDesdeVisual(String visual) {
-        if (visual == null) {
-            return null;
-        }
+        if (visual == null) return null;
         visual = visual.toLowerCase();
-        if (visual.contains("juego")) {
-            return "juego";
-        }
-        if (visual.contains("logro")) {
-            return "logro";
-        }
-        if (visual.contains("moderador")) {
-            return "moderador";
-        }
-        if (visual.contains("consola")) {
-            return "consola";
-        }
+        if (visual.contains("juego")) return "juego";
+        if (visual.contains("logro")) return "logro";
+        if (visual.contains("moderador")) return "moderador";
+        if (visual.contains("consola")) return "consola";
         return "general";
     }
 
     private static class TablaAuxiliar {
-
         final String tabla;
         final String columnaId;
         final String columnaNombre;
