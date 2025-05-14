@@ -27,7 +27,7 @@ public class FormMejorasDelCanalController implements Initializable {
     @FXML private Button btnCancelar;
 
     private MejorasDelCanal mejoraEnEdicion;
-
+    private final MejorasDelCanalDAO dao = new MejorasDelCanalDAO();
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
@@ -35,7 +35,6 @@ public class FormMejorasDelCanalController implements Initializable {
         radioCumplidaSi.setToggleGroup(cumplidaGroup);
         radioCumplidaNo.setToggleGroup(cumplidaGroup);
         radioCumplidaNo.setSelected(true);
-
         configurarDatePickers();
     }
 
@@ -106,12 +105,18 @@ public class FormMejorasDelCanalController implements Initializable {
             return;
         }
 
-        MejorasDelCanalDAO dao = new MejorasDelCanalDAO();
+        int idEstado = dao.obtenerIdEstadoCumplidaDesdeNombre(cumplida ? "Sí" : "No");
+        if (idEstado == -1) {
+            mostrarAlerta("No se encontró el estado 'Cumplida'. Verifica la tabla estado_cumplida.");
+            return;
+        }
+
         boolean exito;
         Integer idGenerado = null;
 
         if (mejoraEnEdicion == null) {
             MejorasDelCanal nueva = new MejorasDelCanal(descripcion, meta, actual, fechaInicio, fechaFin, cumplida);
+            nueva.setIdEstadoCumplida(idEstado);
             idGenerado = dao.insertarMejoraYDevolverId(nueva);
             exito = (idGenerado != null);
         } else {
@@ -124,13 +129,14 @@ public class FormMejorasDelCanalController implements Initializable {
             mejoraEnEdicion.setFechaInicio(fechaInicio);
             mejoraEnEdicion.setFechaFin(fechaFin);
             mejoraEnEdicion.setCumplida(cumplida);
+            mejoraEnEdicion.setIdEstadoCumplida(idEstado);
             exito = dao.actualizarMejora(mejoraEnEdicion);
         }
 
         if (exito) {
             mostrarConfirmacion(mejoraEnEdicion == null ? "Mejora añadida correctamente." : "Mejora actualizada correctamente.");
             if (idGenerado != null) {
-                MejorasDelCanal insertada = new MejorasDelCanal(idGenerado, descripcion, meta, actual, fechaInicio, fechaFin, cumplida);
+                MejorasDelCanal insertada = new MejorasDelCanal(idGenerado, descripcion, meta, actual, fechaInicio, fechaFin, cumplida, idEstado, cumplida ? "Sí" : "No");
                 btnGuardar.getScene().getRoot().setUserData(insertada);
             } else {
                 btnGuardar.getScene().getRoot().setUserData(mejoraEnEdicion);

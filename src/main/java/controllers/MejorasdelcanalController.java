@@ -64,14 +64,16 @@ public class MejorasdelcanalController implements Initializable {
     }
 
     private void cargarCombos() {
+        // ComboBox de años
         ObservableList<String> aniosDisponibles = dao.obtenerAniosDisponibles();
         aniosDisponibles.add(0, "Todos");
         cboxFecha.setItems(aniosDisponibles);
         cboxFecha.setPromptText("Filtrar por Año");
 
+        // ComboBox de estado cumplida (sin agregar "Todos" como opción)
         ObservableList<String> opcionesCumplida = dao.obtenerValoresCumplida();
-        opcionesCumplida.add(0, "Todos");
         cboxSiNo.setItems(opcionesCumplida);
+        opcionesCumplida.add(0, "Todos");
         cboxSiNo.setPromptText("Opciones");
     }
 
@@ -87,8 +89,10 @@ public class MejorasdelcanalController implements Initializable {
 
         mejorasFiltradas.setAll(mejorasOriginales.stream()
                 .filter(m -> texto.isEmpty() || m.getDescripcion().toLowerCase().contains(texto))
-                .filter(m -> anioSeleccionado == null || anioSeleccionado.equals("Todos") || String.valueOf(m.getFechaInicio().getYear()).equals(anioSeleccionado))
-                .filter(m -> cumplidaSeleccionada == null || cumplidaSeleccionada.equals("Todos") || (m.isCumplida() ? "Sí" : "No").equals(cumplidaSeleccionada))
+                .filter(m -> anioSeleccionado == null || anioSeleccionado.equals("Todos")
+                || String.valueOf(m.getFechaInicio().getYear()).equals(anioSeleccionado))
+                .filter(m -> cumplidaSeleccionada == null || cumplidaSeleccionada.equals("Todos")
+                || m.getEstadoCumplidaNombre().equalsIgnoreCase(cumplidaSeleccionada))
                 .collect(Collectors.toList())
         );
 
@@ -121,7 +125,7 @@ public class MejorasdelcanalController implements Initializable {
         lblActual.setText(String.valueOf(mejoraSeleccionada.getActual()));
         lblFechaInicio.setText(mejoraSeleccionada.getFechaInicio().format(formatoFecha));
         lblFechaFin.setText(mejoraSeleccionada.getFechaFin().format(formatoFecha));
-        lblCumplida.setText(mejoraSeleccionada.isCumplida() ? "Sí" : "No");
+        lblCumplida.setText(mejoraSeleccionada.getEstadoCumplidaNombre());
     }
 
     private void limpiarDetalle() {

@@ -12,11 +12,17 @@ public class MejorasDelCanalDAO {
 
     public ObservableList<MejorasDelCanal> obtenerMejoras() {
         ObservableList<MejorasDelCanal> lista = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM mejoras_canal ORDER BY fecha_inicio ASC";
+        String sql = "SELECT m.*, ec.nombre AS estado, m.id_estado_cumplida "
+                + "FROM mejoras_canal m "
+                + "LEFT JOIN estado_cumplida ec ON m.id_estado_cumplida = ec.id_estado_cumplida "
+                + "ORDER BY m.fecha_inicio ASC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+                String estado = rs.getString("estado");
+                boolean cumplida = "Sí".equalsIgnoreCase(estado);
+
                 MejorasDelCanal mejora = new MejorasDelCanal(
                         rs.getInt("id_mejora"),
                         rs.getString("descripcion"),
@@ -24,7 +30,9 @@ public class MejorasDelCanalDAO {
                         rs.getInt("actual"),
                         LocalDate.parse(rs.getString("fecha_inicio")),
                         LocalDate.parse(rs.getString("fecha_fin")),
-                        rs.getBoolean("cumplida")
+                        cumplida,
+                        rs.getInt("id_estado_cumplida"),
+                        estado
                 );
                 lista.add(mejora);
             }
@@ -37,18 +45,19 @@ public class MejorasDelCanalDAO {
     }
 
     public Integer insertarMejoraYDevolverId(MejorasDelCanal mejora) {
-        String sql = "INSERT INTO mejoras_canal "
-                + "(descripcion, meta, actual, fecha_inicio, fecha_fin, cumplida) "
+        String sql = "INSERT INTO mejoras_canal (descripcion, meta, actual, fecha_inicio, fecha_fin, id_estado_cumplida) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            int idEstado = mejora.getIdEstadoCumplida();
 
             stmt.setString(1, mejora.getDescripcion());
             stmt.setInt(2, mejora.getMeta());
             stmt.setInt(3, mejora.getActual());
             stmt.setString(4, mejora.getFechaInicio().toString());
             stmt.setString(5, mejora.getFechaFin().toString());
-            stmt.setBoolean(6, mejora.isCumplida());
+            stmt.setInt(6, idEstado);
 
             int filas = stmt.executeUpdate();
             if (filas > 0) {
@@ -59,6 +68,7 @@ public class MejorasDelCanalDAO {
             }
 
         } catch (SQLException e) {
+            System.err.println(">>> Error al insertar mejora: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -66,10 +76,8 @@ public class MejorasDelCanalDAO {
     }
 
     public boolean actualizarMejora(MejorasDelCanal mejora) {
-        String sql = "UPDATE mejoras_canal SET "
-                + "descripcion = ?, meta = ?, actual = ?, "
-                + "fecha_inicio = ?, fecha_fin = ?, cumplida = ? "
-                + "WHERE id_mejora = ?";
+        String sql = "UPDATE mejoras_canal SET descripcion = ?, meta = ?, actual = ?, "
+                + "fecha_inicio = ?, fecha_fin = ?, id_estado_cumplida = ? WHERE id_mejora = ?";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -78,7 +86,7 @@ public class MejorasDelCanalDAO {
             stmt.setInt(3, mejora.getActual());
             stmt.setString(4, mejora.getFechaInicio().toString());
             stmt.setString(5, mejora.getFechaFin().toString());
-            stmt.setBoolean(6, mejora.isCumplida());
+            stmt.setInt(6, mejora.getIdEstadoCumplida());
             stmt.setInt(7, mejora.getId());
 
             return stmt.executeUpdate() > 0;
@@ -105,12 +113,13 @@ public class MejorasDelCanalDAO {
 
     public ObservableList<String> obtenerFechasUnicas(String columnaFecha) {
         ObservableList<String> fechas = FXCollections.observableArrayList();
-        String sql = "SELECT DISTINCT " + columnaFecha + " FROM mejoras_canal WHERE " + columnaFecha + " IS NOT NULL ORDER BY " + columnaFecha + " ASC";
+        String sql = "SELECT DISTINCT " + columnaFecha + " FROM mejoras_canal "
+                + "WHERE " + columnaFecha + " IS NOT NULL ORDER BY " + columnaFecha + " ASC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                fechas.add(rs.getString(1)); // yyyy-MM-dd
+                fechas.add(rs.getString(1));
             }
 
         } catch (SQLException e) {
@@ -122,13 +131,12 @@ public class MejorasDelCanalDAO {
 
     public ObservableList<String> obtenerValoresCumplida() {
         ObservableList<String> valores = FXCollections.observableArrayList();
-        String sql = "SELECT DISTINCT cumplida FROM mejoras_canal ORDER BY cumplida ASC";
+        String sql = "SELECT DISTINCT nombre FROM estado_cumplida ORDER BY nombre ASC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                boolean valor = rs.getBoolean("cumplida");
-                valores.add(valor ? "Sí" : "No");
+                valores.add(rs.getString("nombre"));
             }
 
         } catch (SQLException e) {
@@ -155,4 +163,22 @@ public class MejorasDelCanalDAO {
         return anios;
     }
 
+    public int obtenerIdEstadoCumplidaDesdeNombre(String nombre) {
+        String sql = "SELECT id_estado_cumplida FROM estado_cumplida WHERE LOWER(nombre) = ?";
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nombre.toLowerCase());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_estado_cumplida");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 }

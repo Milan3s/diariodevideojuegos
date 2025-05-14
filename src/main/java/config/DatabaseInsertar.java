@@ -22,7 +22,8 @@ public class DatabaseInsertar {
                         + "('Dificultades', 'dificultades_logros', 'id_dificultad', 'nombre'), "
                         + "('Años - Metas Twitch', 'anios_metas_twitch', 'anio', 'anio'), "
                         + "('Años - Mejoras Canal', 'anios_mejoras_canal', 'anio', 'anio'), "
-                        + "('Años - Metas Específicas', 'anios_metas_especificas', 'anio', 'anio');";
+                        + "('Años - Metas Específicas', 'anios_metas_especificas', 'anio', 'anio'), "
+                        + "('Cumplida | Mejora', 'estado_cumplida', 'id_estado_cumplida', 'nombre');";
 
                 String sqlEstados
                         = "INSERT INTO estados (tipo, nombre) VALUES "
@@ -35,9 +36,13 @@ public class DatabaseInsertar {
                         = "INSERT INTO dificultades_logros (nombre, tipo) VALUES "
                         + "('Fácil', 'logro'), ('Media', 'logro'), ('Difícil', 'logro'), ('Extrema', 'logro');";
 
+                String sqlCumplida
+                        = "INSERT OR IGNORE INTO estado_cumplida (nombre) VALUES ('Sí'), ('No');";
+
                 stmt.execute(sqlConfiguracionAuxiliares);
                 stmt.execute(sqlEstados);
                 stmt.execute(sqlDificultades);
+                stmt.execute(sqlCumplida);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Datos insertados correctamente.", ButtonType.OK);
                 alert.showAndWait();

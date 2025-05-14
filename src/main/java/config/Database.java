@@ -159,6 +159,13 @@ public class Database {
             + "    PRIMARY KEY (id_mejora, anio),\n"
             + "    FOREIGN KEY (id_mejora) REFERENCES mejoras_canal(id_mejora)\n"
             + ");\n"
+                
+                
+            + "CREATE TABLE IF NOT EXISTS estado_cumplida (\n"
+            + "    id_estado_cumplida INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + "    nombre TEXT NOT NULL\n"
+            + ");\n"
+
 
             + "CREATE TABLE IF NOT EXISTS mejoras_canal (\n"
             + "    id_mejora INTEGER PRIMARY KEY AUTOINCREMENT,\n"
@@ -167,9 +174,11 @@ public class Database {
             + "    actual INTEGER DEFAULT 0,\n"
             + "    fecha_inicio TEXT,\n"
             + "    fecha_fin TEXT,\n"
-            + "    cumplida BOOLEAN DEFAULT 0,\n"
-            + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP\n"
+            + "    id_estado_cumplida INTEGER,\n"
+            + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP,\n"
+            + "    FOREIGN KEY (id_estado_cumplida) REFERENCES estado_cumplida(id_estado_cumplida)\n"
             + ");\n"
+                
 
             + "CREATE TABLE IF NOT EXISTS eventos_extensibles (\n"
             + "    id_extensible INTEGER PRIMARY KEY AUTOINCREMENT,\n"
