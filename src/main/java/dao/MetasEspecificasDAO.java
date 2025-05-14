@@ -14,12 +14,12 @@ public class MetasEspecificasDAO {
         List<MetasEspecificas> lista = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder(
-                "SELECT m.*, c.nombre AS consola_nombre "
-                + "FROM metas_especificas m "
-                + "LEFT JOIN consolas c ON m.id_consola = c.id_consola WHERE 1=1 ");
+                "SELECT m.*, c.nombre AS consola_nombre " +
+                "FROM metas_especificas m " +
+                "LEFT JOIN consolas c ON m.id_consola = c.id_consola WHERE 1=1 ");
 
         if (anio != null) {
-            sql.append("AND strftime('%Y', m.fecha_inicio) = ? ");
+            sql.append("AND EXISTS (SELECT 1 FROM anios_metas_especificas a WHERE a.id_meta_especifica = m.id_meta_especifica AND a.anio = ?) ");
         }
         if (filtro != null && !filtro.isEmpty()) {
             sql.append("AND LOWER(m.descripcion) LIKE ? ");
@@ -30,7 +30,7 @@ public class MetasEspecificasDAO {
 
             int index = 1;
             if (anio != null) {
-                stmt.setString(index++, anio.toString());
+                stmt.setInt(index++, anio);
             }
             if (filtro != null && !filtro.isEmpty()) {
                 stmt.setString(index, "%" + filtro.toLowerCase() + "%");
@@ -53,11 +53,10 @@ public class MetasEspecificasDAO {
         String sql = "SELECT id_consola, nombre FROM consolas ORDER BY nombre ASC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
                 consolas.add(new String[]{
-                    String.valueOf(rs.getInt("id_consola")),
-                    rs.getString("nombre")
+                        String.valueOf(rs.getInt("id_consola")),
+                        rs.getString("nombre")
                 });
             }
         } catch (SQLException e) {
@@ -67,9 +66,9 @@ public class MetasEspecificasDAO {
         return consolas;
     }
 
-    public List<Integer> obtenerAniosDisponibles() {
+    public List<Integer> obtenerAniosDesdeAuxiliar() {
         List<Integer> anios = new ArrayList<>();
-        String sql = "SELECT DISTINCT strftime('%Y', fecha_inicio) AS anio FROM metas_especificas ORDER BY anio DESC";
+        String sql = "SELECT DISTINCT anio FROM anios_metas_especificas ORDER BY anio DESC";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -78,15 +77,15 @@ public class MetasEspecificasDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return anios;
     }
 
     public void insertar(MetasEspecificas meta) {
-        String sql = "INSERT INTO metas_especificas "
-                + "(descripcion, juegos_objetivo, juegos_completados, cumplida, fecha_inicio, fecha_fin, fecha_registro, fabricante, id_consola) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO metas_especificas (descripcion, juegos_objetivo, juegos_completados, cumplida, fecha_inicio, fecha_fin, fecha_registro, fabricante, id_consola) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, meta.getDescripcion());
             stmt.setInt(2, meta.getJuegosObjetivo());
@@ -98,6 +97,27 @@ public class MetasEspecificasDAO {
             stmt.setString(8, meta.getFabricante());
             stmt.setInt(9, meta.getConsolaId());
 
+            int filas = stmt.executeUpdate();
+            if (filas > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int idGenerado = rs.getInt(1);
+                        insertarAnioAuxiliar(idGenerado, meta.getFechaInicio().getYear());
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertarAnioAuxiliar(int idMeta, int anio) {
+        String sql = "INSERT OR IGNORE INTO anios_metas_especificas (id_meta_especifica, anio, tipo) VALUES (?, ?, ?)";
+        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idMeta);
+            stmt.setInt(2, anio);
+            stmt.setString(3, "especifica");
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,13 +125,9 @@ public class MetasEspecificasDAO {
     }
 
     public void actualizar(MetasEspecificas meta) {
-        String sql = "UPDATE metas_especificas SET "
-                + "descripcion = ?, juegos_objetivo = ?, juegos_completados = ?, cumplida = ?, "
-                + "fecha_inicio = ?, fecha_fin = ?, fecha_registro = ?, fabricante = ?, id_consola = ? "
-                + "WHERE id_meta_especifica = ?";
+        String sql = "UPDATE metas_especificas SET descripcion = ?, juegos_objetivo = ?, juegos_completados = ?, cumplida = ?, fecha_inicio = ?, fecha_fin = ?, fecha_registro = ?, fabricante = ?, id_consola = ? WHERE id_meta_especifica = ?";
 
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, meta.getDescripcion());
             stmt.setInt(2, meta.getJuegosObjetivo());
             stmt.setInt(3, meta.getJuegosCompletados());
@@ -124,6 +140,8 @@ public class MetasEspecificasDAO {
             stmt.setInt(10, meta.getId());
 
             stmt.executeUpdate();
+            insertarAnioAuxiliar(meta.getId(), meta.getFechaInicio().getYear());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -151,44 +169,24 @@ public class MetasEspecificasDAO {
                 rs.getString("fabricante"),
                 rs.getInt("id_consola"),
                 rs.getString("consola_nombre"),
-                LocalDate.parse(rs.getString("fecha_inicio").substring(0, 10)),
-                LocalDate.parse(rs.getString("fecha_fin").substring(0, 10)),
-                LocalDate.parse(rs.getString("fecha_registro").substring(0, 10))
+                LocalDate.parse(rs.getString("fecha_inicio")),
+                LocalDate.parse(rs.getString("fecha_fin")),
+                LocalDate.parse(rs.getString("fecha_registro"))
         );
     }
 
     public String[] obtenerUltimaConsola() {
         String sql = "SELECT id_consola, nombre FROM consolas ORDER BY id_consola DESC LIMIT 1";
         try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
             if (rs.next()) {
                 return new String[]{
-                    String.valueOf(rs.getInt("id_consola")),
-                    rs.getString("nombre")
+                        String.valueOf(rs.getInt("id_consola")),
+                        rs.getString("nombre")
                 };
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
-
-    public List<Integer> obtenerAniosDesdeAuxiliar() {
-        List<Integer> anios = new ArrayList<>();
-        String sql = "SELECT DISTINCT anio FROM anios_metas_twitch ORDER BY anio DESC";
-
-        try (Connection conn = Conexion.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                anios.add(rs.getInt("anio"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return anios;
-    }
-
 }
