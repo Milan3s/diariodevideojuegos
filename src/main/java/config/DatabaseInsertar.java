@@ -75,12 +75,26 @@ public class DatabaseInsertar {
 
                 String sqlVotosConsolas =
                         "INSERT INTO votos_consolas (id_consola, diseno, comodidad, catalogo, durabilidad, precio, conectividad, tienda, comentarios, nota) VALUES "
+                        + "(1, 4, 4, 6, 5, 9, 1, 'Retro Store', 'La pionera, pero limitada.', 6), "
                         + "(2, 5, 5, 8, 6, 6, 2, 'Retro Store', 'La NES cambió todo.', 8), "
                         + "(3, 6, 6, 9, 7, 5, 3, 'Retro Store', 'Gráficos avanzados para su época.', 9), "
                         + "(4, 7, 6, 8, 6, 5, 3, 'Retro Store', 'Sonic corriendo a tope.', 8), "
                         + "(5, 7, 6, 8, 7, 4, 3, 'Retro Store', 'Multijugador local legendario.', 8), "
                         + "(6, 8, 7, 9, 8, 6, 5, 'Retro Store', 'RPGs inolvidables.', 9), "
-                        + "(7, 9, 8, 10, 8, 6, 6, 'Retro Store', 'Catálogo imbatible.', 10);";
+                        + "(7, 9, 8, 10, 8, 6, 6, 'Retro Store', 'Catálogo imbatible.', 10), "
+                        + "(8, 5, 4, 5, 4, 8, 1, 'Retro Store', 'Mejoras técnicas pero poco éxito.', 6), "
+                        + "(9, 5, 4, 6, 5, 7, 1, 'Retro Store', 'Retrocompatible, pero sin impacto.', 6), "
+                        + "(10, 6, 4, 5, 4, 6, 1, 'Retro Store', 'Ambiciosa pero confusa.', 5), "
+                        + "(11, 7, 6, 8, 7, 4, 4, 'Retro Store', 'Gran potencia, pero poco apoyo.', 7), "
+                        + "(12, 8, 7, 8, 8, 5, 5, 'Retro Store', 'Revolución con sensores de movimiento.', 9), "
+                        + "(13, 5, 5, 6, 6, 6, 2, 'Retro Store', 'No logró el éxito esperado.', 6), "
+                        + "(14, 6, 5, 7, 6, 6, 3, 'Retro Store', 'Difícil de programar, pero potente.', 7), "
+                        + "(15, 7, 6, 8, 6, 6, 4, 'Retro Store', 'Adelantada a su tiempo.', 8), "
+                        + "(16, 5, 6, 8, 7, 7, 1, 'Retro Store', 'Resistente y portátil.', 8), "
+                        + "(17, 6, 7, 9, 7, 6, 2, 'Retro Store', 'Colorido y potente para su tamaño.', 8), "
+                        + "(18, 7, 8, 10, 8, 5, 3, 'Retro Store', 'Pantalla táctil innovadora.', 9), "
+                        + "(19, 7, 8, 9, 8, 5, 4, 'Retro Store', 'Ideal para multimedia y juegos.', 9);";
+
 
                 String sqlVotosJuegos =
                         "INSERT INTO votos_juegos (id_juego, jugabilidad, dificultad, diseno_niveles, graficos, sonido, controles, adiccion, rejugabilidad, valor_nostalgico, innovacion, diseno_visual, multijugador_local, precio, tienda, comentarios, nota) VALUES "
