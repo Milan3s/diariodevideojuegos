@@ -1,3 +1,4 @@
+
 package config;
 
 public class Database {
@@ -61,7 +62,28 @@ public class Database {
             + "    fecha_lanzamiento TEXT,\n"
             + "    imagen TEXT,\n"
             + "    id_estado INTEGER,\n"
+            + "    original BOOLEAN,\n"
+            + "    modificada BOOLEAN,\n"
+            + "    caja BOOLEAN,\n"
+            + "    precintada BOOLEAN,\n"
+            + "    hz TEXT,\n"
             + "    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)\n"
+            + ");\n"
+
+            + "CREATE TABLE IF NOT EXISTS votos_consolas (\n"
+            + "    id_voto INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + "    id_consola INTEGER NOT NULL,\n"
+            + "    diseno INTEGER,\n"
+            + "    comodidad INTEGER,\n"
+            + "    catalogo INTEGER,\n"
+            + "    durabilidad INTEGER,\n"
+            + "    precio INTEGER,\n"
+            + "    conectividad INTEGER,\n"
+            + "    tienda TEXT,\n"
+            + "    comentarios TEXT,\n"
+            + "    nota INTEGER,\n"
+            + "    fecha_voto TEXT DEFAULT CURRENT_TIMESTAMP,\n"
+            + "    FOREIGN KEY (id_consola) REFERENCES consolas(id_consola)\n"
             + ");\n"
 
             + "CREATE TABLE IF NOT EXISTS juegos (\n"
@@ -78,7 +100,33 @@ public class Database {
             + "    es_recomendado BOOLEAN DEFAULT FALSE,\n"
             + "    imagen TEXT,\n"
             + "    video TEXT,\n"
+            + "    region TEXT,\n"
+            + "    caja_original BOOLEAN,\n"
+            + "    precintado BOOLEAN,\n"
             + "    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)\n"
+            + ");\n"
+
+            + "CREATE TABLE IF NOT EXISTS votos_juegos (\n"
+            + "    id_voto INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + "    id_juego INTEGER NOT NULL,\n"
+            + "    jugabilidad INTEGER,\n"
+            + "    dificultad INTEGER,\n"
+            + "    diseno_niveles INTEGER,\n"
+            + "    graficos INTEGER,\n"
+            + "    sonido INTEGER,\n"
+            + "    controles INTEGER,\n"
+            + "    adiccion INTEGER,\n"
+            + "    rejugabilidad INTEGER,\n"
+            + "    valor_nostalgico INTEGER,\n"
+            + "    innovacion INTEGER,\n"
+            + "    diseno_visual INTEGER,\n"
+            + "    multijugador_local INTEGER,\n"
+            + "    precio INTEGER,\n"
+            + "    tienda TEXT,\n"
+            + "    comentarios TEXT,\n"
+            + "    nota INTEGER,\n"
+            + "    fecha_voto TEXT DEFAULT CURRENT_TIMESTAMP,\n"
+            + "    FOREIGN KEY (id_juego) REFERENCES juegos(id_juegos)\n"
             + ");\n"
 
             + "CREATE TABLE IF NOT EXISTS juegos_consolas (\n"
@@ -159,13 +207,11 @@ public class Database {
             + "    PRIMARY KEY (id_mejora, anio),\n"
             + "    FOREIGN KEY (id_mejora) REFERENCES mejoras_canal(id_mejora)\n"
             + ");\n"
-                
-                
+
             + "CREATE TABLE IF NOT EXISTS estado_cumplida (\n"
             + "    id_estado_cumplida INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + "    nombre TEXT NOT NULL\n"
             + ");\n"
-
 
             + "CREATE TABLE IF NOT EXISTS mejoras_canal (\n"
             + "    id_mejora INTEGER PRIMARY KEY AUTOINCREMENT,\n"
@@ -178,7 +224,6 @@ public class Database {
             + "    fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP,\n"
             + "    FOREIGN KEY (id_estado_cumplida) REFERENCES estado_cumplida(id_estado_cumplida)\n"
             + ");\n"
-                
 
             + "CREATE TABLE IF NOT EXISTS eventos_extensibles (\n"
             + "    id_extensible INTEGER PRIMARY KEY AUTOINCREMENT,\n"
