@@ -9,10 +9,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import models.Consola;
 import models.Estado;
 
@@ -24,50 +24,27 @@ import java.util.ResourceBundle;
 public class FormConsolasController implements Initializable {
 
     private Runnable onGuardarCallback;
-    @FXML
-    private Button btnCancelar;
 
-    public void setOnGuardarCallback(Runnable callback) {
-        this.onGuardarCallback = callback;
-    }
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtAbreviatura;
+    @FXML private TextField txtAnio;
+    @FXML private TextField txtFabricante;
+    @FXML private TextField txtGeneracion;
+    @FXML private TextField txtRegion;
+    @FXML private TextField txtTipo;
+    @FXML private TextField txtProcesador;
+    @FXML private TextField txtMemoria;
+    @FXML private TextField txtAlmacenamiento;
+    @FXML private TextField txtFrecuencia;
+    @FXML private TextField txtCaracteristicas;
 
-    @FXML
-    private TextField txtNombre;
-    @FXML
-    private TextField txtAbreviatura;
-    @FXML
-    private TextField txtAnio;
-    @FXML
-    private TextField txtFabricante;
-    @FXML
-    private TextField txtGeneracion;
-    @FXML
-    private TextField txtRegion;
-    @FXML
-    private TextField txtTipo;
-    @FXML
-    private TextField txtProcesador;
-    @FXML
-    private TextField txtMemoria;
-    @FXML
-    private TextField txtAlmacenamiento;
-    @FXML
-    private TextField txtFrecuencia;
-    @FXML
-    private TextField txtCaracteristicas;
-
-    @FXML
-    private DatePicker dateFechaLanzamiento;
-    @FXML
-    private ComboBox<Estado> comboEstado;
-    @FXML
-    private ImageView imgPreview;
-    @FXML
-    private AnchorPane formularioConsola;
-    @FXML
-    private GridPane gridFormulario;
-    @FXML
-    private Button btnGuardar;
+    @FXML private DatePicker dateFechaLanzamiento;
+    @FXML private ComboBox<Estado> comboEstado;
+    @FXML private ImageView imgPreview;
+    @FXML private AnchorPane formularioConsola;
+    @FXML private GridPane gridFormulario;
+    @FXML private Button btnGuardar;
+    @FXML private Button btnCancelar;
 
     private File imagenSeleccionada;
     private Consola consolaActual;
@@ -78,7 +55,6 @@ public class FormConsolasController implements Initializable {
         comboEstado.setItems(ComboDAO.cargarEstadosPorTipo("consola"));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         dateFechaLanzamiento.setConverter(new javafx.util.StringConverter<>() {
             @Override
             public String toString(java.time.LocalDate date) {
@@ -90,7 +66,10 @@ public class FormConsolasController implements Initializable {
                 return (string != null && !string.isEmpty()) ? java.time.LocalDate.parse(string, formatter) : null;
             }
         });
+    }
 
+    public void setOnGuardarCallback(Runnable callback) {
+        this.onGuardarCallback = callback;
     }
 
     public void limpiarFormulario() {
@@ -142,7 +121,6 @@ public class FormConsolasController implements Initializable {
                 imagenSeleccionada = imgFile;
             }
         }
-
     }
 
     @FXML
@@ -179,6 +157,8 @@ public class FormConsolasController implements Initializable {
                     : null;
             Estado estado = comboEstado.getValue();
 
+            boolean chip = false; // ya no se usa radio button, valor fijo o derivado si lo decides
+
             String imagenNombre = consolaActual != null ? consolaActual.getImagen() : null;
             if (imagenSeleccionada != null) {
                 imagenNombre = Conexion.guardarImagenConsola(imagenSeleccionada);
@@ -189,18 +169,39 @@ public class FormConsolasController implements Initializable {
                     nombre, abreviatura, anio, fabricante, generacion, region,
                     tipo, procesador, memoria, almacenamiento,
                     fechaLanzamiento, imagenNombre, estado,
-                    frecuencia, false, caracteristicas // chip = false
+                    frecuencia, chip, caracteristicas
             );
 
-            boolean exito = consolaActual == null ? dao.insertar(nueva) : dao.actualizar(nueva);
-            if (exito) {
-                if (onGuardarCallback != null) {
-                    onGuardarCallback.run();
-                }
-                cerrarVentana();
+            if (consolaActual != null) {
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Confirmar Edición");
+                confirm.setHeaderText("¿Deseas sobrescribir los datos?");
+                confirm.setContentText("Se reemplazarán los datos de esta consola.");
+                confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+                confirm.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.YES) {
+                        boolean exito = dao.actualizar(nueva);
+                        if (exito) {
+                            mostrarInfo("Consola actualizada correctamente.");
+                            if (onGuardarCallback != null) onGuardarCallback.run();
+                            cerrarVentana();
+                        } else {
+                            mostrarAlerta("No se pudo actualizar la consola.");
+                        }
+                    }
+                });
             } else {
-                mostrarAlerta("No se pudo guardar la consola.");
+                boolean exito = dao.insertar(nueva);
+                if (exito) {
+                    mostrarInfo("Consola guardada correctamente.");
+                    if (onGuardarCallback != null) onGuardarCallback.run();
+                    cerrarVentana();
+                } else {
+                    mostrarAlerta("No se pudo guardar la consola.");
+                }
             }
+
         } catch (NumberFormatException e) {
             mostrarAlerta("Año o Frecuencia no válidos. Deben ser números.");
         } catch (Exception e) {
@@ -221,12 +222,17 @@ public class FormConsolasController implements Initializable {
         alert.showAndWait();
     }
 
+    private void mostrarInfo(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
     @FXML
     private void cancelarConsola(ActionEvent event) {
-        // Obtener el botón que lanzó el evento
-        Button btn = (Button) event.getSource();
-        // Obtener la ventana (Stage) y cerrarla
-        Stage stage = (Stage) btn.getScene().getWindow();
+        Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 }
