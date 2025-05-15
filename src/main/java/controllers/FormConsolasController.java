@@ -136,12 +136,13 @@ public class FormConsolasController implements Initializable {
         comboEstado.getSelectionModel().select(consola.getEstado());
 
         if (consola.getImagen() != null) {
-            File imgFile = new File(Conexion.imagenesPath, consola.getImagen());
+            File imgFile = new File(Conexion.imagenesConsolaDiarioPath, consola.getImagen());
             if (imgFile.exists()) {
                 imgPreview.setImage(new Image(imgFile.toURI().toString()));
                 imagenSeleccionada = imgFile;
             }
         }
+
     }
 
     @FXML
@@ -180,7 +181,7 @@ public class FormConsolasController implements Initializable {
 
             String imagenNombre = consolaActual != null ? consolaActual.getImagen() : null;
             if (imagenSeleccionada != null) {
-                imagenNombre = Conexion.guardarImagen(imagenSeleccionada);
+                imagenNombre = Conexion.guardarImagenConsola(imagenSeleccionada);
             }
 
             Consola nueva = new Consola(

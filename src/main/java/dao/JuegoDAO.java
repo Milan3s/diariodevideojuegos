@@ -174,12 +174,16 @@ public class JuegoDAO {
 
                 if (filas > 0) {
                     if (imagenJuego != null && !imagenJuego.isEmpty()) {
-                        File archivoImagen = new File(Conexion.imagenesPath, imagenJuego);
-                        if (archivoImagen.exists()) archivoImagen.delete();
+                        File archivoImagen = new File(Conexion.imagenesJuegosDiarioPath, imagenJuego);
+                        if (archivoImagen.exists()) {
+                            archivoImagen.delete();
+                        }
                     }
                     if (videoJuego != null && !videoJuego.isEmpty()) {
-                        File archivoVideo = new File(Conexion.videosPath, videoJuego);
-                        if (archivoVideo.exists()) archivoVideo.delete();
+                        File archivoVideo = new File(Conexion.videosJuegosDiarioPath, videoJuego);
+                        if (archivoVideo.exists()) {
+                            archivoVideo.delete();
+                        }
                     }
                     conn.commit();
                     return true;
@@ -188,6 +192,7 @@ public class JuegoDAO {
                 conn.rollback();
                 AppLogger.severe("Error al eliminar el juego: " + e.getMessage());
             }
+
         } catch (SQLException e) {
             AppLogger.severe("Error de conexión a la base de datos: " + e.getMessage());
             e.printStackTrace();
@@ -211,10 +216,15 @@ public class JuegoDAO {
                 stmt.setString(5, juego.getGenero());
                 stmt.setString(6, juego.getModoJuego());
 
-                try {
-                    LocalDate fecha = LocalDate.parse(juego.getFechaLanzamiento(), FORMATO_FECHA);
-                    stmt.setString(7, fecha.format(FORMATO_SQLITE));
-                } catch (DateTimeParseException e) {
+                if (juego.getFechaLanzamiento() != null && !juego.getFechaLanzamiento().isEmpty()) {
+                    try {
+                        LocalDate fecha = LocalDate.parse(juego.getFechaLanzamiento(), FORMATO_FECHA);
+                        stmt.setString(7, fecha.format(FORMATO_SQLITE));
+                    } catch (DateTimeParseException e) {
+                        AppLogger.warning("Fecha inválida para el juego '" + juego.getNombre() + "': " + juego.getFechaLanzamiento());
+                        stmt.setNull(7, java.sql.Types.VARCHAR);
+                    }
+                } else {
                     stmt.setNull(7, java.sql.Types.VARCHAR);
                 }
 

@@ -259,17 +259,24 @@ public class JuegosController implements Initializable {
         lblEstado.setText(juego.getEstado() != null ? juego.getEstado().getNombre() : "No disponible");
         lblConsola.setText(juego.getConsola() != null ? juego.getConsola().getNombre() : "No disponible");
 
-        File imageFile = new File(Conexion.imagenesPath, juego.getImagen() != null ? juego.getImagen() : "");
-        if (imageFile.exists()) {
-            imgDetalle.setImage(new Image(imageFile.toURI().toString()));
-            iconoImagenNoDisponible.setVisible(false);
+        // Imagen del juego
+        if (juego.getImagen() != null) {
+            File imageFile = new File(Conexion.imagenesJuegosDiarioPath, juego.getImagen());
+            if (imageFile.exists()) {
+                imgDetalle.setImage(new Image(imageFile.toURI().toString()));
+                iconoImagenNoDisponible.setVisible(false);
+            } else {
+                imgDetalle.setImage(null);
+                iconoImagenNoDisponible.setVisible(true);
+            }
         } else {
             imgDetalle.setImage(null);
             iconoImagenNoDisponible.setVisible(true);
         }
 
+// Video del juego
         if (juego.getVideo() != null && !juego.getVideo().isEmpty()) {
-            File videoFile = new File(Conexion.videosPath, juego.getVideo());
+            File videoFile = new File(Conexion.videosJuegosDiarioPath, juego.getVideo());
             if (videoFile.exists()) {
                 try {
                     Media media = new Media(videoFile.toURI().toString());
@@ -290,6 +297,7 @@ public class JuegosController implements Initializable {
             controlesVideo.setVisible(false);
             iconoVideoNoDisponible.setVisible(true);
         }
+
     }
 
     @FXML

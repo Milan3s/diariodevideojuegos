@@ -173,35 +173,37 @@ public class ConsolasController implements Initializable {
         });
     }
 
-    private void mostrarDetalle(Consola consola) {
-        lblNombre.setText(consola.getNombre());
-        lblAbreviatura.setText(consola.getAbreviatura());
-        lblAnio.setText(consola.getAnio() != null ? String.valueOf(consola.getAnio()) : "No disponible");
-        lblFabricante.setText(consola.getFabricante());
-        lblGeneracion.setText(consola.getGeneracion());
-        lblRegion.setText(consola.getRegion());
-        lblTipo.setText(consola.getTipo());
+   private void mostrarDetalle(Consola consola) {
+    lblNombre.setText(consola.getNombre());
+    lblAbreviatura.setText(consola.getAbreviatura());
+    lblAnio.setText(consola.getAnio() != null ? String.valueOf(consola.getAnio()) : "No disponible");
+    lblFabricante.setText(consola.getFabricante());
+    lblGeneracion.setText(consola.getGeneracion());
+    lblRegion.setText(consola.getRegion());
+    lblTipo.setText(consola.getTipo());
 
-        lblProcesador.setText(consola.getProcesador());
-        lblMemoria.setText(consola.getMemoria());
-        lblFrecuencia.setText(consola.getFrecuenciaMHz() != null ? consola.getFrecuenciaMHz() + " MHz" : "No disponible");
-        lblTieneChip.setText(consola.tieneChip() ? "Sí" : "No");
+    lblProcesador.setText(consola.getProcesador());
+    lblMemoria.setText(consola.getMemoria());
+    lblFrecuencia.setText(consola.getFrecuenciaMHz() != null ? consola.getFrecuenciaMHz() + " MHz" : "No disponible");
+    lblTieneChip.setText(consola.tieneChip() ? "Sí" : "No");
 
-        if (consola.getEstado() != null && consola.getEstado().getNombre() != null) {
-            lblEstado.setText(consola.getEstado().getNombre());
-        } else {
-            lblEstado.setText("No disponible");
-        }
-
-        File imageFile = new File(Conexion.imagenesPath, consola.getImagen() != null ? consola.getImagen() : "");
-        if (imageFile.exists()) {
-            imgDetalle.setImage(new Image(imageFile.toURI().toString()));
-            iconoImagenNoDisponible.setVisible(false);
-        } else {
-            imgDetalle.setImage(null);
-            iconoImagenNoDisponible.setVisible(true);
-        }
+    if (consola.getEstado() != null && consola.getEstado().getNombre() != null) {
+        lblEstado.setText(consola.getEstado().getNombre());
+    } else {
+        lblEstado.setText("No disponible");
     }
+
+    // Nueva ruta usando la estructura organizada
+    File imageFile = new File(Conexion.imagenesConsolaDiarioPath, consola.getImagen() != null ? consola.getImagen() : "");
+    if (imageFile.exists()) {
+        imgDetalle.setImage(new Image(imageFile.toURI().toString()));
+        iconoImagenNoDisponible.setVisible(false);
+    } else {
+        imgDetalle.setImage(null);
+        iconoImagenNoDisponible.setVisible(true);
+    }
+}
+
 
     private void limpiarDetalle() {
         lblNombre.setText("");

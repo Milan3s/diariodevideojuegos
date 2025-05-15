@@ -10,30 +10,36 @@ import java.sql.SQLException;
 
 public class Conexion {
 
-    // Ruta base para la carpeta principal
+    // Ruta base principal
     private static final String mainDirectoryPath = Paths.get(System.getProperty("user.home"), "Documents", "diariodevideojuegos").toString();
+
+    // Rutas principales
+    private static final String recursosPath = Paths.get(mainDirectoryPath, "recursos").toString();
+    private static final String diarioPath = Paths.get(recursosPath, "diario").toString();
+    private static final String votosPath = Paths.get(recursosPath, "votos").toString();
+
+    // Rutas específicas de recursos
+    public static final String imagenesJuegosDiarioPath = Paths.get(diarioPath, "imagenes", "juegos").toString();
+    public static final String imagenesConsolaDiarioPath = Paths.get(diarioPath, "imagenes", "consola").toString();
+    public static final String videosJuegosDiarioPath = Paths.get(diarioPath, "videos", "juegos").toString();
+
+    public static final String imagenesVotosPath = Paths.get(votosPath, "imagenes").toString();
 
     // Ruta a la base de datos
     private static final String dbPath = Paths.get(mainDirectoryPath, "Config", "Database", "midiario.db").toString();
     private static final String url = "jdbc:sqlite:" + dbPath;
-
-    // Ruta de imágenes de juegos
-    public static final String imagenesPath = Paths.get(mainDirectoryPath, "imagenes", "juegos").toString();
-
-    // Ruta de videos de juegos
-    public static final String videosPath = Paths.get(mainDirectoryPath, "videos", "juegos").toString();
 
     // Obtener URL de conexión
     public static String getUrl() {
         return url;
     }
 
-    // Obtener conexión a la base de datos
+    // Obtener conexión
     public static Connection obtenerConexion() throws SQLException {
         return DriverManager.getConnection(getUrl());
     }
 
-    // Borrar el directorio principal completo
+    // Borrar todo el directorio principal
     public static void borrarDirectorioPrincipal() {
         Path directory = Paths.get(mainDirectoryPath);
         if (Files.exists(directory) && Files.isDirectory(directory)) {
@@ -61,26 +67,26 @@ public class Conexion {
         }
     }
 
-    // Guardar imagen de juego
-    public static String guardarImagen(File imagen) {
+    // Guardar imagen en una ruta dada
+    public static String guardarImagen(File imagen, String destinoBasePath) {
         if (!imagen.exists()) {
             AppLogger.severe("El archivo de imagen no existe: " + imagen.getAbsolutePath());
             return null;
         }
 
-        File directorio = new File(imagenesPath);
+        File directorio = new File(destinoBasePath);
         if (!directorio.exists() && !directorio.mkdirs()) {
-            AppLogger.severe("No se pudo crear el directorio de imágenes: " + imagenesPath);
+            AppLogger.severe("No se pudo crear el directorio de imágenes: " + destinoBasePath);
             return null;
         }
 
         String nombreImagen = imagen.getName();
-        Path destinoPath = Paths.get(imagenesPath, nombreImagen);
+        Path destinoPath = Paths.get(destinoBasePath, nombreImagen);
         File destino = destinoPath.toFile();
 
         if (destino.exists()) {
             nombreImagen = generarNombreUnico(imagen);
-            destinoPath = Paths.get(imagenesPath, nombreImagen);
+            destinoPath = Paths.get(destinoBasePath, nombreImagen);
             destino = destinoPath.toFile();
         }
 
@@ -96,26 +102,26 @@ public class Conexion {
         return nombreImagen;
     }
 
-    // Guardar video de juego
-    public static String guardarVideo(File video) {
+    // Guardar video en una ruta dada
+    public static String guardarVideo(File video, String destinoBasePath) {
         if (!video.exists()) {
             AppLogger.severe("El archivo de video no existe: " + video.getAbsolutePath());
             return null;
         }
 
-        File directorio = new File(videosPath);
+        File directorio = new File(destinoBasePath);
         if (!directorio.exists() && !directorio.mkdirs()) {
-            AppLogger.severe("No se pudo crear el directorio de videos: " + videosPath);
+            AppLogger.severe("No se pudo crear el directorio de videos: " + destinoBasePath);
             return null;
         }
 
         String nombreVideo = video.getName();
-        Path destinoPath = Paths.get(videosPath, nombreVideo);
+        Path destinoPath = Paths.get(destinoBasePath, nombreVideo);
         File destino = destinoPath.toFile();
 
         if (destino.exists()) {
             nombreVideo = generarNombreUnico(video);
-            destinoPath = Paths.get(videosPath, nombreVideo);
+            destinoPath = Paths.get(destinoBasePath, nombreVideo);
             destino = destinoPath.toFile();
         }
 
@@ -131,10 +137,31 @@ public class Conexion {
         return nombreVideo;
     }
 
-    // Generar nombre único si ya existe
+    // Generar nombre único para archivo existente
     private static String generarNombreUnico(File archivo) {
         String baseName = archivo.getName().substring(0, archivo.getName().lastIndexOf('.'));
         String extension = archivo.getName().substring(archivo.getName().lastIndexOf('.'));
         return baseName + "_" + System.currentTimeMillis() + extension;
     }
+
+    // Guarda imagen en la ruta de consolas del diario
+    public static String guardarImagenConsola(File imagen) {
+        return guardarImagen(imagen, imagenesConsolaDiarioPath);
+    }
+
+// Guarda imagen en la ruta de juegos del diario
+    public static String guardarImagenJuego(File imagen) {
+        return guardarImagen(imagen, imagenesJuegosDiarioPath);
+    }
+
+// Guarda video en la ruta de juegos del diario
+    public static String guardarVideoJuego(File video) {
+        return guardarVideo(video, videosJuegosDiarioPath);
+    }
+
+// Guarda imagen en la ruta de votos
+    public static String guardarImagenVoto(File imagen) {
+        return guardarImagen(imagen, imagenesVotosPath);
+    }
+
 }

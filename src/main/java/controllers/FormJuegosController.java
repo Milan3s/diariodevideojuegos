@@ -137,7 +137,7 @@ public class FormJuegosController implements Initializable {
 
         String nombreImagen = null;
         if (imagenSeleccionada != null) {
-            nombreImagen = Conexion.guardarImagen(imagenSeleccionada);
+            nombreImagen = Conexion.guardarImagen(imagenSeleccionada, Conexion.imagenesJuegosDiarioPath);
             if (nombreImagen == null) {
                 mostrarAlerta("Error al guardar la imagen.");
                 AppLogger.severe("Error al guardar la imagen seleccionada.");
@@ -146,6 +146,7 @@ public class FormJuegosController implements Initializable {
         } else if (juegoEditando != null) {
             nombreImagen = juegoEditando.getImagen();
         }
+
         juego.setImagen(nombreImagen);
 
         String nombreVideo = null;
@@ -235,7 +236,7 @@ public class FormJuegosController implements Initializable {
         comboConsola.setValue(juegoSeleccionado.getConsola());
 
         if (juegoSeleccionado.getImagen() != null && !juegoSeleccionado.getImagen().isEmpty()) {
-            File imageFile = new File(Conexion.imagenesPath, juegoSeleccionado.getImagen());
+            File imageFile = new File(Conexion.imagenesJuegosDiarioPath, juegoSeleccionado.getImagen());
             if (imageFile.exists()) {
                 imgPreview.setImage(new Image(imageFile.toURI().toString()));
                 imagenSeleccionada = imageFile;
@@ -243,7 +244,7 @@ public class FormJuegosController implements Initializable {
         }
 
         if (juegoSeleccionado.getVideo() != null && !juegoSeleccionado.getVideo().isEmpty()) {
-            File videoFile = new File(Conexion.videosPath, juegoSeleccionado.getVideo());
+            File videoFile = new File(Conexion.videosJuegosDiarioPath, juegoSeleccionado.getVideo());
             if (videoFile.exists()) {
                 javafx.scene.media.Media media = new javafx.scene.media.Media(videoFile.toURI().toString());
                 javafx.scene.media.MediaPlayer mediaPlayer = new javafx.scene.media.MediaPlayer(media);
@@ -268,21 +269,21 @@ public class FormJuegosController implements Initializable {
 
         File archivo = fileChooser.showOpenDialog(null);
         if (archivo != null) {
-            String nombreVideo = archivo.getName();
-            try {
-                nombreVideo = URLDecoder.decode(nombreVideo, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                AppLogger.severe("Error al decodificar el nombre del video: " + e.getMessage());
-            }
+            String nombreVideoGuardado = Conexion.guardarVideo(archivo, Conexion.videosJuegosDiarioPath);
 
-            if (Conexion.guardarVideo(archivo) != null) {
-                mediaPreview.setMediaPlayer(new javafx.scene.media.MediaPlayer(
-                        new javafx.scene.media.Media(archivo.toURI().toString())
-                ));
-                AppLogger.info("Video seleccionado: " + archivo.getAbsolutePath());
+            if (nombreVideoGuardado != null) {
+                try {
+                    javafx.scene.media.Media media = new javafx.scene.media.Media(archivo.toURI().toString());
+                    javafx.scene.media.MediaPlayer mediaPlayer = new javafx.scene.media.MediaPlayer(media);
+                    mediaPreview.setMediaPlayer(mediaPlayer);
+                    AppLogger.info("Video seleccionado y guardado: " + archivo.getAbsolutePath());
 
-                if (juegoEditando != null) {
-                    juegoEditando.setVideo(nombreVideo);
+                    if (juegoEditando != null) {
+                        juegoEditando.setVideo(nombreVideoGuardado);
+                    }
+                } catch (Exception e) {
+                    mostrarAlerta("Error al reproducir el video.");
+                    AppLogger.severe("Error al cargar el video: " + e.getMessage());
                 }
             } else {
                 mostrarAlerta("Error al guardar el video.");

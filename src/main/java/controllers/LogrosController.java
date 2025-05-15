@@ -181,7 +181,7 @@ public class LogrosController implements Initializable {
         lblCreditos.setText(String.valueOf(logroSeleccionado.getCreditos()));
 
         if (logroSeleccionado.getJuego() != null && logroSeleccionado.getJuego().getImagen() != null) {
-            File imgFile = new File(Conexion.imagenesPath + File.separator + logroSeleccionado.getJuego().getImagen());
+            File imgFile = new File(Conexion.imagenesJuegosDiarioPath, logroSeleccionado.getJuego().getImagen());
             if (imgFile.exists()) {
                 imgBoxart.setImage(new Image(imgFile.toURI().toString()));
                 iconoImagenNoDisponible.setVisible(false);
@@ -193,6 +193,7 @@ public class LogrosController implements Initializable {
             imgBoxart.setImage(null);
             iconoImagenNoDisponible.setVisible(true);
         }
+
     }
 
     private void limpiarDetalle() {
