@@ -136,12 +136,20 @@ public class FormJuegosController implements Initializable {
         juego.setEsRecomendado(radioSi.isSelected());
 
         String nombreImagen = null;
+
         if (imagenSeleccionada != null) {
-            nombreImagen = Conexion.guardarImagen(imagenSeleccionada, Conexion.imagenesJuegosDiarioPath);
-            if (nombreImagen == null) {
-                mostrarAlerta("Error al guardar la imagen.");
-                AppLogger.severe("Error al guardar la imagen seleccionada.");
-                return;
+            boolean esMismaImagen = juegoEditando != null
+                    && juegoEditando.getImagen() != null
+                    && new File(Conexion.imagenesJuegosDiarioPath, juegoEditando.getImagen()).equals(imagenSeleccionada);
+
+            if (!esMismaImagen) {
+                nombreImagen = Conexion.guardarImagen(imagenSeleccionada, Conexion.imagenesJuegosDiarioPath);
+                if (nombreImagen == null) {
+                    mostrarAlerta("Error al guardar la imagen.");
+                    return;
+                }
+            } else {
+                nombreImagen = juegoEditando.getImagen(); // usar la anterior
             }
         } else if (juegoEditando != null) {
             nombreImagen = juegoEditando.getImagen();

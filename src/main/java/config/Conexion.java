@@ -49,8 +49,12 @@ public class Conexion {
             directorio.mkdirs();
         }
 
-        String nombreImagen = generarNombreUnico(imagen);
+        String nombreImagen = imagen.getName();
         Path destinoPath = Paths.get(destinoBasePath, nombreImagen);
+        if (Files.exists(destinoPath)) {
+            nombreImagen = generarNombreUnico(imagen);
+            destinoPath = Paths.get(destinoBasePath, nombreImagen);
+        }
 
         try {
             Files.copy(imagen.toPath(), destinoPath, StandardCopyOption.REPLACE_EXISTING);
