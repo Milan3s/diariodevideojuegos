@@ -41,6 +41,14 @@ public class setup {
     private Button btnCerrar;
 
     private final Path basePath = Paths.get(System.getProperty("user.home"), "Documents", "diariodevideojuegos");
+    private final Path recursosPath = basePath.resolve("recursos");
+    private final Path diarioPath = recursosPath.resolve("diario");
+    private final Path votosPath = recursosPath.resolve("votos");
+
+    private final Path imagenesJuegosDiarioPath = diarioPath.resolve("imagenes/juegos");
+    private final Path imagenesConsolaDiarioPath = diarioPath.resolve("imagenes/consola");
+    private final Path videosJuegosDiarioPath = diarioPath.resolve("videos/juegos");
+    private final Path imagenesVotosPath = votosPath.resolve("imagenes");
     private final Path dbPath = basePath.resolve("Config/Database/midiario.db");
 
     @FXML
@@ -56,17 +64,16 @@ public class setup {
     @FXML
     private Button btnInsertar;
 
-    // Botón: INSTALAR
     @FXML
     private void handleInstalar() {
         try {
-            Files.createDirectories(basePath.resolve("Config/Database"));
-            Files.createDirectories(basePath.resolve("imagenes/juegos"));
-            Files.createDirectories(basePath.resolve("imagenes/consola"));
-            Files.createDirectories(basePath.resolve("videos/juegos"));
-            // overlays eliminado
+            Files.createDirectories(dbPath.getParent());
+            Files.createDirectories(imagenesJuegosDiarioPath);
+            Files.createDirectories(imagenesConsolaDiarioPath);
+            Files.createDirectories(videosJuegosDiarioPath);
+            Files.createDirectories(imagenesVotosPath);
 
-            String url = "jdbc:sqlite:" + dbPath;
+            String url = "jdbc:sqlite:" + dbPath.toString();
 
             try (Connection conn = DriverManager.getConnection(url)) {
                 if (conn != null) {
@@ -83,23 +90,26 @@ public class setup {
         }
     }
 
-    // Botón: VERIFICAR
     @FXML
     private void handleVerificar() {
         StringBuilder resultado = new StringBuilder();
 
-        resultado.append(Files.exists(basePath.resolve("Config/Database")) ? "✔ Config/Database\n" : "✘ Config/Database\n");
-        resultado.append(Files.exists(basePath.resolve("imagenes/juegos")) ? "✔ imagenes/juegos\n" : "✘ imagenes/juegos\n");
-        resultado.append(Files.exists(basePath.resolve("imagenes/consola")) ? "✔ imagenes/consola\n" : "✘ imagenes/consola\n");
-        resultado.append(Files.exists(basePath.resolve("videos/juegos")) ? "✔ videos/juegos\n" : "✘ videos/juegos\n");
-        // overlays eliminado
-        resultado.append(Files.exists(dbPath) ? "✔ Base de datos (midiario.db)\n" : "✘ Base de datos (midiario.db)\n");
+        resultado.append(verificarRuta(dbPath.toString(), "Base de datos (midiario.db)\n"));
+        resultado.append(verificarRuta(imagenesJuegosDiarioPath.toString(), "diario/imagenes/juegos\n"));
+        resultado.append(verificarRuta(imagenesConsolaDiarioPath.toString(), "diario/imagenes/consola\n"));
+        resultado.append(verificarRuta(videosJuegosDiarioPath.toString(), "diario/videos/juegos\n"));
+        resultado.append(verificarRuta(imagenesVotosPath.toString(), "votos/imagenes\n"));
 
         lblMensaje.setText(resultado.toString());
         lblRuta.setText("Ruta base: " + basePath.toString());
     }
 
-    // Botón: BORRAR
+    private String verificarRuta(String pathStr, String nombre) {
+        String rutaLimpia = pathStr.startsWith("jdbc:sqlite:") ? pathStr.replace("jdbc:sqlite:", "") : pathStr;
+        Path path = Paths.get(rutaLimpia);
+        return (Files.exists(path) ? "✔ " : "✘ ") + nombre;
+    }
+
     @FXML
     private void handleBorrar() {
         try {
@@ -111,13 +121,11 @@ public class setup {
         }
     }
 
-    // Botón: CERRAR
     @FXML
     private void handleCerrar() {
         System.exit(0);
     }
 
-    // Iniciar la aplicación
     @FXML
     private void handleIniciar(ActionEvent event) {
         try {
@@ -127,13 +135,11 @@ public class setup {
             Stage stage = new Stage();
             stage.setTitle("Inicio - Diario de Videojuegos");
 
-            // Establecer resolución fija 1920x1080
             Scene scene = new Scene(root, 1920, 1080);
             stage.setScene(scene);
-            stage.setResizable(true); // Opcional: evita que el usuario cambie el tamaño
+            stage.setResizable(true);
             stage.show();
 
-            // Cerrar la ventana actual
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.close();
 
@@ -144,7 +150,6 @@ public class setup {
         }
     }
 
-    // Botón: INSERTAR DATOS
     @FXML
     private void handleInsertar() {
         DatabaseInsertar.insertarDatos();
