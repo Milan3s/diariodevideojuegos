@@ -19,7 +19,7 @@ export class ModeradoresService {
   private baseUrl = 'http://localhost:3000/api/moderadores';
   private estadosUrl = 'http://localhost:3000/api/estados?tipo=moderador';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   obtenerModeradores(): Observable<Moderador[]> {
     return this.http.get<Moderador[]>(this.baseUrl).pipe(
@@ -33,15 +33,8 @@ export class ModeradoresService {
     );
   }
 
-  // ✅ ESTE MÉTODO DEBE EXISTIR
   agregarModerador(data: Partial<Moderador>): Observable<any> {
     return this.http.post(this.baseUrl, data).pipe(
-      catchError(this.manejarError)
-    );
-  }
-
-  darDeAlta(id: number): Observable<any> {
-    return this.http.put(`${this.baseUrl}/alta/${id}`, {}).pipe(
       catchError(this.manejarError)
     );
   }
@@ -52,15 +45,29 @@ export class ModeradoresService {
     );
   }
 
-
   eliminarModeradores(ids: number[]): Observable<any> {
     return this.http.post(`${this.baseUrl}/eliminar`, { ids }).pipe(
       catchError(this.manejarError)
     );
   }
 
+  darDeAlta(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/alta/${id}`, {}).pipe(
+      catchError(this.manejarError)
+    );
+  }
 
+  darDeBaja(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/baja/${id}`, {}).pipe(
+      catchError(this.manejarError)
+    );
+  }
 
+  readmitir(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/readmitir/${id}`, {}).pipe(
+      catchError(this.manejarError)
+    );
+  }
 
   private manejarError(error: HttpErrorResponse): Observable<never> {
     console.error('❌ Error en ModeradoresService:', error);

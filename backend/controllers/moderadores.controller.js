@@ -126,5 +126,46 @@ module.exports = {
         eliminados: resultado.affectedRows
       });
     });
-  }
+  },
+  darDeBajaModerador: (req, res) => {
+    const id = req.params.id;
+
+    const sql = `
+    UPDATE moderadores
+    SET fecha_baja = CURDATE()
+    WHERE id_moderador = ?
+  `;
+
+    db.query(sql, [id], (err) => {
+      if (err) {
+        console.error('❌ Error al dar de baja moderador:', err);
+        return res.status(500).json({ mensaje: 'Error al dar de baja moderador' });
+      }
+
+      res.json({ mensaje: 'Moderador dado de baja correctamente' });
+    });
+  },
+  readmitirModerador: (req, res) => {
+    const id = req.params.id;
+
+    const sql = `
+    UPDATE moderadores
+    SET fecha_baja = NULL
+    WHERE id_moderador = ?
+  `;
+
+    db.query(sql, [id], (err) => {
+      if (err) {
+        console.error('❌ Error al readmitir moderador:', err);
+        return res.status(500).json({ mensaje: 'Error al readmitir moderador' });
+      }
+
+      res.json({ mensaje: 'Moderador readmitido correctamente' });
+    });
+  },
+
+
+
+
+
 };

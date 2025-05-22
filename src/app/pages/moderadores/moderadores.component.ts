@@ -89,6 +89,25 @@ export class ModeradoresComponent implements OnInit {
     this.moderadorSeleccionado = moderador;
   }
 
+  cargarModeradoresConSeleccion(id?: number): void {
+    this.moderadoresService.obtenerModeradores().subscribe({
+      next: (data) => {
+        this.moderadores = data.map(m => ({ ...m, seleccionado: false }));
+        if (id) {
+          const reencontrado = this.moderadores.find(m => m.id_moderador === id);
+          if (reencontrado) {
+            this.seleccionarModerador(reencontrado);
+          }
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error al obtener moderadores:', err);
+        this.mostrarAlerta('❌ Error al cargar moderadores', 'danger');
+      }
+    });
+  }
+
+
   limpiarSeleccion(): void {
     this.moderadorSeleccionado = null;
     this.limpiarFormulario();
@@ -107,8 +126,10 @@ export class ModeradoresComponent implements OnInit {
         id_moderador ? '✅ Moderador actualizado correctamente' : '✅ Moderador guardado correctamente',
         'success'
       );
+      this.cerrarModal('modalAgregarModerador');
       this.limpiarFormulario();
-      this.cargarModeradores();
+      this.cargarModeradoresConSeleccion(id_moderador ?? undefined);
+
     };
 
     const errorCallback = () => {
@@ -130,6 +151,7 @@ export class ModeradoresComponent implements OnInit {
       });
     }
   }
+
 
   get moderadoresFiltrados(): Moderador[] {
     return this.moderadores.filter(m => {
@@ -307,6 +329,33 @@ export class ModeradoresComponent implements OnInit {
       error: () => this.mostrarAlerta('❌ Error al dar de alta al moderador', 'danger')
     });
   }
+
+  darDeBaja(): void {
+    if (!this.moderadorSeleccionado) return;
+
+    const id = this.moderadorSeleccionado.id_moderador;
+    this.moderadoresService.darDeBaja(id).subscribe({
+      next: () => {
+        this.mostrarAlerta('✅ Moderador dado de baja correctamente', 'success');
+        this.cargarModeradores();
+      },
+      error: () => this.mostrarAlerta('❌ Error al dar de baja al moderador', 'danger')
+    });
+  }
+  readmitir(): void {
+    if (!this.moderadorSeleccionado) return;
+
+    const id = this.moderadorSeleccionado.id_moderador;
+    this.moderadoresService.readmitir(id).subscribe({
+      next: () => {
+        this.mostrarAlerta('✅ Moderador readmitido correctamente', 'success');
+        this.cargarModeradores();
+      },
+      error: () => this.mostrarAlerta('❌ Error al readmitir al moderador', 'danger')
+    });
+  }
+
+
 
   formatearFecha(fecha: string | null): string {
     if (!fecha) return '-';
