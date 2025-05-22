@@ -11,8 +11,20 @@
             <!-- Buscador -->
             <div class="input-group mb-3">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" class="form-control" placeholder="Buscar por nombre...">
+                <input type="text" class="form-control" placeholder="Buscar por nombre..."
+                    [(ngModel)]="terminoBusqueda" />
             </div>
+
+            <div class="mb-3">
+                <select class="form-select" [(ngModel)]="filtroEstadoId">
+                    <option [ngValue]="null">Todos los estados</option>
+                    <option *ngFor="let estado of estados" [ngValue]="estado.id_estado.toString()">
+                        {{ estado.nombre }}
+                    </option>
+                </select>
+
+            </div>
+
 
             <div class="border rounded overflow-auto" style="height: 690px;">
                 <!-- Cabecera: Seleccionar todos -->
@@ -33,11 +45,12 @@
                     </div>
 
                     <!-- Si hay moderadores -->
-                    <div *ngFor="let moderador of moderadoresPaginados()"
+                    <div *ngFor="let moderador of moderadoresPaginados"
                         class="list-group-item d-flex align-items-start juego-item" [ngClass]="{
-                            'seleccionado': moderador === moderadorSeleccionado,
-                            'marcado': moderador.seleccionado
-                        }">
+       'seleccionado': moderador === moderadorSeleccionado,
+       'marcado': moderador.seleccionado
+     }">
+
                         <!-- Checkbox visible si está marcado o seleccionado -->
                         <input *ngIf="moderador.seleccionado || moderador === moderadorSeleccionado" type="checkbox"
                             class="form-check-input me-2 mt-1" [(ngModel)]="moderador.seleccionado"
@@ -50,10 +63,10 @@
                         <!-- Info moderador -->
                         <div class="flex-grow-1" (click)="seleccionarModerador(moderador)" style="cursor: pointer;">
                             <i class="fas fa-user-shield me-2"></i>{{ moderador.nombre || 'Nombre Moderador' }}<br />
-                            <small class="text-muted">{{ moderador.email || 'Sin email' }}</small><br />
                             <span class="badge bg-secondary mt-1">{{ moderador.estado_nombre || 'Sin estado' }}</span>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -65,16 +78,19 @@
                 <button class="btn btn-sm btn-light" (click)="irPaginaAnterior()" [disabled]="paginaActual === 1">
                     <i class="fas fa-angle-left"></i>
                 </button>
-                <span><i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas() }}</span>
+                <span>
+                    <i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas }}
+                </span>
                 <button class="btn btn-sm btn-light" (click)="irPaginaSiguiente()"
-                    [disabled]="paginaActual === totalPaginas()">
+                    [disabled]="paginaActual === totalPaginas">
                     <i class="fas fa-angle-right"></i>
                 </button>
                 <button class="btn btn-sm btn-light" (click)="irUltimaPagina()"
-                    [disabled]="paginaActual === totalPaginas()">
+                    [disabled]="paginaActual === totalPaginas">
                     Último<i class="fas fa-angle-double-right ms-1"></i>
                 </button>
             </div>
+
 
 
         </div>

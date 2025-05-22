@@ -11,12 +11,13 @@ export interface Moderador {
   fecha_baja?: string;
   id_estado?: number;
   estado_nombre?: string;
-  seleccionado?: boolean;
+  seleccionado?: boolean; // para selección múltiple
 }
 
 @Injectable({ providedIn: 'root' })
 export class ModeradoresService {
   private baseUrl = 'http://localhost:3000/api/moderadores';
+  private estadosUrl = 'http://localhost:3000/api/estados?tipo=moderador';
 
   constructor(private http: HttpClient) {}
 
@@ -26,8 +27,14 @@ export class ModeradoresService {
     );
   }
 
+  obtenerEstados(): Observable<any[]> {
+    return this.http.get<any[]>(this.estadosUrl).pipe(
+      catchError(this.manejarError)
+    );
+  }
+
   private manejarError(error: HttpErrorResponse): Observable<never> {
-    console.error('Error en ModeradoresService:', error);
+    console.error('❌ Error en ModeradoresService:', error);
     return throwError(() => new Error('Error en la solicitud HTTP'));
   }
 }

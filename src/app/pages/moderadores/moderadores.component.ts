@@ -4,7 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ModeradoresService, Moderador } from './moderadores.service';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
   selector: 'app-moderadores',
   standalone: true,
@@ -16,10 +15,21 @@ export class ModeradoresComponent implements OnInit {
   moderadores: Moderador[] = [];
   moderadorSeleccionado: Moderador | null = null;
 
+  // Filtros
+  terminoBusqueda: string = '';
+  filtroEstadoId: string | null = null;
+
+  estados: { id_estado: number; nombre: string }[] = [];
+
+  // Paginación
+  paginaActual: number = 1;
+  tamanoPagina: number = 9;
+
   constructor(private moderadoresService: ModeradoresService) { }
 
   ngOnInit(): void {
     this.cargarModeradores();
+    this.cargarEstados();
   }
 
   cargarModeradores(): void {
@@ -27,7 +37,7 @@ export class ModeradoresComponent implements OnInit {
       next: (data) => {
         this.moderadores = data.map(m => ({
           ...m,
-          seleccionado: false // importante para selección múltiple
+          seleccionado: false
         }));
       },
       error: (err) => {
@@ -36,6 +46,16 @@ export class ModeradoresComponent implements OnInit {
     });
   }
 
+  cargarEstados(): void {
+    this.moderadoresService.obtenerEstados().subscribe({
+      next: (data) => {
+        this.estados = data.filter(e => e.tipo === 'moderador');
+      },
+      error: (err) => {
+        console.error('❌ Error al obtener estados:', err);
+      }
+    });
+  }
 
   seleccionarModerador(moderador: Moderador): void {
     this.moderadorSeleccionado = moderador;
@@ -45,31 +65,25 @@ export class ModeradoresComponent implements OnInit {
     this.moderadorSeleccionado = null;
   }
 
-  // ✅ Selección múltiple
-  estanTodosSeleccionados(): boolean {
-    return this.moderadores.length > 0 && this.moderadores.every(m => m.seleccionado);
+  // 🔍 Filtrado
+  get moderadoresFiltrados(): Moderador[] {
+    return this.moderadores.filter(m => {
+      const coincideNombre = m.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase());
+      const coincideEstado =
+        this.filtroEstadoId !== null ? m.id_estado?.toString() === this.filtroEstadoId : true;
+      return coincideNombre && coincideEstado;
+    });
   }
 
-  cantidadSeleccionados(): number {
-    return this.moderadores.filter(m => m.seleccionado).length;
+
+  // ✅ Paginación sobre los filtrados
+  get totalPaginas(): number {
+    return Math.ceil(this.moderadoresFiltrados.length / this.tamanoPagina) || 1;
   }
 
-  onSeleccionarTodosChange(event: any): void {
-    const checked = event.target.checked;
-    this.moderadores.forEach(m => m.seleccionado = checked);
-  }
-
-  // 🔢 Paginación
-  paginaActual: number = 1;
-  tamanoPagina: number = 7;
-
-  totalPaginas(): number {
-    return Math.ceil(this.moderadores.length / this.tamanoPagina) || 1;
-  }
-
-  moderadoresPaginados(): Moderador[] {
+  get moderadoresPaginados(): Moderador[] {
     const inicio = (this.paginaActual - 1) * this.tamanoPagina;
-    return this.moderadores.slice(inicio, inicio + this.tamanoPagina);
+    return this.moderadoresFiltrados.slice(inicio, inicio + this.tamanoPagina);
   }
 
   irPrimeraPagina(): void {
@@ -77,7 +91,7 @@ export class ModeradoresComponent implements OnInit {
   }
 
   irUltimaPagina(): void {
-    this.paginaActual = this.totalPaginas();
+    this.paginaActual = this.totalPaginas;
   }
 
   irPaginaAnterior(): void {
@@ -87,8 +101,23 @@ export class ModeradoresComponent implements OnInit {
   }
 
   irPaginaSiguiente(): void {
-    if (this.paginaActual < this.totalPaginas()) {
+    if (this.paginaActual < this.totalPaginas) {
       this.paginaActual++;
     }
+  }
+
+  // ✅ Selección múltiple
+  estanTodosSeleccionados(): boolean {
+    return this.moderadoresFiltrados.length > 0 &&
+      this.moderadoresFiltrados.every(m => m.seleccionado);
+  }
+
+  cantidadSeleccionados(): number {
+    return this.moderadores.filter(m => m.seleccionado).length;
+  }
+
+  onSeleccionarTodosChange(event: any): void {
+    const checked = event.target.checked;
+    this.moderadoresFiltrados.forEach(m => m.seleccionado = checked);
   }
 }
