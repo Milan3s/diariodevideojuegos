@@ -1,0 +1,45 @@
+<div class="d-flex vh-100">
+  <!-- Sidebar -->
+  <div class="bg-light border-end p-3" style="width: 300px;">
+    <h5 class="fw-bold mb-4">Menú</h5>
+
+    <div class="d-grid gap-2">
+      <ng-container *ngFor="let item of menu">
+        <ng-container *ngIf="item.children; else simpleLink">
+          <!-- Botón padre (con hijos) -->
+          <button class="btn btn-outline-dark w-100 text-center"
+            (click)="toggleSubmenu(item.label)">
+            {{ item.label }}
+          </button>
+
+          <!-- Submenú -->
+          <div *ngIf="openSubmenu === item.label" class="mt-2">
+            <div class="text-center" style="font-size: 0.75rem;">
+              <i class="fas fa-chevron-up"></i>
+            </div>
+
+            <div class="d-grid gap-2 border rounded shadow-sm p-2 bg-white">
+              <a *ngFor="let child of item.children" class="btn btn-light w-100 text-center" 
+                [routerLink]="child.route">
+                {{ child.label }}
+              </a>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Enlace directo (sin hijos) -->
+        <ng-template #simpleLink>
+          <a class="btn btn-outline-dark w-100 text-center" 
+            [routerLink]="item.route">
+            {{ item.label }}
+          </a>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="flex-grow-1 p-4">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,0 +1,403 @@
+<div class="container-fluid mt-3">
+  <div class="row">
+    <div class="col-12">
+      <h2><i class="fas fa-gamepad me-2"></i>Juegos</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Panel izquierdo -->
+    <div class="col-md-3 mb-3">
+      <!-- Filtros -->
+      <div class="d-flex gap-2 mb-3">
+        <select class="form-select" name="filtroEstado" [(ngModel)]="filtroEstado">
+          <option [ngValue]="null">Filtrar estado</option>
+          <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">
+            {{ estado.tipo?.trim() }} {{ estado.nombre }}
+          </option>
+        </select>
+
+        <select class="form-select" name="filtroConsola" [(ngModel)]="filtroConsolas">
+          <option [ngValue]="null">Filtrar consola</option>
+          <option *ngFor="let consola of consolas" [ngValue]="consola.id_consola">
+            {{ consola.nombre }} ({{ consola.abreviatura }})
+          </option>
+        </select>
+
+      </div>
+
+      <!-- Buscador -->
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          <i class="fas fa-search"></i> <!-- Icono de lupa -->
+        </span>
+        <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="terminoBusqueda">
+      </div>
+
+
+      <!-- Lista de juegos con selección múltiple -->
+      <div class="border rounded overflow-auto" style="height: 700px;">
+
+        <!-- Checkbox para seleccionar todos los juegos filtrados -->
+        <div class="d-flex align-items-center justify-content-between p-2 border-bottom bg-light">
+          <div class="d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" [checked]="estanTodosSeleccionados()"
+              (change)="onSeleccionarTodosChange($event)" />
+            <strong>Seleccionar todos</strong>
+          </div>
+
+          <!-- Contador de seleccionados -->
+          <small class="text-muted">
+            {{ cantidadSeleccionados() }} seleccionados
+          </small>
+        </div>
+        <!-- Lista de juegos -->
+        <div class="list-group list-group-flush">
+          <div *ngFor="let juego of juegosPaginados()" class="list-group-item d-flex align-items-start juego-item"
+            [ngClass]="{
+              'seleccionado': juego === juegoSeleccionado,
+              'marcado': juego.seleccionado
+            }">
+            <!-- ✅ Mostrar el checkbox si el juego está seleccionado o marcado -->
+            <input *ngIf="juego.seleccionado || juego === juegoSeleccionado" type="checkbox"
+              class="form-check-input me-2 mt-1" [(ngModel)]="juego.seleccionado" (click)="$event.stopPropagation()" />
+
+            <!-- ✅ Reservar el espacio para el checkbox si no se muestra -->
+            <span *ngIf="!(juego.seleccionado || juego === juegoSeleccionado)" class="me-2"
+              style="width: 1.5rem;"></span>
+
+            <div class="flex-grow-1" (click)="seleccionarJuego(juego)" style="cursor: pointer;">
+              <i class="fas fa-gamepad me-2"></i>{{ juego.nombre }}<br />
+              <small class="text-muted">
+                Consola: {{ juego.consola_abreviatura || 'No tiene ninguna asignada' }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <button class="btn btn-sm btn-light" (click)="irPrimeraPagina()" [disabled]="paginaActual === 1">
+          <i class="fas fa-angle-double-left me-1"></i>Primero
+        </button>
+
+        <button class="btn btn-sm btn-light" (click)="irPaginaAnterior()" [disabled]="paginaActual === 1">
+          <i class="fas fa-angle-left"></i>
+        </button>
+        <span><i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas() }}</span>
+
+        <button class="btn btn-sm btn-light" (click)="irPaginaSiguiente()" [disabled]="paginaActual === totalPaginas()">
+          <i class="fas fa-angle-right"></i>
+        </button>
+        <button class="btn btn-sm btn-light" (click)="irUltimaPagina()" [disabled]="paginaActual === totalPaginas()">
+          Último<i class="fas fa-angle-double-right ms-1"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="col-md-8">
+      <!-- Acciones -->
+      <div class="mb-3 d-flex gap-2 flex-wrap align-items-start">
+
+        <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+          <i class="fas fa-eraser me-1"></i> Limpiar
+        </button>
+
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarJuego">
+          <i class="fas fa-plus me-1"></i> Añadir Juego
+        </button>
+
+        <button class="btn btn-outline-dark" [disabled]="!juegoSeleccionado" data-bs-toggle="modal"
+          data-bs-target="#modalAgregarJuego">
+          <i class="fas fa-edit me-1"></i> Editar
+        </button>
+
+        <!-- Botón Exportar Juegos -->
+        <button class="btn btn-primary" [disabled]="cantidadSeleccionados() === 0" data-bs-toggle="modal"
+          data-bs-target="#modalConfirmarExportacionJuegos">
+          <i class="fas fa-file-export me-1"></i> Exportar seleccionados
+        </button>
+
+        <button class="btn btn-danger" [disabled]="cantidadSeleccionados() === 0" data-bs-toggle="modal"
+          data-bs-target="#modalConfirmarEliminacionMultiple">
+          <i class="fas fa-trash me-1"></i> Eliminar seleccionados
+        </button>
+
+      </div>
+
+
+      <!-- Detalle del juego -->
+      <div class="bg-light p-3 rounded border">
+        <div class="row">
+          <!-- Columna izquierda: Info + Imagen -->
+          <div class="col-md-6">
+            <p><strong><i class="fas fa-tag me-1"></i>Nombre:</strong> {{ juegoSeleccionado?.nombre || '-' }}</p>
+            <p><strong><i class="fas fa-th-large me-1"></i>Género:</strong> {{ juegoSeleccionado?.genero || '-' }}</p>
+            <p><strong><i class="fas fa-calendar me-1"></i>Fecha de lanzamiento:</strong>
+              {{ formatearFecha(juegoSeleccionado?.fecha_lanzamiento) }}
+            </p>
+
+            <p><strong><i class="fas fa-building me-1"></i>Editor:</strong> {{ juegoSeleccionado?.editor || '-' }}</p>
+            <p><strong><i class="fas fa-code me-1"></i>Desarrollador:</strong> {{ juegoSeleccionado?.desarrollador ||
+              '-'
+              }}</p>
+            <p><strong><i class="fas fa-gamepad me-1"></i>Modo de juego:</strong> {{ juegoSeleccionado?.modo_juego ||
+              '-'
+              }}</p>
+            <p><strong><i class="fas fa-thumbs-up me-1"></i>Recomendado:</strong>
+              {{ juegoSeleccionado?.es_recomendado == null ? '-' : (juegoSeleccionado?.es_recomendado === 1 ? 'Sí' :
+              'No') }}
+            </p>
+
+            <p><strong><i class="fas fa-flag me-1"></i>Estado:</strong> {{ juegoSeleccionado?.estado_nombre || '-' }}
+            </p>
+            <p><strong><i class="fas fa-tv me-1"></i>Consola:</strong> {{ juegoSeleccionado?.consola_nombre }}</p>
+
+            <div *ngIf="juegoSeleccionado?.RutaImagen" class="mt-3">
+              <img [src]="juegoSeleccionado?.RutaImagen" (error)="imagenError = true" *ngIf="!imagenError"
+                alt="BoxArt del juego" class="img-fluid" style="max-height: 300px;">
+              <p *ngIf="imagenError" class="text-muted">No se pudo cargar la imagen.</p>
+            </div>
+          </div>
+
+          <!-- Columna derecha: Video simulado -->
+          <div class="col-md-6">
+            <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center rounded border"
+              style="height: 350px;">
+              <ng-container *ngIf="juegoSeleccionado?.RutaVideo && !videoError; else sinVideo">
+                <video [src]="juegoSeleccionado?.RutaVideo" controls class="w-100 h-100 rounded"
+                  (error)="videoError = true" style="object-fit: cover;">
+                  Tu navegador no soporta el video HTML5.
+                </video>
+              </ng-container>
+
+              <!-- Si falla el video -->
+              <ng-template #sinVideo>
+                <p class="text-muted text-center m-0">No se pudo cargar el video del juego.</p>
+              </ng-template>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!juegoSeleccionado" class="alert alert-info my-2">
+        <i class="fas fa-info-circle me-2"></i>Selecciona un juego de la lista para ver los detalles.
+      </div>
+
+      <!-- Alerta de éxito o error -->
+      <div *ngIf="mostrarAlerta" class="alert" [ngClass]="{
+      'alert-success': tipoAlerta === 'success',
+      'alert-danger': tipoAlerta === 'danger'
+        }">
+        <i class="fas" [ngClass]="tipoAlerta === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
+        {{ mensajeAlerta }}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Mostrar alerta Agregar Juego -->
+<div *ngIf="mostrarAlerta" class="alert alert-{{ tipoAlerta }} alert-dismissible fade show mt-3" role="alert">
+  {{ mensajeAlerta }}
+  <button type="button" class="btn-close" (click)="mostrarAlerta = false" aria-label="Cerrar"></button>
+</div>
+
+<!-- Modal Agregar Juego -->
+<div class="modal fade" id="modalAgregarJuego" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <form (ngSubmit)="juegoSeleccionado ? confirmarEditarJuego() : guardarJuego()" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">
+            <i class="fas" [ngClass]="juegoSeleccionado ? 'fa-edit' : 'fa-plus'"></i>
+            {{ juegoSeleccionado ? 'Editar Juego' : 'Añadir Nuevo Juego' }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"
+            (click)="limpiarSeleccion()"></button>
+        </div>
+
+        <div class="modal-body">
+          <div *ngIf="mostrarAlerta" class="alert"
+            [ngClass]="{ 'alert-success': tipoAlerta === 'success', 'alert-danger': tipoAlerta === 'danger' }">
+            <i class="fas" [ngClass]="tipoAlerta === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
+            {{ mensajeAlerta }}
+          </div>
+
+          <div class="row g-3">
+            <!-- Columna 1 -->
+            <div class="col-md-4">
+              <label class="form-label"><i class="fas fa-signature me-1"></i>Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="nuevoJuego.nombre" name="nombre" required
+                placeholder="Ej: The Legend of Zelda">
+
+              <label class="form-label mt-3"><i class="fas fa-th-large me-1"></i>Género</label>
+              <input type="text" class="form-control" [(ngModel)]="nuevoJuego.genero" name="genero"
+                placeholder="Ej: Aventura, RPG, Acción">
+
+              <label class="form-label mt-3"><i class="fas fa-calendar-alt me-1"></i>Fecha de lanzamiento</label>
+              <input type="date" class="form-control" [(ngModel)]="nuevoJuego.fecha_lanzamiento"
+                name="fecha_lanzamiento">
+            </div>
+
+            <!-- Columna 2 -->
+            <div class="col-md-4">
+              <label class="form-label"><i class="fas fa-building me-1"></i>Editor</label>
+              <input type="text" class="form-control" [(ngModel)]="nuevoJuego.editor" name="editor"
+                placeholder="Ej: Nintendo, Ubisoft">
+
+              <label class="form-label mt-3"><i class="fas fa-code me-1"></i>Desarrollador</label>
+              <input type="text" class="form-control" [(ngModel)]="nuevoJuego.desarrollador" name="desarrollador"
+                placeholder="Ej: Retro Studios">
+
+              <label class="form-label mt-3"><i class="fas fa-thumbs-up me-1"></i>Recomendado</label>
+              <select class="form-select" [(ngModel)]="nuevoJuego.es_recomendado" name="es_recomendado">
+                <option [ngValue]="undefined">Selecciona opción</option>
+                <option [ngValue]="1">Sí</option>
+                <option [ngValue]="0">No</option>
+              </select>
+            </div>
+
+            <!-- Columna 3 -->
+            <div class="col-md-4">
+              <label class="form-label"><i class="fas fa-gamepad me-1"></i>Modo de juego</label>
+              <input type="text" class="form-control" [(ngModel)]="nuevoJuego.modo_juego" name="modo_juego"
+                placeholder="Ej: Un jugador, Multijugador">
+
+              <label class="form-label mt-3"><i class="fas fa-tv me-1"></i>Consola asignada</label>
+              <select class="form-select" [(ngModel)]="nuevoJuego.id_consola" name="id_consola" required>
+                <option [ngValue]="undefined">Selecciona una consola</option>
+                <option *ngFor="let consola of consolas" [ngValue]="consola.id_consola">
+                  {{ consola.nombre }} ({{ consola.abreviatura }})
+                </option>
+              </select>
+
+              <label class="form-label mt-3"><i class="fas fa-folder me-1"></i>Ubicación (Abreviatura)</label>
+              <select class="form-select" [(ngModel)]="nuevoJuego.consola_abreviatura" name="consola_abreviatura">
+                <option [ngValue]="''">Selecciona ubicación</option>
+                <option *ngFor="let consola of consolas" [ngValue]="consola.abreviatura">
+                  {{ consola.abreviatura }} ({{ consola.nombre }})
+                </option>
+              </select>
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-6 mt-3">
+              <label class="form-label"><i class="fas fa-flag me-1"></i>Estado del juego</label>
+              <select class="form-select" [(ngModel)]="nuevoJuego.id_estado" name="id_estado" required>
+                <option [ngValue]="undefined">Selecciona uno...</option>
+                <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">{{ estado.nombre }}</option>
+              </select>
+            </div>
+
+            <!-- Archivos -->
+            <div class="col-md-6 mt-3">
+              <label class="form-label"><i class="fas fa-image me-1"></i>Imagen</label>
+              <input type="file" class="form-control" (change)="onArchivoSeleccionado($event, 'imagen')"
+                accept="image/*">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><i class="fas fa-video me-1"></i>Video</label>
+              <input type="file" class="form-control" (change)="onArchivoSeleccionado($event, 'video')"
+                accept="video/*">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarSeleccion()">
+            <i class="fas fa-times me-1"></i>Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i>{{ juegoSeleccionado ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Confirmar Eliminación Múltiple -->
+<div class="modal fade" id="modalConfirmarEliminacionMultiple" tabindex="-1" aria-labelledby="modalMultipleLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="modalMultipleLabel">
+          <i class="fas fa-trash-alt me-2"></i>Eliminar Juegos Seleccionados
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          ¿Estás seguro de que deseas eliminar
+          <strong>{{ cantidadSeleccionados() }}</strong> juegos seleccionados?
+        </p>
+        <p class="text-muted">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="confirmarEliminarSeleccionados()">
+          Sí, eliminar todos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Confirmar Exportación de Juegos -->
+<div class="modal fade" id="modalConfirmarExportacionJuegos" tabindex="-1" aria-labelledby="exportJuegosLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exportJuegosLabel">
+          <i class="fas fa-file-export me-2"></i>Exportar Juegos
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Advertencia si no hay juegos seleccionados -->
+        <div *ngIf="cantidadSeleccionados() === 0" class="alert alert-warning mb-0">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          Por favor, selecciona al menos un juego para exportar.
+        </div>
+
+        <!-- Confirmación si hay juegos seleccionados -->
+        <div *ngIf="cantidadSeleccionados() > 0" class="mt-3">
+          <label class="form-label mt-2">
+            <i class="fas fa-file-alt me-1"></i>Elige un formato de exportación
+          </label>
+          <select class="form-select" [(ngModel)]="formatoExportacion">
+            <option value="excel">Excel (.xlsx)</option>
+            <option value="sql">SQL (.sql)</option>
+          </select>
+
+          <p class="my-3">
+            Se van a exportar <strong>{{ cantidadSeleccionados() }}</strong> juego(s).
+            ¿Estás seguro de continuar?
+          </p>
+        </div>
+      </div>
+
+      <!-- Botones solo si hay juegos para exportar -->
+      <div class="modal-footer" *ngIf="cantidadSeleccionados() > 0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-1"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="confirmarExportacionJuegos()">
+          <i class="fas fa-file-export me-1"></i>Exportar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+.juego-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.juego-item:hover {
+  background-color: #f8f9fa;
+}
+
+.juego-item.seleccionado {
+  background-color: #e8f0ff;
+}
+
+.juego-item.marcado {
+  border-left: 4px solid #0d6efd;
+}

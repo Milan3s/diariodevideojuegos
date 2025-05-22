@@ -1,0 +1,437 @@
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-md-10">
+
+            <h2><i class="fas fa-tv me-2"></i>Consolas</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel izquierdo -->
+        <div class="col-md-3 mb-3">
+            <!-- Filtros -->
+            <div class="d-flex gap-2 mb-3">
+                <select class="form-select" [(ngModel)]="filtroEstado">
+                    <option [ngValue]="null">Filtrar estado</option>
+                    <option *ngFor="let estado of estados" [value]="estado.id_estado">{{ estado.nombre }}</option>
+                </select>
+            </div>
+
+            <!-- Buscador -->
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por nombre..."
+                    [(ngModel)]="terminoBusqueda">
+            </div>
+
+            <div class="border rounded overflow-auto" style="height: 690px;">
+                <!-- Header selección -->
+                <div class="d-flex align-items-center justify-content-between p-2 border-bottom bg-light">
+                    <div class="d-flex align-items-center">
+                        <input type="checkbox" class="form-check-input me-2 mt-1" [checked]="estanTodasSeleccionadas()"
+                            (change)="toggleSeleccionarTodas($event)" />
+                        <strong>Seleccionar todos</strong>
+                    </div>
+                    <small class="text-muted">{{ cantidadSeleccionadas() }} seleccionadas</small>
+                </div>
+
+                <!-- Lista de consolas -->
+                <div class="list-group list-group-flush">
+                    <div *ngFor="let consola of consolasPaginadas()"
+                        class="list-group-item d-flex align-items-start consola-item"
+                        [ngClass]="{ 'seleccionada': consola === consolaSeleccionada, 'marcada': consola.seleccionado }">
+
+                        <!-- ✅ Mostrar checkbox solo si está seleccionada o marcada -->
+                        <input *ngIf="consola.seleccionado || consola === consolaSeleccionada" type="checkbox"
+                            class="form-check-input me-2 mt-1" [(ngModel)]="consola.seleccionado"
+                            (click)="$event.stopPropagation()" />
+
+                        <!-- ✅ Reservar espacio invisible si no se muestra el checkbox -->
+                        <span *ngIf="!(consola.seleccionado || consola === consolaSeleccionada)" class="me-2"
+                            style="width: 1.5rem;"></span>
+
+                        <!-- Info consola -->
+                        <div class="flex-grow-1" (click)="seleccionarConsola(consola)" style="cursor: pointer;">
+                            <i class="fas fa-tv me-2"></i>{{ consola.nombre }}<br />
+                            <small class="text-muted">
+                                {{ consola.cantidad_juegos || 0 }} juego{{ consola.cantidad_juegos !== 1 ? 's' : '' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paginación -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <button class="btn btn-sm btn-light" (click)="irPrimeraPagina()" [disabled]="paginaActual === 1">
+                    <i class="fas fa-angle-double-left me-1"></i>Primero
+                </button>
+                <button class="btn btn-sm btn-light" (click)="irPaginaAnterior()" [disabled]="paginaActual === 1">
+                    <i class="fas fa-angle-left"></i>
+                </button>
+                <span><i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas() }}</span>
+                <button class="btn btn-sm btn-light" (click)="irPaginaSiguiente()"
+                    [disabled]="paginaActual === totalPaginas()">
+                    <i class="fas fa-angle-right"></i>
+                </button>
+                <button class="btn btn-sm btn-light" (click)="irUltimaPagina()"
+                    [disabled]="paginaActual === totalPaginas()">
+                    Último<i class="fas fa-angle-double-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel derecho -->
+        <div class="col-md-9">
+            <!-- Acciones -->
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+                <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+                    <i class="fas fa-eraser me-1"></i>Limpiar
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarConsola">
+                    <i class="fas fa-plus me-1"></i>Añadir Consola
+                </button>
+                <button class="btn btn-outline-dark" [disabled]="!consolaSeleccionada" data-bs-toggle="modal"
+                    data-bs-target="#modalAgregarConsola">
+                    <i class="fas fa-edit me-1"></i>Editar
+                </button>
+                <button class="btn btn-outline-dark" (click)="abrirModalExportar()">
+                    <i class="fas fa-file-excel me-1"></i>Exportar Consolas
+                </button>
+                <button class="btn btn-outline-danger" [disabled]="cantidadSeleccionadas() === 0" data-bs-toggle="modal"
+                    data-bs-target="#modalConfirmarEliminacionMultiple">
+                    <i class="fas fa-trash me-1"></i>Eliminar seleccionadas
+                </button>
+            </div>
+
+            <!-- Panel de detalles -->
+            <div class="p-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><strong>Nombre:</strong> {{ consolaSeleccionada?.nombre || '-' }}</p>
+                        <p><strong>Abreviatura:</strong> {{ consolaSeleccionada?.abreviatura || '-' }}</p>
+                        <p><strong>Fabricante:</strong> {{ consolaSeleccionada?.fabricante || '-' }}</p>
+                        <p><strong>Generación:</strong> {{ consolaSeleccionada?.generacion || '-' }}</p>
+                        <p><strong>Tipo:</strong> {{ consolaSeleccionada?.tipo || '-' }}</p>
+                        <p><strong>Estado:</strong> {{ consolaSeleccionada?.estado_nombre || '-' }}</p>
+                        <p><strong>Juegos asociados:</strong>
+                            {{ consolaSeleccionada?.cantidad_juegos != null ? consolaSeleccionada?.cantidad_juegos : '-'
+                            }}
+                        </p>
+                        <p><strong>Fecha lanzamiento:</strong> {{ formatearFecha(consolaSeleccionada?.fecha_lanzamiento)
+                            }}</p>
+
+
+                        <p><strong>Original:</strong> {{ mostrarSiNo(consolaSeleccionada?.original) }}</p>
+                        <p><strong>Modificada:</strong> {{ mostrarSiNo(consolaSeleccionada?.modificada) }}</p>
+                        <p><strong>Caja:</strong> {{ mostrarSiNo(consolaSeleccionada?.caja) }}</p>
+
+
+                    </div>
+                    <div class="col-md-3">
+                        <p><strong>Región:</strong> {{ consolaSeleccionada?.region || '-' }}</p>
+                        <p><strong>Procesador:</strong> {{ consolaSeleccionada?.procesador || '-' }}</p>
+                        <p><strong>Memoria:</strong> {{ consolaSeleccionada?.memoria || '-' }}</p>
+                        <p><strong>Almacenamiento:</strong> {{ consolaSeleccionada?.almacenamiento || '-' }}</p>
+                        <p><strong>Frecuencia MHz:</strong> {{ consolaSeleccionada?.frecuencia_mhz || '-' }}</p>
+                        <p><strong>Hz:</strong> {{ consolaSeleccionada?.hz || '-' }}</p>
+
+                        <p><strong>Chip dedicado:</strong> {{ esBooleano(consolaSeleccionada?.chip) }}</p>
+
+
+                        <p><strong>Precintada:</strong> {{ consolaSeleccionada?.precintada == true ? 'Sí' :
+                            consolaSeleccionada?.precintada == false ? 'No' : '-' }}</p>
+
+
+                        <p><strong>Características:</strong></p>
+                        <p>{{ consolaSeleccionada?.caracteristicas || '-' }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <video *ngIf="!videoError && consolaSeleccionada?.RutaVideo"
+                            [src]="consolaSeleccionada?.RutaVideo" (error)="videoError = true"
+                            class="estilo-video-consolas" controls preload="metadata">
+                            Tu navegador no soporta el video HTML5.
+                        </video>
+                        <p *ngIf="videoError || !consolaSeleccionada?.RutaVideo" class="text-muted">No se pudo cargar el
+                            video.</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <img *ngIf="!imagenError && consolaSeleccionada?.RutaImagen"
+                            [src]="consolaSeleccionada?.RutaImagen" (error)="imagenError = true" class="img-fluid"
+                            alt="Imagen consola" style="max-height: 300px; object-fit: contain;" />
+                        <p *ngIf="imagenError" class="text-muted">No se pudo cargar la imagen.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info my-2">
+                <i class="fas fa-info-circle me-2"></i>Selecciona un logro de la lista para ver los detalles.
+            </div>
+
+            <div *ngIf="mostrarAlerta" class="alert"
+                [ngClass]="{ 'alert-success': tipoAlerta === 'success', 'alert-danger': tipoAlerta === 'danger' }">
+                <i class="fas" [ngClass]="tipoAlerta === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
+                {{ mensajeAlerta }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar / Editar Consola -->
+<div class="modal fade" id="modalAgregarConsola" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <form (ngSubmit)="consolaSeleccionada ? confirmarEditarConsola() : guardarConsola()"
+                enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">
+                        <i class="fas" [ngClass]="consolaSeleccionada ? 'fa-edit' : 'fa-plus'"></i>
+                        {{ consolaSeleccionada ? 'Editar Consola' : 'Añadir Nueva Consola' }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"
+                        (click)="limpiarSeleccion()"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+                        <!-- Columna 1 -->
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fas fa-signature me-1"></i>Nombre</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.nombre" name="nombre"
+                                required placeholder="Ej: Nintendo Switch">
+
+                            <label class="form-label mt-3"><i class="fas fa-abacus me-1"></i>Abreviatura</label>
+                            <ng-container *ngIf="!consolaSeleccionada; else editarAbreviatura">
+                                <input type="text" class="form-control" [(ngModel)]="nuevaConsola.abreviatura"
+                                    name="abreviatura" placeholder="Ej: NS, PS5">
+                            </ng-container>
+                            <ng-template #editarAbreviatura>
+                                <select class="form-select" [(ngModel)]="nuevaConsola.abreviatura" name="abreviatura">
+                                    <option [ngValue]="''">Selecciona carpeta</option>
+                                    <option *ngFor="let consola of consolas" [ngValue]="consola.abreviatura">
+                                        {{ consola.abreviatura }} ({{ consola.nombre }})
+                                    </option>
+                                </select>
+                            </ng-template>
+
+                            <label class="form-label mt-2"><i class="fas fa-folder-open me-1"></i>Ruta generada</label>
+                            <input type="text" class="form-control bg-light"
+                                [value]="generarCarpetaDesdeAbreviatura(nuevaConsola.abreviatura)" readonly>
+
+                            <label class="form-label mt-3"><i class="fas fa-boxes me-1"></i>Tipo</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.tipo" name="tipo"
+                                placeholder="Ej: Portátil, Sobremesa">
+
+                            <label class="form-label mt-3"><i class="fas fa-microchip me-1"></i>Procesador</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.procesador"
+                                name="procesador" placeholder="Ej: AMD Zen 2, ARM Cortex">
+
+                            <label class="form-label mt-3"><i class="fas fa-memory me-1"></i>Memoria</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.memoria" name="memoria"
+                                placeholder="Ej: 8 GB RAM, 512 MB">
+                        </div>
+
+                        <!-- Columna 2 -->
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fas fa-industry me-1"></i>Fabricante</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.fabricante"
+                                name="fabricante" placeholder="Ej: Nintendo, Sony">
+
+                            <label class="form-label mt-3"><i class="fas fa-layer-group me-1"></i>Generación</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.generacion"
+                                name="generacion" placeholder="Ej: Octava, Novena">
+
+                            <label class="form-label mt-3"><i class="fas fa-globe-americas me-1"></i>Región</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.region" name="region"
+                                placeholder="Ej: Japón, USA, PAL">
+
+                            <label class="form-label mt-3"><i class="fas fa-hdd me-1"></i>Almacenamiento</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.almacenamiento"
+                                name="almacenamiento" placeholder="Ej: 500 GB, SD Card">
+
+                            <label class="form-label mt-3"><i class="fas fa-wifi me-1"></i>Frecuencia MHz</label>
+                            <input type="number" class="form-control" [(ngModel)]="nuevaConsola.frecuencia_mhz"
+                                name="frecuencia_mhz" placeholder="Ej: 1600, 3200">
+
+                            <label class="form-label mt-3"><i class="fas fa-microchip me-1"></i>Chip dedicado</label>
+                            <select class="form-select" [(ngModel)]="nuevaConsola.chip" name="chip">
+                                <option [ngValue]="undefined">Seleccione una opción...</option>
+                                <option [ngValue]="true">Sí</option>
+                                <option [ngValue]="false">No</option>
+                            </select>
+
+                        </div>
+
+                        <!-- Columna 3 -->
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fas fa-align-left me-1"></i>Características</label>
+                            <textarea class="form-control" [(ngModel)]="nuevaConsola.caracteristicas"
+                                name="caracteristicas" rows="2"
+                                placeholder="Ej: Retrocompatible, WiFi, HDMI"></textarea>
+
+                            <label class="form-label mt-3"><i class="fas fa-calendar-alt me-1"></i>Fecha
+                                lanzamiento</label>
+                            <input type="date" class="form-control" [(ngModel)]="nuevaConsola.fecha_lanzamiento"
+                                name="fecha_lanzamiento">
+
+                            <label class="form-label mt-3"><i class="fas fa-wave-square me-1"></i>Frecuencia Hz</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevaConsola.hz" name="hz"
+                                placeholder="Ej: 60, 50">
+
+                            <label class="form-label mt-3"><i class="fas fa-check-square me-1"></i>Estado</label>
+                            <select class="form-select" [(ngModel)]="nuevaConsola.id_estado" name="id_estado">
+                                <option [ngValue]="undefined">Selecciona estado</option>
+                                <option *ngFor="let estado of estados" [value]="estado.id_estado">{{ estado.nombre }}
+                                </option>
+                            </select>
+
+                            <label class="form-label mt-3"><i class="fas fa-image me-1"></i>Imagen</label>
+                            <input type="file" class="form-control" name="imagen"
+                                (change)="onArchivoSeleccionado($event, 'imagen')" accept="image/*">
+
+                            <label class="form-label mt-3"><i class="fas fa-video me-1"></i>Video</label>
+                            <input type="file" class="form-control" name="video"
+                                (change)="onArchivoSeleccionado($event, 'video')" accept="video/*">
+                        </div>
+
+                        <!-- Booleanos -->
+                        <div class="col-12 mt-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label d-block"><i class="fas fa-toggle-on me-1"></i>Original /
+                                        Modificada</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="version"
+                                            (change)="actualizarBooleanosDesdeRadio('original')"
+                                            [checked]="nuevaConsola.original">
+                                        <label class="form-check-label">Original</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="version"
+                                            (change)="actualizarBooleanosDesdeRadio('modificada')"
+                                            [checked]="nuevaConsola.modificada">
+                                        <label class="form-check-label">Modificada</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label d-block"><i class="fas fa-box me-1"></i>Caja /
+                                        Precintada</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="cajaEstado"
+                                            (change)="actualizarBooleanosDesdeRadio('caja')"
+                                            [checked]="nuevaConsola.caja">
+                                        <label class="form-check-label">Con caja</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="cajaEstado"
+                                            (change)="actualizarBooleanosDesdeRadio('precintada')"
+                                            [checked]="nuevaConsola.precintada">
+                                        <label class="form-check-label">Precintada</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="limpiarSeleccion()">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>{{ consolaSeleccionada ? 'Actualizar' : 'Guardar' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal Confirmar Eliminación Múltiple -->
+<div class="modal fade" id="modalConfirmarEliminacionMultiple" tabindex="-1" aria-labelledby="modalMultipleLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalMultipleLabel">
+                    <i class="fas fa-trash-alt me-2"></i>Eliminar Consolas Seleccionadas
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    ¿Estás seguro de que deseas eliminar
+                    <strong>{{ cantidadSeleccionadas() }}</strong> consola(s) seleccionada(s)?
+                </p>
+                <p class="text-muted">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="confirmarEliminarSeleccionadas()">
+                    Sí, eliminar todas
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmar Exportación -->
+<div class="modal fade" id="modalConfirmarExportacion" tabindex="-1" aria-labelledby="exportLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportLabel">
+                    <i class="fas fa-file-export me-2"></i>Exportar Consolas
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Advertencia si no hay consolas seleccionadas -->
+                <div *ngIf="cantidadExportar === 0" class="alert alert-warning mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Por favor, selecciona al menos una consola para exportar.
+                </div>
+
+                <!-- Confirmación si hay consolas seleccionadas -->
+                <div *ngIf="cantidadExportar > 0" class="mt-3">
+
+
+                    <label class="form-label mt-2">
+                        <i class="fas fa-file-alt me-1"></i>Elige un formato de exportación
+                    </label>
+                    <select class="form-select" [(ngModel)]="formatoExportacion">
+                        <option value="excel">Excel (.xlsx)</option>
+                        <option value="sql">SQL (.sql)</option>
+                    </select>
+
+                    <p class="my-3">
+                        Se van a exportar <strong>{{ cantidadExportar }}</strong> consola(s).
+                        ¿Estás seguro de continuar?
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botones solo si hay consolas para exportar -->
+            <div class="modal-footer" *ngIf="cantidadExportar > 0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" (click)="confirmarExportacion()">
+                    <i class="fas fa-file-export me-1"></i>Exportar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

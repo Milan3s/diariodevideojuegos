@@ -1,0 +1,44 @@
+.resumen-fecha {
+  color: var(--bs-primary);
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+.resumen-card {
+  text-align: center;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.resumen-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.resumen-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.resumen-cifra {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.resumen-subtexto {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.resumen-panel-metas {
+  padding: 1rem 0;
+}

@@ -1,0 +1,92 @@
+<div class="container mt-4 resumen-app">
+  <!-- Título -->
+  <div class="mb-4">
+    <h2><i class="fas fa-chart-pie me-2"></i>Resumen General</h2>
+    <p class="resumen-fecha">
+      <i class="fas fa-calendar-alt me-1"></i>
+      {{ resumen?.fecha ? (resumen.fecha | date:'d \'de\' MMMM \'de\' y':'es-ES') : '-' }}
+    </p>
+  </div>
+
+  <!-- Panel Resumen General -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card">
+        <i class="fas fa-tv resumen-icon text-info"></i>
+        <h6>Consolas</h6>
+        <p class="resumen-cifra">{{ resumen?.totalConsolas ?? '-' }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card">
+        <i class="fas fa-gamepad resumen-icon text-success"></i>
+        <h6>Juegos</h6>
+        <p class="resumen-cifra">{{ resumen?.totalJuegos ?? '-' }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card">
+        <i class="fas fa-trophy resumen-icon text-warning"></i>
+        <h6>Logros</h6>
+        <p class="resumen-cifra">{{ resumen?.totalLogros ?? '-' }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card">
+        <i class="fas fa-bullseye resumen-icon text-danger"></i>
+        <h6>Metas totales</h6>
+        <p class="resumen-cifra">
+          {{
+            resumen?.totalMetasEspecificas !== undefined &&
+            resumen?.totalMetasJuegos !== undefined &&
+            resumen?.totalMetasTwitch !== undefined
+              ? resumen.totalMetasEspecificas + resumen.totalMetasJuegos + resumen.totalMetasTwitch
+              : '-'
+          }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Metas del Mes -->
+  <div class="row g-3 resumen-panel-metas">
+    <div class="col-12 mb-2">
+      <h3><i class="fas fa-flag-checkered me-2 text-secondary"></i>Metas del Mes</h3>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card bg-light">
+        <i class="fas fa-tasks resumen-icon text-primary"></i>
+        <h6>Metas específicas</h6>
+        <p class="resumen-cifra">{{ resumen?.totalMetasEspecificas ?? '-' }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card bg-light">
+        <i class="fas fa-gamepad resumen-icon text-success"></i>
+        <h6>Metas de juegos</h6>
+        <p class="resumen-cifra">{{ resumen?.totalMetasJuegos ?? '-' }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card bg-light">
+        <i class="fas fa-video resumen-icon text-dark"></i>
+        <h6>Metas Twitch</h6>
+        <p class="resumen-cifra">{{ resumen?.totalMetasTwitch ?? '-' }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="resumen-card bg-light">
+        <i class="fas fa-tools resumen-icon text-secondary"></i>
+        <h6>Mejora del canal</h6>
+        <p class="resumen-cifra">{{ resumen?.totalMejorasCanal ?? '-' }}</p>
+      </div>
+    </div>
+  </div>
+</div>

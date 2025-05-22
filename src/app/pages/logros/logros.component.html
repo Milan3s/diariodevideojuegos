@@ -1,0 +1,387 @@
+<div class="container-fluid mt-3">
+  <div class="row">
+    <div class="col-12">
+      <h2><i class="fas fa-trophy me-2"></i>Logros</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Panel izquierdo -->
+    <div class="col-md-3 mb-3">
+      <!-- Filtros -->
+      <div class="d-flex gap-2 mb-3">
+        <select class="form-select" [(ngModel)]="filtroEstado">
+          <option [ngValue]="null">Filtrar estado</option>
+          <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">
+            {{ estado.tipo ? estado.tipo + ' - ' : '' }}{{ estado.nombre }}
+          </option>
+        </select>
+
+
+        <select class="form-select" [(ngModel)]="filtroConsola">
+          <option [ngValue]="null">Filtrar consola</option>
+          <option *ngFor="let consola of consolas" [ngValue]="consola.id_consola">
+            {{ consola.nombre }} ({{ consola.abreviatura }})
+          </option>
+        </select>
+
+      </div>
+
+      <!-- Buscador -->
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          <i class="fas fa-search"></i>
+        </span>
+        <input type="text" class="form-control" placeholder="Buscar por nombre...">
+      </div>
+
+      <!-- Lista de logros -->
+      <div class="border rounded overflow-auto" style="height: 690px;">
+        <!-- Header selección -->
+        <div class="d-flex align-items-center justify-content-between p-2 border-bottom bg-light">
+          <div class="d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2 mt-1" [checked]="estanTodosSeleccionados()"
+              (change)="onSeleccionarTodosChange($event)" />
+            <span class="fw-bold">Seleccionar todos</span>
+          </div>
+
+          <small class="text-muted">{{ cantidadSeleccionados() }} seleccionados</small>
+        </div>
+
+        <!-- Lista de logros -->
+        <div class="list-group list-group-flush">
+          <div *ngFor="let logro of logrosPaginados()" class="list-group-item d-flex align-items-start logro-item"
+            [ngClass]="{ 'seleccionada': logro === logroSeleccionado, 'marcada': logro.seleccionado }">
+
+            <!-- Checkbox solo si está seleccionado o marcado -->
+            <input *ngIf="logro.seleccionado || logro === logroSeleccionado" type="checkbox"
+              class="form-check-input me-2 mt-1" [(ngModel)]="logro.seleccionado" (click)="$event.stopPropagation()" />
+
+            <!-- Reservar espacio invisible si no se muestra el checkbox -->
+            <span *ngIf="!(logro.seleccionado || logro === logroSeleccionado)" class="me-2"
+              style="width: 1.5rem;"></span>
+
+            <!-- Info logro -->
+            <div class="flex-grow-1" (click)="seleccionarLogro(logro)" style="cursor: pointer;">
+              <i class="fas fa-trophy me-2"></i>{{ logro.nombre }}<br />
+              <small class="text-muted d-block">
+                Juego: {{ logro.juego_nombre || 'Desconocido' }}
+              </small>
+              <small class="text-muted d-block">
+                Estado: {{ logro.estado_logro_nombre || 'Sin estado' }} ·
+                Progreso: {{ logro.progreso ?? 0 }}%
+              </small>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Paginación -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <button class="btn btn-sm btn-light" (click)="irPrimeraPagina()" [disabled]="paginaActual === 1">
+          <i class="fas fa-angle-double-left me-1"></i>Primero
+        </button>
+
+        <button class="btn btn-sm btn-light" (click)="irPaginaAnterior()" [disabled]="paginaActual === 1">
+          <i class="fas fa-angle-left"></i>
+        </button>
+
+        <span><i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas() }}</span>
+
+        <button class="btn btn-sm btn-light" (click)="irPaginaSiguiente()" [disabled]="paginaActual === totalPaginas()">
+          <i class="fas fa-angle-right"></i>
+        </button>
+
+        <button class="btn btn-sm btn-light" (click)="irUltimaPagina()" [disabled]="paginaActual === totalPaginas()">
+          Último<i class="fas fa-angle-double-right ms-1"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="col-md-8">
+      <!-- Acciones -->
+      <div class="mb-3 d-flex gap-2 flex-wrap align-items-start">
+        <!-- Botón Limpiar: mantiene su función -->
+        <button class="btn btn-outline-secondary" (click)="limpiarTodo()">
+          <i class="fas fa-eraser me-1"></i> Limpiar
+        </button>
+
+        <!-- Botón Añadir Logro: abre modalAgregarLogro -->
+        <button class="btn btn-primary" (click)="abrirModalAgregar()">
+          <i class="fas fa-plus me-1"></i> Añadir Logro
+        </button>
+
+        <!-- Botón Editar: (habilitado solo si hay uno seleccionado) -->
+        <button class="btn btn-outline-dark" [disabled]="!logroSeleccionado" (click)="editarLogro(logroSeleccionado!)">
+          <i class="fas fa-edit me-1"></i> Editar
+        </button>
+
+        <!-- Botón Exportar seleccionados -->
+        <button class="btn btn-primary" [disabled]="cantidadSeleccionados() === 0" data-bs-toggle="modal"
+          data-bs-target="#modalConfirmarExportacionLogros">
+          <i class="fas fa-file-export me-1"></i> Exportar seleccionados
+        </button>
+
+        <!-- Botón Eliminar seleccionados -->
+        <button class="btn btn-danger" [disabled]="cantidadSeleccionados() === 0" data-bs-toggle="modal"
+          data-bs-target="#modalConfirmarEliminacionMultipleLogros">
+          <i class="fas fa-trash me-1"></i> Eliminar seleccionados
+        </button>
+
+      </div>
+
+      <!-- Detalle del logro -->
+      <div class="bg-light p-3 rounded border">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong><i class="fas fa-tag me-1"></i>Nombre:</strong> {{ logroSeleccionado?.nombre || '-' }}</p>
+            <p><strong><i class="fas fa-align-left me-1"></i>Descripción:</strong> {{ logroSeleccionado?.descripcion ||
+              '-' }}</p>
+            <p><strong><i class="fas fa-hourglass-half me-1"></i>Horas estimadas:</strong> {{
+              logroSeleccionado?.horas_estimadas ?? '-' }}</p>
+            <p><strong><i class="fas fa-calendar-alt me-1"></i>Año:</strong> {{ logroSeleccionado?.anio ?? '-' }}</p>
+            <p><strong><i class="fas fa-calendar-plus me-1"></i>Inicio:</strong> {{
+              formatearFecha(logroSeleccionado?.fecha_inicio) }}</p>
+            <p><strong><i class="fas fa-calendar-check me-1"></i>Fin:</strong> {{
+              formatearFecha(logroSeleccionado?.fecha_fin) }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong><i class="fas fa-redo me-1"></i>Intentos:</strong> {{ logroSeleccionado?.intentos ?? '-' }}</p>
+            <p><strong><i class="fas fa-coins me-1"></i>Créditos:</strong> {{ logroSeleccionado?.creditos ?? '-' }}</p>
+            <p><strong><i class="fas fa-star me-1"></i>Puntuación:</strong> {{ logroSeleccionado?.puntuacion ?? '-' }}
+            </p>
+            <p><strong><i class="fas fa-clock me-1"></i>Registro:</strong> {{
+              formatearFecha(logroSeleccionado?.fecha_registro) }}</p>
+            <p><strong><i class="fas fa-flag me-1"></i>Estado:</strong> {{ logroSeleccionado?.estado_nombre || '-' }}
+            </p>
+            <p><strong><i class="fas fa-gamepad me-1"></i>Juego:</strong> {{ logroSeleccionado?.juego_nombre || '-' }}
+            </p>
+            <p><strong><i class="fas fa-tv me-1"></i>Dificultad:</strong> {{ logroSeleccionado?.dificultad_nombre || '-'
+              }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info my-2">
+        <i class="fas fa-info-circle me-2"></i>Selecciona un logro de la lista para ver los detalles.
+      </div>
+
+      <div *ngIf="mostrarAlertaBox" class="alert" [ngClass]="{
+          'alert-success': tipoAlerta === 'success',
+          'alert-danger': tipoAlerta === 'danger'
+        }">
+        <i class="fas" [ngClass]="{
+            'fa-check-circle': tipoAlerta === 'success',
+            'fa-exclamation-circle': tipoAlerta === 'danger'
+          }"></i>
+        {{ mensajeAlerta }}
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar / Editar Logro -->
+<div class="modal fade" id="modalAgregarLogro" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <form (ngSubmit)="guardarLogro()" #formLogro="ngForm" name="formLogro">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">
+            <i class="fas fa-trophy me-2"></i>Añadir / Editar Logro
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+
+            <!-- Columna 1 -->
+            <div class="col-md-4">
+              <label class="form-label"><i class="fas fa-signature me-1"></i>Nombre</label>
+              <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoLogro.nombre"
+                placeholder="Ej: Logro Maestro" />
+
+              <label class="form-label mt-3"><i class="fas fa-hourglass-half me-1"></i>Horas estimadas</label>
+              <input type="number" class="form-control" name="horas_estimadas" [(ngModel)]="nuevoLogro.horas_estimadas"
+                placeholder="Ej: 10" />
+
+                <label class="form-label mt-3"><i class="fas fa-star me-1"></i>Puntuación</label>
+              <input type="number" class="form-control" name="puntuacion" [(ngModel)]="nuevoLogro.puntuacion"
+                placeholder="Ej: 1000" />
+            </div>
+
+            <!-- Columna 2 -->
+            <div class="col-md-4">
+              <label class="form-label"><i class="fas fa-calendar me-1"></i>Año</label>
+              <input type="number" class="form-control" name="anio" [(ngModel)]="nuevoLogro.anio"
+                placeholder="Ej: 2024" />
+
+              <label class="form-label mt-3"><i class="fas fa-calendar-plus me-1"></i>Fecha inicio</label>
+              <input type="date" class="form-control" name="fecha_inicio" [(ngModel)]="nuevoLogro.fecha_inicio" />
+
+              <label class="form-label mt-3"><i class="fas fa-calendar-check me-1"></i>Fecha fin</label>
+              <input type="date" class="form-control" name="fecha_fin" [(ngModel)]="nuevoLogro.fecha_fin" />
+            </div>
+
+            <!-- Columna 3 -->
+            <div class="col-md-4">
+              <label class="form-label"><i class="fas fa-redo me-1"></i>Intentos</label>
+              <input type="number" class="form-control" name="intentos" [(ngModel)]="nuevoLogro.intentos"
+                placeholder="Ej: 3" />
+
+              <label class="form-label mt-3"><i class="fas fa-coins me-1"></i>Créditos</label>
+              <input type="number" class="form-control" name="creditos" [(ngModel)]="nuevoLogro.creditos"
+                placeholder="Ej: 50" />
+
+              
+
+              <label class="form-label mt-3"><i class="fas fa-percent me-1"></i>Progreso (%)</label>
+              <input type="number" class="form-control" name="progreso" [(ngModel)]="nuevoLogro.progreso"
+                placeholder="Ej: 80" min="0" max="100" />
+            </div>
+
+            <!-- Asociaciones -->
+            <div class="col-md-6">
+              <label class="form-label mt-3"><i class="fas fa-flag me-1"></i>Estado</label>
+              <select class="form-select" [(ngModel)]="nuevoLogro.id_estado" name="id_estado">
+                <option [ngValue]="undefined">Selecciona estado</option>
+                <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">{{ estado.nombre }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label mt-3"><i class="fas fa-tv me-1"></i>Consola</label>
+              <select class="form-select" [(ngModel)]="nuevoLogro.id_consola" name="id_consola">
+                <option [ngValue]="undefined">Selecciona consola</option>
+                <option *ngFor="let consola of consolas" [ngValue]="consola.id_consola">
+                  {{ consola.nombre }} ({{ consola.abreviatura }})
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label mt-3"><i class="fas fa-gamepad me-1"></i>Juego</label>
+              <select class="form-select" name="id_juego" [(ngModel)]="nuevoLogro.id_juego">
+                <option [ngValue]="undefined">Selecciona juego</option>
+                <option *ngFor="let juego of juegos" [ngValue]="juego.id_juegos">
+                  {{ juego.nombre }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label mt-3"><i class="fas fa-brain me-1"></i>Dificultad</label>
+              <select class="form-select" name="id_dificultad" [(ngModel)]="nuevoLogro.id_dificultad">
+                <option [ngValue]="undefined">Selecciona dificultad</option>
+                <option *ngFor="let dificultad of dificultades" [ngValue]="dificultad.id_dificultad">
+                  {{ dificultad.nombre }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Descripción al final y en toda la fila -->
+            <div class="col-12">
+              <label class="form-label mt-3"><i class="fas fa-align-left me-1"></i>Descripción</label>
+              <textarea class="form-control" name="descripcion" [(ngModel)]="nuevoLogro.descripcion" rows="3"
+                placeholder="Describe el logro..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i>Guardar
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal Confirmar Eliminación Múltiple -->
+<div class="modal fade" id="modalConfirmarEliminacionMultipleLogros" tabindex="-1" aria-labelledby="modalMultipleLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="modalMultipleLabel">
+          <i class="fas fa-trash-alt me-2"></i>Eliminar Logros Seleccionados
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          ¿Estás seguro de que deseas eliminar
+          <strong>{{ cantidadSeleccionados() }}</strong> logro(s) seleccionado(s)?
+        </p>
+        <p class="text-muted">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="confirmarEliminarSeleccionados()">
+          Sí, eliminar todos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Confirmar Exportación de Logros -->
+<div class="modal fade" id="modalConfirmarExportacionLogros" tabindex="-1" aria-labelledby="exportLogrosLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exportLogrosLabel">
+          <i class="fas fa-file-export me-2"></i>Exportar Logros
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="alert alert-warning mb-0" *ngIf="cantidadSeleccionados() === 0">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          Por favor, selecciona al menos un logro para exportar.
+        </div>
+
+        <div class="mt-3">
+          <label class="form-label mt-2">
+            <i class="fas fa-file-alt me-1"></i>Elige un formato de exportación
+          </label>
+          <select class="form-select" [(ngModel)]="formatoExportacion">
+            <option value="excel">Excel (.xlsx)</option>
+            <option value="sql">SQL (.sql)</option>
+          </select>
+
+          <p class="my-3">
+            Se van a exportar <strong>{{ cantidadSeleccionados() }}</strong> logro(s).
+            ¿Estás seguro de continuar?
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-1"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="confirmarExportacion()">
+          <i class="fas fa-file-export me-1"></i>Exportar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
