@@ -14,75 +14,120 @@
                 <input type="text" class="form-control" placeholder="Buscar por nombre...">
             </div>
 
-            <div class="list-group list-group-flush">
-                <div *ngFor="let moderador of moderadores" class="list-group-item d-flex align-items-start"
-                    (click)="seleccionarModerador(moderador)"
-                    [ngClass]="{ 'seleccionada': moderador === moderadorSeleccionado }">
+            <div class="border rounded overflow-auto" style="height: 690px;">
+                <!-- Cabecera: Seleccionar todos -->
+                <div class="d-flex align-items-center justify-content-between p-2 border-bottom bg-light">
+                    <div class="d-flex align-items-center">
+                        <input type="checkbox" class="form-check-input me-2" [checked]="estanTodosSeleccionados()"
+                            (change)="onSeleccionarTodosChange($event)" />
+                        <strong>Seleccionar todos</strong>
+                    </div>
+                    <small class="text-muted">{{ cantidadSeleccionados() }} seleccionados</small>
+                </div>
 
-                    <div class="flex-grow-1" style="cursor: pointer;">
-                        <i class="fas fa-user-shield me-2"></i>{{ moderador.nombre }}<br />
-                        <small class="text-muted">{{ moderador.email }}</small><br />
-                        <span class="badge bg-secondary mt-1">{{ moderador.estado_nombre || 'Sin estado' }}</span>
+                <!-- Lista -->
+                <div class="list-group list-group-flush">
+                    <!-- Si no hay moderadores -->
+                    <div *ngIf="moderadores.length === 0" class="list-group-item text-muted text-center">
+                        <i class="fas fa-info-circle me-2"></i>No hay moderadores registrados.
                     </div>
 
+                    <!-- Si hay moderadores -->
+                    <div *ngFor="let moderador of moderadoresPaginados()"
+                        class="list-group-item d-flex align-items-start juego-item" [ngClass]="{
+                            'seleccionado': moderador === moderadorSeleccionado,
+                            'marcado': moderador.seleccionado
+                        }">
+                        <!-- Checkbox visible si está marcado o seleccionado -->
+                        <input *ngIf="moderador.seleccionado || moderador === moderadorSeleccionado" type="checkbox"
+                            class="form-check-input me-2 mt-1" [(ngModel)]="moderador.seleccionado"
+                            (click)="$event.stopPropagation()" />
+
+                        <!-- Espacio reservado si no se muestra checkbox -->
+                        <span *ngIf="!(moderador.seleccionado || moderador === moderadorSeleccionado)" class="me-2"
+                            style="width: 1.5rem;"></span>
+
+                        <!-- Info moderador -->
+                        <div class="flex-grow-1" (click)="seleccionarModerador(moderador)" style="cursor: pointer;">
+                            <i class="fas fa-user-shield me-2"></i>{{ moderador.nombre || 'Nombre Moderador' }}<br />
+                            <small class="text-muted">{{ moderador.email || 'Sin email' }}</small><br />
+                            <span class="badge bg-secondary mt-1">{{ moderador.estado_nombre || 'Sin estado' }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-
             <!-- Paginación -->
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <button class="btn btn-sm btn-light">
+                <button class="btn btn-sm btn-light" (click)="irPrimeraPagina()" [disabled]="paginaActual === 1">
                     <i class="fas fa-angle-double-left me-1"></i>Primero
                 </button>
-                <button class="btn btn-sm btn-light">
+                <button class="btn btn-sm btn-light" (click)="irPaginaAnterior()" [disabled]="paginaActual === 1">
                     <i class="fas fa-angle-left"></i>
                 </button>
-                <span><i class="fas fa-pager me-1"></i>Página 1 / 1</span>
-                <button class="btn btn-sm btn-light">
+                <span><i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas() }}</span>
+                <button class="btn btn-sm btn-light" (click)="irPaginaSiguiente()"
+                    [disabled]="paginaActual === totalPaginas()">
                     <i class="fas fa-angle-right"></i>
                 </button>
-                <button class="btn btn-sm btn-light">
+                <button class="btn btn-sm btn-light" (click)="irUltimaPagina()"
+                    [disabled]="paginaActual === totalPaginas()">
                     Último<i class="fas fa-angle-double-right ms-1"></i>
                 </button>
             </div>
+
+
         </div>
 
         <!-- Panel derecho -->
         <div class="col-md-9">
-            <div class="mb-3 d-flex gap-2 flex-wrap">
+            <!-- Botones de acciones -->
+            <!-- Acciones: Grupo 1 -->
+            <div class="mb-2 d-flex gap-2 flex-wrap">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarModerador">
                     <i class="fas fa-plus me-1"></i>Añadir Moderador
                 </button>
-                <button class="btn btn-outline-dark">
+                <button class="btn btn-outline-dark" [disabled]="!moderadorSeleccionado">
                     <i class="fas fa-edit me-1"></i>Editar
                 </button>
-                <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                <button class="btn btn-outline-danger" [disabled]="!moderadorSeleccionado" data-bs-toggle="modal"
                     data-bs-target="#modalConfirmarEliminacionModerador">
                     <i class="fas fa-trash me-1"></i>Eliminar
                 </button>
                 <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalExportarModeradores">
                     <i class="fas fa-file-export me-1"></i>Exportar Moderadores
                 </button>
+            </div>
 
-                <button class="btn btn-outline-success">
+            <!-- Acciones: Grupo 2 -->
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+                <button class="btn btn-outline-success" [disabled]="!moderadorSeleccionado">
                     <i class="fas fa-user-check me-1"></i>Dar de alta
                 </button>
-                <button class="btn btn-outline-warning">
+                <button class="btn btn-outline-warning" [disabled]="!moderadorSeleccionado">
                     <i class="fas fa-user-times me-1"></i>Dar de baja
                 </button>
-                <button class="btn btn-outline-info">
+                <button class="btn btn-outline-info" [disabled]="!moderadorSeleccionado">
                     <i class="fas fa-paper-plane me-1"></i>Readmitir
+                </button>
+                <button class="btn btn-outline-secondary" (click)="limpiarSeleccion()"
+                    [disabled]="!moderadorSeleccionado">
+                    <i class="fas fa-eraser me-1"></i>Limpiar
                 </button>
             </div>
 
+
+            <!-- Detalles del moderador (siempre visibles, con placeholders si no hay selección) -->
             <div class="p-3">
-                <p><strong>Nombre:</strong> -</p>
-                <p><strong>Email:</strong> -</p>
-                <p><strong>Fecha de alta:</strong> -</p>
-                <p><strong>Fecha de baja:</strong> -</p>
-                <p><strong>Estado:</strong> -</p>
+                <p><strong>Nombre:</strong> {{ moderadorSeleccionado?.nombre || '-' }}</p>
+                <p><strong>Email:</strong> {{ moderadorSeleccionado?.email || '-' }}</p>
+                <p><strong>Fecha de alta:</strong> {{ moderadorSeleccionado?.fecha_alta || '-' }}</p>
+                <p><strong>Fecha de baja:</strong> {{ moderadorSeleccionado?.fecha_baja || '-' }}</p>
+                <p><strong>Estado:</strong> {{ moderadorSeleccionado?.estado_nombre || 'Sin estado' }}</p>
             </div>
         </div>
+
+
     </div>
 </div>
 

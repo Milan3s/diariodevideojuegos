@@ -11,6 +11,7 @@ export interface Moderador {
   fecha_baja?: string;
   id_estado?: number;
   estado_nombre?: string;
+  seleccionado?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })

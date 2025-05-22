@@ -1,0 +1,20 @@
+/* Estilo base del ítem de la lista */
+.juego-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover visual */
+.juego-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Seleccionado */
+.juego-item.seleccionado {
+  background-color: #e8f0ff;
+}
+
+/* Marcado con borde */
+.juego-item.marcado {
+  border-left: 4px solid #0d6efd;
+}
