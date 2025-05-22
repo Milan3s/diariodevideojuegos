@@ -46,6 +46,20 @@ export class ModeradoresService {
     );
   }
 
+  editarModerador(id: number, data: Partial<Moderador>): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, data).pipe(
+      catchError(this.manejarError)
+    );
+  }
+
+
+  eliminarModeradores(ids: number[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/eliminar`, { ids }).pipe(
+      catchError(this.manejarError)
+    );
+  }
+
+
 
 
   private manejarError(error: HttpErrorResponse): Observable<never> {

@@ -2,6 +2,7 @@ const db = require('../db');
 const { format } = require('date-fns');
 
 module.exports = {
+  // ✅ Obtener todos los moderadores
   obtenerModeradores: (req, res) => {
     const sql = `
       SELECT 
@@ -33,6 +34,7 @@ module.exports = {
     });
   },
 
+  // ✅ Crear un nuevo moderador
   agregarModerador: (req, res) => {
     const { nombre, email, id_estado } = req.body;
 
@@ -51,24 +53,78 @@ module.exports = {
         return res.status(500).json({ mensaje: 'Error al insertar moderador' });
       }
 
-      res.status(201).json({ mensaje: 'Moderador insertado correctamente', id_moderador: resultado.insertId });
+      res.status(201).json({
+        mensaje: 'Moderador insertado correctamente',
+        id_moderador: resultado.insertId
+      });
     });
   },
 
-  agregarAltaModerador: (req, res) => {
+  // ✅ Dar de alta un moderador existente
+  darDeAltaModerador: (req, res) => {
     const id = req.params.id;
+
     const sql = `
-    UPDATE moderadores 
-    SET fecha_alta = CURDATE(), fecha_baja = NULL 
-    WHERE id_moderador = ?
-  `;
+      UPDATE moderadores 
+      SET fecha_alta = CURDATE(), fecha_baja = NULL 
+      WHERE id_moderador = ?
+    `;
+
     db.query(sql, [id], (err) => {
       if (err) {
         console.error('❌ Error al dar de alta moderador:', err);
         return res.status(500).json({ mensaje: 'Error al dar de alta moderador' });
       }
+
       res.json({ mensaje: 'Moderador dado de alta correctamente' });
     });
-  }
+  },
 
+  // ✅ Actualizar moderador
+  actualizarModerador: (req, res) => {
+    const id = req.params.id;
+    const { nombre, email, id_estado } = req.body;
+
+    if (!nombre || !email || !id_estado) {
+      return res.status(400).json({ mensaje: 'Faltan campos obligatorios para la actualización' });
+    }
+
+    const sql = `
+      UPDATE moderadores
+      SET nombre = ?, email = ?, id_estado = ?
+      WHERE id_moderador = ?
+    `;
+
+    db.query(sql, [nombre, email, id_estado, id], (err) => {
+      if (err) {
+        console.error('❌ Error al actualizar moderador:', err);
+        return res.status(500).json({ mensaje: 'Error al actualizar moderador' });
+      }
+
+      res.json({ mensaje: 'Moderador actualizado correctamente' });
+    });
+  },
+
+  // ✅ Eliminar uno o varios moderadores por ID
+  eliminarModeradores: (req, res) => {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ mensaje: 'No se proporcionaron IDs para eliminar' });
+    }
+
+    const sql = `DELETE FROM moderadores WHERE id_moderador IN (?)`;
+
+    db.query(sql, [ids], (err, resultado) => {
+      if (err) {
+        console.error('❌ Error al eliminar moderadores:', err);
+        return res.status(500).json({ mensaje: 'Error al eliminar moderadores' });
+      }
+
+      res.json({
+        mensaje: 'Moderadores eliminados correctamente',
+        eliminados: resultado.affectedRows
+      });
+    });
+  }
 };

@@ -15,6 +15,7 @@
                     [(ngModel)]="terminoBusqueda" />
             </div>
 
+            <!-- Filtro estado -->
             <div class="mb-3">
                 <select class="form-select" [(ngModel)]="filtroEstadoId">
                     <option [ngValue]="undefined" disabled selected>Selecciona un estado</option>
@@ -23,11 +24,10 @@
                         {{ estado.nombre }}
                     </option>
                 </select>
-
             </div>
 
+            <!-- Lista moderadores -->
             <div class="border rounded overflow-auto" style="height: 690px;">
-                <!-- Cabecera: Seleccionar todos -->
                 <div class="d-flex align-items-center justify-content-between p-2 border-bottom bg-light">
                     <div class="d-flex align-items-center">
                         <input type="checkbox" class="form-check-input me-2" [checked]="estanTodosSeleccionados()"
@@ -37,36 +37,24 @@
                     <small class="text-muted">{{ cantidadSeleccionados() }} seleccionados</small>
                 </div>
 
-                <!-- Lista -->
                 <div class="list-group list-group-flush">
-                    <!-- Si no hay moderadores -->
                     <div *ngIf="moderadores.length === 0" class="list-group-item text-muted text-center">
                         <i class="fas fa-info-circle me-2"></i>No hay moderadores registrados.
                     </div>
 
-                    <!-- Si hay moderadores -->
                     <div *ngFor="let moderador of moderadoresPaginados"
-                        class="list-group-item d-flex align-items-start juego-item" [ngClass]="{
-                        'seleccionado': moderador === moderadorSeleccionado,
-                        'marcado': moderador.seleccionado
-                        }">
-
-                        <!-- Checkbox visible si está marcado o seleccionado -->
+                        class="list-group-item d-flex align-items-start juego-item"
+                        [ngClass]="{ 'seleccionado': moderador === moderadorSeleccionado, 'marcado': moderador.seleccionado }">
                         <input *ngIf="moderador.seleccionado || moderador === moderadorSeleccionado" type="checkbox"
                             class="form-check-input me-2 mt-1" [(ngModel)]="moderador.seleccionado"
                             (click)="$event.stopPropagation()" />
-
-                        <!-- Espacio reservado si no se muestra checkbox -->
                         <span *ngIf="!(moderador.seleccionado || moderador === moderadorSeleccionado)" class="me-2"
                             style="width: 1.5rem;"></span>
-
-                        <!-- Info moderador -->
                         <div class="flex-grow-1" (click)="seleccionarModerador(moderador)" style="cursor: pointer;">
                             <i class="fas fa-user-shield me-2"></i>{{ moderador.nombre || 'Nombre Moderador' }}<br />
                             <span class="badge bg-secondary mt-1">{{ moderador.estado_nombre || 'Sin estado' }}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -78,9 +66,7 @@
                 <button class="btn btn-sm btn-light" (click)="irPaginaAnterior()" [disabled]="paginaActual === 1">
                     <i class="fas fa-angle-left"></i>
                 </button>
-                <span>
-                    <i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas }}
-                </span>
+                <span><i class="fas fa-pager me-1"></i>Página {{ paginaActual }} / {{ totalPaginas }}</span>
                 <button class="btn btn-sm btn-light" (click)="irPaginaSiguiente()"
                     [disabled]="paginaActual === totalPaginas">
                     <i class="fas fa-angle-right"></i>
@@ -90,50 +76,47 @@
                     Último<i class="fas fa-angle-double-right ms-1"></i>
                 </button>
             </div>
-
-
-
         </div>
 
         <!-- Panel derecho -->
         <div class="col-md-9">
-            <!-- Botones de acciones -->
-            <!-- Acciones: Grupo 1 -->
+            <!-- Acciones -->
             <div class="mb-2 d-flex gap-2 flex-wrap">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarModerador">
                     <i class="fas fa-plus me-1"></i>Añadir Moderador
                 </button>
-                <button class="btn btn-outline-dark" [disabled]="!moderadorSeleccionado">
+                <button class="btn btn-outline-dark" [disabled]="!moderadorSeleccionado" data-bs-toggle="modal"
+                    data-bs-target="#modalAgregarModerador" (click)="cargarParaEditar()">
                     <i class="fas fa-edit me-1"></i>Editar
                 </button>
-                <button class="btn btn-outline-danger" [disabled]="!moderadorSeleccionado" data-bs-toggle="modal"
-                    data-bs-target="#modalConfirmarEliminacionModerador">
-                    <i class="fas fa-trash me-1"></i>Eliminar
+                <button class="btn btn-outline-danger"
+                    [disabled]="!moderadorSeleccionado && cantidadSeleccionados() === 0"
+                    (click)="abrirModalEliminarSeleccionados()">
+                    <i class="fas fa-trash me-1"></i>Eliminar Seleccionados
                 </button>
-                <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalExportarModeradores">
+                <button class="btn btn-outline-dark" (click)="abrirModalExportarModeradores()">
                     <i class="fas fa-file-export me-1"></i>Exportar Moderadores
                 </button>
+
             </div>
 
-            <!-- Acciones: Grupo 2 -->
             <div class="mb-3 d-flex gap-2 flex-wrap">
+                <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+                    <i class="fas fa-eraser me-1"></i>Limpiar filtros
+                </button>
                 <button class="btn btn-outline-success" [disabled]="!moderadorSeleccionado" (click)="darDeAlta()">
                     <i class="fas fa-user-check me-1"></i>Dar de alta
                 </button>
-
                 <button class="btn btn-outline-warning" [disabled]="!moderadorSeleccionado">
                     <i class="fas fa-user-times me-1"></i>Dar de baja
                 </button>
                 <button class="btn btn-outline-info" [disabled]="!moderadorSeleccionado">
                     <i class="fas fa-paper-plane me-1"></i>Readmitir
                 </button>
-                <button class="btn btn-outline-secondary" (click)="limpiarSeleccion()"
-                    [disabled]="!moderadorSeleccionado">
-                    <i class="fas fa-eraser me-1"></i>Limpiar
-                </button>
+
+
             </div>
 
-            <!-- Detalles del moderador (siempre visibles, con placeholders si no hay selección) -->
             <div class="p-3">
                 <p><strong>Nombre:</strong> {{ moderadorSeleccionado?.nombre || '-' }}</p>
                 <p><strong>Email:</strong> {{ moderadorSeleccionado?.email || '-' }}</p>
@@ -146,132 +129,117 @@
                 <i class="fas fa-info-circle me-2"></i>Selecciona un moderador de la lista para ver los detalles.
             </div>
 
-            <!-- Alerta de estado -->
-            <div *ngIf="mensajeAlerta" class="alert mt-2" [ngClass]="{
-                'alert-success': tipoAlerta === 'success',
-                'alert-danger': tipoAlerta === 'danger'
-                }">
+            <div *ngIf="mensajeAlerta" class="alert mt-2"
+                [ngClass]="{ 'alert-success': tipoAlerta === 'success', 'alert-danger': tipoAlerta === 'danger' }">
                 {{ mensajeAlerta }}
                 <button type="button" class="btn-close float-end" aria-label="Cerrar" (click)="cerrarAlerta()"></button>
             </div>
-
         </div>
-
-
-
     </div>
 </div>
 
-<!-- Modal Agregar / Editar Moderador -->
-<div class="modal fade" id="modalAgregarModerador" tabindex="-1" aria-labelledby="modalLabelModerador"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form (ngSubmit)="guardarModerador()" #formModerador="ngForm">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabelModerador">
-                        <i class="fas fa-user-shield"></i>
-                        {{ moderadorSeleccionado ? 'Editar Moderador' : 'Añadir Moderador' }}
+<!-- Modales -->
+
+    <div class="modal fade" id="modalAgregarModerador" tabindex="-1" aria-labelledby="modalLabelModerador"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form (ngSubmit)="guardarModerador()" #formModerador="ngForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabelModerador">
+                            <i class="fas fa-user-shield"></i>
+                            {{ moderadorSeleccionado ? 'Editar Moderador' : 'Añadir Moderador' }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"
+                            (click)="limpiarFormulario()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" required
+                            [(ngModel)]="nuevoModerador.nombre" placeholder="Nombre completo" />
+                        <label class="form-label mt-3">Email</label>
+                        <input type="email" class="form-control" name="email" required
+                            [(ngModel)]="nuevoModerador.email" placeholder="correo@ejemplo.com" />
+                        <label class="form-label mt-3">Estado</label>
+                        <select class="form-select" name="id_estado" required [(ngModel)]="nuevoModerador.id_estado">
+                            <option [ngValue]="undefined">Selecciona estado</option>
+                            <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">{{ estado.nombre }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            (click)="limpiarFormulario()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="formModerador.invalid">{{
+                            moderadorSeleccionado ? 'Actualizar' : 'Guardar' }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmarEliminacionModeradores" tabindex="-1" aria-labelledby="modalEliminarLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-danger">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalEliminarLabel">
+                        <i class="fas fa-trash-alt me-2"></i>Eliminar Moderador(es)
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"
-                        (click)="limpiarFormulario()"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar los <strong>{{ cantidadSeleccionados() }}</strong>
+                        moderadores seleccionados?</p>
+                    <p class="text-muted">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" (click)="confirmarEliminarSeleccionados()">Sí,
+                        eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalExportarModeradores" tabindex="-1" aria-labelledby="modalExportarLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalExportarLabel">
+                        <i class="fas fa-file-export me-2"></i>Exportar Moderadores
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
                 <div class="modal-body">
-                    <!-- Nombre -->
-                    <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" name="nombre" required [(ngModel)]="nuevoModerador.nombre"
-                        placeholder="Nombre completo" />
-
-                    <!-- Email -->
-                    <label class="form-label mt-3">Email</label>
-                    <input type="email" class="form-control" name="email" required [(ngModel)]="nuevoModerador.email"
-                        placeholder="correo@ejemplo.com" />
-
-                    <!-- Estado -->
-                    <label class="form-label mt-3">Estado</label>
-                    <select class="form-select" name="id_estado" required [(ngModel)]="nuevoModerador.id_estado">
-                        <option [ngValue]="undefined">Selecciona estado</option>
-                        <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">
-                            {{ estado.nombre }}
-                        </option>
+                    <label class="form-label mt-2">
+                        <i class="fas fa-file-alt me-1"></i>Elige un formato de exportación
+                    </label>
+                    <select class="form-select" [(ngModel)]="formatoExportacion">
+                        <option value="excel">Excel (.xlsx)</option>
+                        <option value="sql">SQL (.sql)</option>
                     </select>
+
+                    <p class="my-3">
+                        Se van a exportar <strong>{{ cantidadSeleccionados() > 0 ? cantidadSeleccionados() :
+                            moderadores.length }}</strong> moderador(es).
+                        ¿Deseas continuar?
+                    </p>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        (click)="limpiarFormulario()">
-                        Cancelar
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary" [disabled]="formModerador.invalid">
-                        {{ moderadorSeleccionado ? 'Actualizar' : 'Guardar' }}
+                    <button type="button" class="btn btn-success" (click)="confirmarExportacionModeradores()">
+                        <i class="fas fa-file-export me-1"></i>Exportar
                     </button>
                 </div>
-            </form>
-
-
-        </div>
-    </div>
-</div>
-
-<!-- Modal Confirmar Eliminación Moderador -->
-<div class="modal fade" id="modalConfirmarEliminacionModerador" tabindex="-1" aria-labelledby="modalEliminarLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-danger">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="modalEliminarLabel">
-                    <i class="fas fa-trash-alt me-2"></i>Eliminar Moderador
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar este moderador?</p>
-                <p class="text-muted">Esta acción no se puede deshacer.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Sí, eliminar</button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Exportar Moderadores -->
-<div class="modal fade" id="modalExportarModeradores" tabindex="-1" aria-labelledby="modalExportarLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalExportarLabel">
-                    <i class="fas fa-file-export me-2"></i>Exportar Moderadores
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-
-            <div class="modal-body">
-                <label class="form-label mt-2">
-                    <i class="fas fa-file-alt me-1"></i>Elige un formato de exportación
-                </label>
-                <select class="form-select">
-                    <option value="excel">Excel (.xlsx)</option>
-                    <option value="csv">CSV (.csv)</option>
-                </select>
-
-                <p class="my-3">
-                    ¿Deseas exportar los datos de los moderadores en el formato seleccionado?
-                </p>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i>Cancelar
-                </button>
-                <button type="button" class="btn btn-success">
-                    <i class="fas fa-file-export me-1"></i>Exportar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
