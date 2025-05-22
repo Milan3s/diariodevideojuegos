@@ -91,6 +91,7 @@ const consolasRoutes = require('./routes/consolas.routes');
 const resumenRoutes  = require('./routes/resumen.routes'); // ✅ Asegúrate que existe
 const logrosRoutes = require('./routes/logros.routes'); // ✅ Nuevo
 const estadosRoutes = require('./routes/estados.routes');
+const moderadoresRoutes = require('./routes/moderadores.routes'); // ✅ Nueva
 
 
 app.use('/api/juegos', juegosRoutes);
@@ -98,6 +99,7 @@ app.use('/api/consolas', consolasRoutes);
 app.use('/api/resumen', resumenRoutes); // ✅ Importante
 app.use('/api/logros', logrosRoutes); 
 app.use('/api/estados', estadosRoutes);
+app.use('/api/moderadores', moderadoresRoutes); // ✅ Activar
 
 
 // ===================

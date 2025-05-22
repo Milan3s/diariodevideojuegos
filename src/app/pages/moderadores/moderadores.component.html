@@ -14,16 +14,20 @@
                 <input type="text" class="form-control" placeholder="Buscar por nombre...">
             </div>
 
-            <div class="border rounded overflow-auto" style="height: 690px;">
-                <!-- Lista de moderadores -->
-                <div class="list-group list-group-flush">
-                    <div class="list-group-item d-flex align-items-start">
-                        <div class="flex-grow-1" style="cursor: pointer;">
-                            <i class="fas fa-user-shield me-2"></i>Nombre Moderador<br />
-                        </div>
+            <div class="list-group list-group-flush">
+                <div *ngFor="let moderador of moderadores" class="list-group-item d-flex align-items-start"
+                    (click)="seleccionarModerador(moderador)"
+                    [ngClass]="{ 'seleccionada': moderador === moderadorSeleccionado }">
+
+                    <div class="flex-grow-1" style="cursor: pointer;">
+                        <i class="fas fa-user-shield me-2"></i>{{ moderador.nombre }}<br />
+                        <small class="text-muted">{{ moderador.email }}</small><br />
+                        <span class="badge bg-secondary mt-1">{{ moderador.estado_nombre || 'Sin estado' }}</span>
                     </div>
+
                 </div>
             </div>
+
 
             <!-- Paginación -->
             <div class="d-flex justify-content-between align-items-center mt-3">
