@@ -28,7 +28,7 @@ export class ModeradoresComponent implements OnInit {
   mensajeAlerta: string | null = null;
   tipoAlerta: 'success' | 'danger' = 'success';
 
-  // Formulario de nuevo moderador
+  // Formulario
   nuevoModerador: Partial<Moderador> = {
     nombre: '',
     email: '',
@@ -42,27 +42,28 @@ export class ModeradoresComponent implements OnInit {
     this.cargarEstados();
   }
 
+  // 🟡 ALERTA (sin temporizador automático)
   mostrarAlerta(mensaje: string, tipo: 'success' | 'danger'): void {
     this.mensajeAlerta = mensaje;
     this.tipoAlerta = tipo;
-    setTimeout(() => this.mensajeAlerta = null, 3000);
+  }
+
+  cerrarAlerta(): void {
+    this.mensajeAlerta = null;
   }
 
   limpiarFormulario(): void {
     this.nuevoModerador = {
       nombre: '',
       email: '',
-      id_estado: undefined // ⬅️ en lugar de null
+      id_estado: undefined
     };
   }
 
   cargarModeradores(): void {
     this.moderadoresService.obtenerModeradores().subscribe({
       next: (data) => {
-        this.moderadores = data.map(m => ({
-          ...m,
-          seleccionado: false
-        }));
+        this.moderadores = data.map(m => ({ ...m, seleccionado: false }));
       },
       error: (err) => {
         console.error('❌ Error al obtener moderadores:', err);
@@ -111,7 +112,7 @@ export class ModeradoresComponent implements OnInit {
     });
   }
 
-  // 🔍 Filtrado
+  // 🔍 FILTRO
   get moderadoresFiltrados(): Moderador[] {
     return this.moderadores.filter(m => {
       const coincideNombre = m.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase());
@@ -122,7 +123,7 @@ export class ModeradoresComponent implements OnInit {
     });
   }
 
-  // 📄 Paginación
+  // 🔢 PAGINACIÓN
   get totalPaginas(): number {
     return Math.ceil(this.moderadoresFiltrados.length / this.tamanoPagina) || 1;
   }
@@ -148,7 +149,7 @@ export class ModeradoresComponent implements OnInit {
     if (this.paginaActual < this.totalPaginas) this.paginaActual++;
   }
 
-  // ✅ Selección múltiple
+  // ✅ MULTI-SELECCIÓN
   estanTodosSeleccionados(): boolean {
     return this.moderadoresFiltrados.length > 0 &&
       this.moderadoresFiltrados.every(m => m.seleccionado);
@@ -163,10 +164,28 @@ export class ModeradoresComponent implements OnInit {
     this.moderadoresFiltrados.forEach(m => m.seleccionado = checked);
   }
 
+  // ⬆️ DAR DE ALTA
+  darDeAlta(): void {
+    if (!this.moderadorSeleccionado) return;
+
+    const id = this.moderadorSeleccionado.id_moderador;
+
+    this.moderadoresService.darDeAlta(id).subscribe({
+      next: () => {
+        this.mostrarAlerta('✅ Moderador dado de alta correctamente', 'success');
+        this.cargarModeradores();
+      },
+      error: () => {
+        this.mostrarAlerta('❌ Error al dar de alta al moderador', 'danger');
+      }
+    });
+  }
+
+
+  // 🗓️ FORMATO DE FECHA
   formatearFecha(fecha: string | null): string {
     if (!fecha) return '-';
     const [year, month, day] = fecha.split('-');
     return `${day}-${month}-${year}`;
   }
-
 }

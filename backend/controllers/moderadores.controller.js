@@ -25,7 +25,6 @@ module.exports = {
 
       const moderadores = resultados.map(m => ({
         ...m,
-        ...m,
         fecha_alta: m.fecha_alta ? format(new Date(m.fecha_alta), 'dd-MM-yyyy') : null,
         fecha_baja: m.fecha_baja ? format(new Date(m.fecha_baja), 'dd-MM-yyyy') : null
       }));
@@ -42,9 +41,9 @@ module.exports = {
     }
 
     const sql = `
-    INSERT INTO moderadores (nombre, email, id_estado, fecha_alta)
-    VALUES (?, ?, ?, NOW())
-  `;
+      INSERT INTO moderadores (nombre, email, id_estado, fecha_alta)
+      VALUES (?, ?, ?, NOW())
+    `;
 
     db.query(sql, [nombre, email, id_estado], (err, resultado) => {
       if (err) {
@@ -54,7 +53,22 @@ module.exports = {
 
       res.status(201).json({ mensaje: 'Moderador insertado correctamente', id_moderador: resultado.insertId });
     });
-  }
+  },
 
+  agregarAltaModerador: (req, res) => {
+    const id = req.params.id;
+    const sql = `
+    UPDATE moderadores 
+    SET fecha_alta = CURDATE(), fecha_baja = NULL 
+    WHERE id_moderador = ?
+  `;
+    db.query(sql, [id], (err) => {
+      if (err) {
+        console.error('❌ Error al dar de alta moderador:', err);
+        return res.status(500).json({ mensaje: 'Error al dar de alta moderador' });
+      }
+      res.json({ mensaje: 'Moderador dado de alta correctamente' });
+    });
+  }
 
 };

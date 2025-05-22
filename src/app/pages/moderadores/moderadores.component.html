@@ -17,11 +17,13 @@
 
             <div class="mb-3">
                 <select class="form-select" [(ngModel)]="filtroEstadoId">
+                    <option [ngValue]="undefined" disabled selected>Selecciona un estado</option>
                     <option [ngValue]="null">Todos los estados</option>
-                    <option *ngFor="let estado of estados" [ngValue]="estado.id_estado.toString()">
+                    <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">
                         {{ estado.nombre }}
                     </option>
                 </select>
+
             </div>
 
             <div class="border rounded overflow-auto" style="height: 690px;">
@@ -115,9 +117,10 @@
 
             <!-- Acciones: Grupo 2 -->
             <div class="mb-3 d-flex gap-2 flex-wrap">
-                <button class="btn btn-outline-success" [disabled]="!moderadorSeleccionado">
+                <button class="btn btn-outline-success" [disabled]="!moderadorSeleccionado" (click)="darDeAlta()">
                     <i class="fas fa-user-check me-1"></i>Dar de alta
                 </button>
+
                 <button class="btn btn-outline-warning" [disabled]="!moderadorSeleccionado">
                     <i class="fas fa-user-times me-1"></i>Dar de baja
                 </button>
@@ -144,11 +147,14 @@
             </div>
 
             <!-- Alerta de estado -->
-            <div *ngIf="mensajeAlerta" class="alert mt-3"
-                [ngClass]="{ 'alert-success': tipoAlerta === 'success', 'alert-danger': tipoAlerta === 'danger' }">
-                <i class="fas" [ngClass]="tipoAlerta === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
+            <div *ngIf="mensajeAlerta" class="alert mt-2" [ngClass]="{
+                'alert-success': tipoAlerta === 'success',
+                'alert-danger': tipoAlerta === 'danger'
+                }">
                 {{ mensajeAlerta }}
+                <button type="button" class="btn-close float-end" aria-label="Cerrar" (click)="cerrarAlerta()"></button>
             </div>
+
         </div>
 
 

@@ -19,7 +19,7 @@ export class ModeradoresService {
   private baseUrl = 'http://localhost:3000/api/moderadores';
   private estadosUrl = 'http://localhost:3000/api/estados?tipo=moderador';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   obtenerModeradores(): Observable<Moderador[]> {
     return this.http.get<Moderador[]>(this.baseUrl).pipe(
@@ -39,6 +39,14 @@ export class ModeradoresService {
       catchError(this.manejarError)
     );
   }
+
+  darDeAlta(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/alta/${id}`, {}).pipe(
+      catchError(this.manejarError)
+    );
+  }
+
+
 
   private manejarError(error: HttpErrorResponse): Observable<never> {
     console.error('❌ Error en ModeradoresService:', error);
