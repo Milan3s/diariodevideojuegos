@@ -121,7 +121,8 @@
                 <p><strong>Email:</strong> {{ moderadorSeleccionado?.email || '-' }}</p>
                 <p><strong>Fecha de alta:</strong> {{ moderadorSeleccionado?.fecha_alta ?? '-' }}</p>
                 <p><strong>Fecha de baja:</strong> {{ moderadorSeleccionado?.fecha_baja ?? '-' }}</p>
-                <p><strong>Estado:</strong> {{ moderadorSeleccionado?.estado_nombre || 'Sin estado' }}</p>
+                <p><strong>Estado:</strong> {{ moderadorSeleccionado?.estado_nombre || '-' }}</p>
+
             </div>
 
             <div *ngIf="!moderadorSeleccionado" class="alert alert-info my-2">

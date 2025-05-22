@@ -32,7 +32,7 @@ export class AppComponent {
     {
       label: 'Inicio',
       children: [
-        { label: 'Resumen del Día', route: '/resumen' },
+        { label: 'Resumen', route: '/resumen' },
         { label: 'Metas Twitch', route: '/metas-twitch' },
         { label: 'Metas Específicas', route: '/metas-especificas' },
         { label: 'Mejoras del Canal', route: '/mejoras-del-canal' }
