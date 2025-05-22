@@ -40,13 +40,14 @@
         <h6>Metas totales</h6>
         <p class="resumen-cifra">
           {{
-            resumen?.totalMetasEspecificas !== undefined &&
-            resumen?.totalMetasJuegos !== undefined &&
-            resumen?.totalMetasTwitch !== undefined
-              ? resumen.totalMetasEspecificas + resumen.totalMetasJuegos + resumen.totalMetasTwitch
-              : '-'
+          resumen
+          ? (resumen.totalMetasEspecificas ?? 0) +
+          (resumen.totalMetasJuegos ?? 0) +
+          (resumen.totalMetasTwitch ?? 0)
+          : '-'
           }}
         </p>
+
       </div>
     </div>
   </div>
