@@ -11,7 +11,7 @@ export interface Moderador {
   fecha_baja?: string;
   id_estado?: number;
   estado_nombre?: string;
-  seleccionado?: boolean; // para selección múltiple
+  seleccionado?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +29,13 @@ export class ModeradoresService {
 
   obtenerEstados(): Observable<any[]> {
     return this.http.get<any[]>(this.estadosUrl).pipe(
+      catchError(this.manejarError)
+    );
+  }
+
+  // ✅ ESTE MÉTODO DEBE EXISTIR
+  agregarModerador(data: Partial<Moderador>): Observable<any> {
+    return this.http.post(this.baseUrl, data).pipe(
       catchError(this.manejarError)
     );
   }

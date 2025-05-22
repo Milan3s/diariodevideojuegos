@@ -25,11 +25,36 @@ module.exports = {
 
       const moderadores = resultados.map(m => ({
         ...m,
-        fecha_alta: m.fecha_alta ? format(new Date(m.fecha_alta), 'yyyy-MM-dd') : null,
-        fecha_baja: m.fecha_baja ? format(new Date(m.fecha_baja), 'yyyy-MM-dd') : null
+        ...m,
+        fecha_alta: m.fecha_alta ? format(new Date(m.fecha_alta), 'dd-MM-yyyy') : null,
+        fecha_baja: m.fecha_baja ? format(new Date(m.fecha_baja), 'dd-MM-yyyy') : null
       }));
 
       res.json(moderadores);
     });
+  },
+
+  agregarModerador: (req, res) => {
+    const { nombre, email, id_estado } = req.body;
+
+    if (!nombre || !email || !id_estado) {
+      return res.status(400).json({ mensaje: 'Faltan campos obligatorios' });
+    }
+
+    const sql = `
+    INSERT INTO moderadores (nombre, email, id_estado, fecha_alta)
+    VALUES (?, ?, ?, NOW())
+  `;
+
+    db.query(sql, [nombre, email, id_estado], (err, resultado) => {
+      if (err) {
+        console.error('❌ Error al insertar moderador:', err);
+        return res.status(500).json({ mensaje: 'Error al insertar moderador' });
+      }
+
+      res.status(201).json({ mensaje: 'Moderador insertado correctamente', id_moderador: resultado.insertId });
+    });
   }
+
+
 };

@@ -17,19 +17,43 @@ export class ModeradoresComponent implements OnInit {
 
   // Filtros
   terminoBusqueda: string = '';
-  filtroEstadoId: string | null = null;
-
+  filtroEstadoId: number | undefined;
   estados: { id_estado: number; nombre: string }[] = [];
 
   // Paginación
   paginaActual: number = 1;
   tamanoPagina: number = 9;
 
+  // Alerta
+  mensajeAlerta: string | null = null;
+  tipoAlerta: 'success' | 'danger' = 'success';
+
+  // Formulario de nuevo moderador
+  nuevoModerador: Partial<Moderador> = {
+    nombre: '',
+    email: '',
+    id_estado: undefined
+  };
+
   constructor(private moderadoresService: ModeradoresService) { }
 
   ngOnInit(): void {
     this.cargarModeradores();
     this.cargarEstados();
+  }
+
+  mostrarAlerta(mensaje: string, tipo: 'success' | 'danger'): void {
+    this.mensajeAlerta = mensaje;
+    this.tipoAlerta = tipo;
+    setTimeout(() => this.mensajeAlerta = null, 3000);
+  }
+
+  limpiarFormulario(): void {
+    this.nuevoModerador = {
+      nombre: '',
+      email: '',
+      id_estado: undefined // ⬅️ en lugar de null
+    };
   }
 
   cargarModeradores(): void {
@@ -42,6 +66,7 @@ export class ModeradoresComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ Error al obtener moderadores:', err);
+        this.mostrarAlerta('❌ Error al cargar moderadores', 'danger');
       }
     });
   }
@@ -63,20 +88,41 @@ export class ModeradoresComponent implements OnInit {
 
   limpiarSeleccion(): void {
     this.moderadorSeleccionado = null;
+    this.limpiarFormulario();
+  }
+
+  guardarModerador(): void {
+    const { nombre, email, id_estado } = this.nuevoModerador;
+
+    if (!nombre?.trim() || !email?.trim() || id_estado === undefined) {
+      this.mostrarAlerta('❗ Todos los campos son obligatorios.', 'danger');
+      return;
+    }
+
+    this.moderadoresService.agregarModerador(this.nuevoModerador).subscribe({
+      next: () => {
+        this.mostrarAlerta('✅ Moderador guardado correctamente', 'success');
+        this.limpiarFormulario();
+        this.cargarModeradores();
+      },
+      error: () => {
+        this.mostrarAlerta('❌ Error al guardar el moderador', 'danger');
+      }
+    });
   }
 
   // 🔍 Filtrado
   get moderadoresFiltrados(): Moderador[] {
     return this.moderadores.filter(m => {
       const coincideNombre = m.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase());
-      const coincideEstado =
-        this.filtroEstadoId !== null ? m.id_estado?.toString() === this.filtroEstadoId : true;
+      const coincideEstado = this.filtroEstadoId !== undefined
+        ? m.id_estado === this.filtroEstadoId
+        : true;
       return coincideNombre && coincideEstado;
     });
   }
 
-
-  // ✅ Paginación sobre los filtrados
+  // 📄 Paginación
   get totalPaginas(): number {
     return Math.ceil(this.moderadoresFiltrados.length / this.tamanoPagina) || 1;
   }
@@ -95,15 +141,11 @@ export class ModeradoresComponent implements OnInit {
   }
 
   irPaginaAnterior(): void {
-    if (this.paginaActual > 1) {
-      this.paginaActual--;
-    }
+    if (this.paginaActual > 1) this.paginaActual--;
   }
 
   irPaginaSiguiente(): void {
-    if (this.paginaActual < this.totalPaginas) {
-      this.paginaActual++;
-    }
+    if (this.paginaActual < this.totalPaginas) this.paginaActual++;
   }
 
   // ✅ Selección múltiple
@@ -120,4 +162,11 @@ export class ModeradoresComponent implements OnInit {
     const checked = event.target.checked;
     this.moderadoresFiltrados.forEach(m => m.seleccionado = checked);
   }
+
+  formatearFecha(fecha: string | null): string {
+    if (!fecha) return '-';
+    const [year, month, day] = fecha.split('-');
+    return `${day}-${month}-${year}`;
+  }
+
 }

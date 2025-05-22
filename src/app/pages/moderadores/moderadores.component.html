@@ -22,9 +22,7 @@
                         {{ estado.nombre }}
                     </option>
                 </select>
-
             </div>
-
 
             <div class="border rounded overflow-auto" style="height: 690px;">
                 <!-- Cabecera: Seleccionar todos -->
@@ -47,9 +45,9 @@
                     <!-- Si hay moderadores -->
                     <div *ngFor="let moderador of moderadoresPaginados"
                         class="list-group-item d-flex align-items-start juego-item" [ngClass]="{
-       'seleccionado': moderador === moderadorSeleccionado,
-       'marcado': moderador.seleccionado
-     }">
+                        'seleccionado': moderador === moderadorSeleccionado,
+                        'marcado': moderador.seleccionado
+                        }">
 
                         <!-- Checkbox visible si está marcado o seleccionado -->
                         <input *ngIf="moderador.seleccionado || moderador === moderadorSeleccionado" type="checkbox"
@@ -132,55 +130,80 @@
                 </button>
             </div>
 
-
             <!-- Detalles del moderador (siempre visibles, con placeholders si no hay selección) -->
             <div class="p-3">
                 <p><strong>Nombre:</strong> {{ moderadorSeleccionado?.nombre || '-' }}</p>
                 <p><strong>Email:</strong> {{ moderadorSeleccionado?.email || '-' }}</p>
-                <p><strong>Fecha de alta:</strong> {{ moderadorSeleccionado?.fecha_alta || '-' }}</p>
-                <p><strong>Fecha de baja:</strong> {{ moderadorSeleccionado?.fecha_baja || '-' }}</p>
+                <p><strong>Fecha de alta:</strong> {{ moderadorSeleccionado?.fecha_alta ?? '-' }}</p>
+                <p><strong>Fecha de baja:</strong> {{ moderadorSeleccionado?.fecha_baja ?? '-' }}</p>
                 <p><strong>Estado:</strong> {{ moderadorSeleccionado?.estado_nombre || 'Sin estado' }}</p>
+            </div>
+
+            <div *ngIf="!moderadorSeleccionado" class="alert alert-info my-2">
+                <i class="fas fa-info-circle me-2"></i>Selecciona un moderador de la lista para ver los detalles.
+            </div>
+
+            <!-- Alerta de estado -->
+            <div *ngIf="mensajeAlerta" class="alert mt-3"
+                [ngClass]="{ 'alert-success': tipoAlerta === 'success', 'alert-danger': tipoAlerta === 'danger' }">
+                <i class="fas" [ngClass]="tipoAlerta === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
+                {{ mensajeAlerta }}
             </div>
         </div>
 
 
+
     </div>
 </div>
-
-
 
 <!-- Modal Agregar / Editar Moderador -->
 <div class="modal fade" id="modalAgregarModerador" tabindex="-1" aria-labelledby="modalLabelModerador"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form>
+            <form (ngSubmit)="guardarModerador()" #formModerador="ngForm">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabelModerador">
-                        <i class="fas fa-user-shield"></i> Añadir/Editar Moderador
+                        <i class="fas fa-user-shield"></i>
+                        {{ moderadorSeleccionado ? 'Editar Moderador' : 'Añadir Moderador' }}
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"
+                        (click)="limpiarFormulario()"></button>
                 </div>
 
                 <div class="modal-body">
+                    <!-- Nombre -->
                     <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" name="nombre" placeholder="Nombre completo">
+                    <input type="text" class="form-control" name="nombre" required [(ngModel)]="nuevoModerador.nombre"
+                        placeholder="Nombre completo" />
 
+                    <!-- Email -->
                     <label class="form-label mt-3">Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="correo@ejemplo.com">
+                    <input type="email" class="form-control" name="email" required [(ngModel)]="nuevoModerador.email"
+                        placeholder="correo@ejemplo.com" />
 
+                    <!-- Estado -->
                     <label class="form-label mt-3">Estado</label>
-                    <select class="form-select" name="estado">
-                        <option>Activo</option>
-                        <option>Inactivo</option>
+                    <select class="form-select" name="id_estado" required [(ngModel)]="nuevoModerador.id_estado">
+                        <option [ngValue]="undefined">Selecciona estado</option>
+                        <option *ngFor="let estado of estados" [ngValue]="estado.id_estado">
+                            {{ estado.nombre }}
+                        </option>
                     </select>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="limpiarFormulario()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="formModerador.invalid">
+                        {{ moderadorSeleccionado ? 'Actualizar' : 'Guardar' }}
+                    </button>
                 </div>
             </form>
+
+
         </div>
     </div>
 </div>
