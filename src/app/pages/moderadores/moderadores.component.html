@@ -1,1 +1,183 @@
-<p>moderadores works!</p>
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-md-10">
+            <h2><i class="fas fa-user-shield me-2"></i>Moderadores</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel izquierdo -->
+        <div class="col-md-3 mb-3">
+            <!-- Buscador -->
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por nombre...">
+            </div>
+
+            <div class="border rounded overflow-auto" style="height: 690px;">
+                <!-- Lista de moderadores -->
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex align-items-start">
+                        <div class="flex-grow-1" style="cursor: pointer;">
+                            <i class="fas fa-user-shield me-2"></i>Nombre Moderador<br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paginación -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <button class="btn btn-sm btn-light">
+                    <i class="fas fa-angle-double-left me-1"></i>Primero
+                </button>
+                <button class="btn btn-sm btn-light">
+                    <i class="fas fa-angle-left"></i>
+                </button>
+                <span><i class="fas fa-pager me-1"></i>Página 1 / 1</span>
+                <button class="btn btn-sm btn-light">
+                    <i class="fas fa-angle-right"></i>
+                </button>
+                <button class="btn btn-sm btn-light">
+                    Último<i class="fas fa-angle-double-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel derecho -->
+        <div class="col-md-9">
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarModerador">
+                    <i class="fas fa-plus me-1"></i>Añadir Moderador
+                </button>
+                <button class="btn btn-outline-dark">
+                    <i class="fas fa-edit me-1"></i>Editar
+                </button>
+                <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                    data-bs-target="#modalConfirmarEliminacionModerador">
+                    <i class="fas fa-trash me-1"></i>Eliminar
+                </button>
+                <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalExportarModeradores">
+                    <i class="fas fa-file-export me-1"></i>Exportar Moderadores
+                </button>
+
+                <button class="btn btn-outline-success">
+                    <i class="fas fa-user-check me-1"></i>Dar de alta
+                </button>
+                <button class="btn btn-outline-warning">
+                    <i class="fas fa-user-times me-1"></i>Dar de baja
+                </button>
+                <button class="btn btn-outline-info">
+                    <i class="fas fa-paper-plane me-1"></i>Readmitir
+                </button>
+            </div>
+
+            <div class="p-3">
+                <p><strong>Nombre:</strong> -</p>
+                <p><strong>Email:</strong> -</p>
+                <p><strong>Fecha de alta:</strong> -</p>
+                <p><strong>Fecha de baja:</strong> -</p>
+                <p><strong>Estado:</strong> -</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal Agregar / Editar Moderador -->
+<div class="modal fade" id="modalAgregarModerador" tabindex="-1" aria-labelledby="modalLabelModerador"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabelModerador">
+                        <i class="fas fa-user-shield"></i> Añadir/Editar Moderador
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" placeholder="Nombre completo">
+
+                    <label class="form-label mt-3">Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="correo@ejemplo.com">
+
+                    <label class="form-label mt-3">Estado</label>
+                    <select class="form-select" name="estado">
+                        <option>Activo</option>
+                        <option>Inactivo</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmar Eliminación Moderador -->
+<div class="modal fade" id="modalConfirmarEliminacionModerador" tabindex="-1" aria-labelledby="modalEliminarLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalEliminarLabel">
+                    <i class="fas fa-trash-alt me-2"></i>Eliminar Moderador
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este moderador?</p>
+                <p class="text-muted">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Exportar Moderadores -->
+<div class="modal fade" id="modalExportarModeradores" tabindex="-1" aria-labelledby="modalExportarLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalExportarLabel">
+                    <i class="fas fa-file-export me-2"></i>Exportar Moderadores
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                <label class="form-label mt-2">
+                    <i class="fas fa-file-alt me-1"></i>Elige un formato de exportación
+                </label>
+                <select class="form-select">
+                    <option value="excel">Excel (.xlsx)</option>
+                    <option value="csv">CSV (.csv)</option>
+                </select>
+
+                <p class="my-3">
+                    ¿Deseas exportar los datos de los moderadores en el formato seleccionado?
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success">
+                    <i class="fas fa-file-export me-1"></i>Exportar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

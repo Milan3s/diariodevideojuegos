@@ -36,5 +36,5 @@ export const routes: Routes = [
   { path: 'eventos-extensibles', component: EventosExtensiblesComponent },
 
   // Redirección por defecto
-  { path: '', redirectTo: 'logros', pathMatch: 'full' }
+  { path: '', redirectTo: 'moderadores', pathMatch: 'full' }
 ];
