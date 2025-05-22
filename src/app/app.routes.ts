@@ -36,5 +36,5 @@ export const routes: Routes = [
   { path: 'eventos-extensibles', component: EventosExtensiblesComponent },
 
   // Redirección por defecto
-  { path: '', redirectTo: 'moderadores', pathMatch: 'full' }
+  { path: '', redirectTo: 'metas-twitch', pathMatch: 'full' }
 ];
