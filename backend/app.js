@@ -6,7 +6,9 @@ const juegosRoutes = require('./routes/juegos.routes');
 const resumenRoutes = require('./routes/resumen.routes');
 const logrosRoutes = require('./routes/logros.routes'); 
 const estadosRoutes = require('./routes/estados.routes'); 
-const moderadoresRoutes = require('./routes/moderadores.routes'); // ✅ NUEVO
+const moderadoresRoutes = require('./routes/moderadores.routes'); 
+const metasTwitchRoutes = require('./routes/metastwitch.routes'); 
+
 
 app.use(cors());
 app.use(express.json());
@@ -16,7 +18,9 @@ app.use('/api', juegosRoutes);
 app.use('/api/resumen', resumenRoutes);
 app.use('/api/logros', logrosRoutes); 
 app.use('/api/estados', estadosRoutes);
-app.use('/api/moderadores', moderadoresRoutes); // ✅ NUEVO
+app.use('/api/moderadores', moderadoresRoutes); 
+app.use('/api/metas-twitch', metasTwitchRoutes);
+
 
 app.listen(3000, () => {
   console.log('✅ Servidor corriendo en http://localhost:3000');

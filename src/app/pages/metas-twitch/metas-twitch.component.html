@@ -8,52 +8,112 @@
   <div class="row">
     <!-- Panel izquierdo -->
     <div class="col-md-3 mb-3">
+      <!-- 🔍 Buscador por descripción -->
       <div class="input-group mb-3">
         <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" class="form-control" placeholder="Buscar por descripción...">
+        <input type="text" class="form-control" placeholder="Buscar por descripción..." [(ngModel)]="terminoBusqueda" />
       </div>
+
+      <!-- 🔽 Select de estados -->
+      <select class="form-select mb-3" [(ngModel)]="filtroEstadoId">
+        <option [ngValue]="''" disabled>Seleccione un estado para filtrar...</option>
+        <option [ngValue]="null">Todos los estados</option>
+        <option *ngFor="let estado of estados" [ngValue]="estado.id">
+          {{ estado.nombre_estado }}
+        </option>
+      </select>
+
+
+
+
 
       <div class="border rounded overflow-auto" style="height: 690px;">
+        <!-- Encabezado de selección -->
         <div class="d-flex align-items-center justify-content-between p-2 border-bottom bg-light">
           <div class="d-flex align-items-center">
-            <input type="checkbox" class="form-check-input me-2 mt-1">
+            <input type="checkbox" class="form-check-input me-2 mt-1" [checked]="estanTodasSeleccionadas()"
+              (change)="toggleSeleccionarTodas($event)" />
             <strong>Seleccionar todos</strong>
           </div>
-          <small class="text-muted">0 seleccionadas</small>
+          <small class="text-muted">{{ contarSeleccionadas() }} seleccionada{{ contarSeleccionadas() !== 1 ? 's' : ''
+            }}</small>
         </div>
 
+        <!-- Lista de metas -->
         <div class="list-group list-group-flush">
-          <div class="list-group-item">
-            <i class="fas fa-bullseye me-2"></i>Ejemplo de meta Twitch<br />
-            <small class="text-muted">Meta: 100 / Actual: 45</small>
+          <div *ngFor="let meta of metasPaginadas" class="list-group-item d-flex align-items-start meta-item"
+            [ngClass]="{ 'seleccionada': meta === metaSeleccionada, 'marcada': meta.seleccionado }">
+
+            <!-- Checkbox si está seleccionada o marcada -->
+            <input *ngIf="meta.seleccionado || meta === metaSeleccionada" type="checkbox"
+              class="form-check-input me-2 mt-1" [(ngModel)]="meta.seleccionado" (click)="$event.stopPropagation()" />
+
+            <!-- Espacio reservado si no se muestra el checkbox -->
+            <span *ngIf="!(meta.seleccionado || meta === metaSeleccionada)" class="me-2" style="width: 1.5rem;"></span>
+
+            <!-- Info de la meta -->
+            <div class="flex-grow-1" (click)="seleccionarMeta(meta)" style="cursor: pointer;">
+              <i class="fas fa-bullseye me-2"></i>{{ meta.descripcion }}<br />
+              <small class="text-muted">Meta: {{ meta.meta }} / Actual: {{ meta.actual }}</small>
+            </div>
           </div>
         </div>
+
+
+
       </div>
 
+
+
+
       <div class="d-flex justify-content-between align-items-center mt-3">
-        <button class="btn btn-sm btn-light"><i class="fas fa-angle-double-left me-1"></i>Primero</button>
-        <button class="btn btn-sm btn-light"><i class="fas fa-angle-left"></i></button>
-        <span><i class="fas fa-pager me-1"></i>Página 1 / 1</span>
-        <button class="btn btn-sm btn-light"><i class="fas fa-angle-right"></i></button>
-        <button class="btn btn-sm btn-light">Último<i class="fas fa-angle-double-right ms-1"></i></button>
+        <button class="btn btn-sm btn-light" (click)="irPrimeraPagina()" [disabled]="paginaActual === 1">
+          <i class="fas fa-angle-double-left me-1"></i>Primero
+        </button>
+
+        <button class="btn btn-sm btn-light" (click)="irPaginaAnterior()" [disabled]="paginaActual === 1">
+          <i class="fas fa-angle-left"></i>
+        </button>
+
+        <span>
+          <i class="fas fa-pager me-1"></i>
+          Página {{ paginaActual }} / {{ totalPaginas }}
+        </span>
+
+        <button class="btn btn-sm btn-light" (click)="irPaginaSiguiente()" [disabled]="paginaActual === totalPaginas">
+          <i class="fas fa-angle-right"></i>
+        </button>
+
+        <button class="btn btn-sm btn-light" (click)="irUltimaPagina()" [disabled]="paginaActual === totalPaginas">
+          Último<i class="fas fa-angle-double-right ms-1"></i>
+        </button>
       </div>
+
+
+
     </div>
 
     <!-- Panel derecho -->
     <div class="col-md-9">
       <div class="mb-3 d-flex gap-2 flex-wrap">
-        <button class="btn btn-outline-secondary">
+        <!-- Botón Limpiar -->
+        <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
           <i class="fas fa-eraser me-1"></i>Limpiar
         </button>
+
+
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarMeta">
           <i class="fas fa-plus me-1"></i>Añadir Meta
         </button>
+
         <button class="btn btn-outline-dark" disabled data-bs-toggle="modal" data-bs-target="#modalAgregarMeta">
           <i class="fas fa-edit me-1"></i>Editar
         </button>
+
         <button class="btn btn-outline-dark">
           <i class="fas fa-file-excel me-1"></i>Exportar
         </button>
+
         <button class="btn btn-outline-danger" disabled data-bs-toggle="modal" data-bs-target="#modalEliminar">
           <i class="fas fa-trash me-1"></i>Eliminar seleccionadas
         </button>
@@ -63,8 +123,6 @@
         <p><strong>Descripción:</strong> -</p>
         <p><strong>Meta:</strong> -</p>
         <p><strong>Actual:</strong> -</p>
-        <p><strong>Mes:</strong> -</p>
-        <p><strong>Año:</strong> -</p>
         <p><strong>Fecha inicio:</strong> -</p>
         <p><strong>Fecha fin:</strong> -</p>
       </div>

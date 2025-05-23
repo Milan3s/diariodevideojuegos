@@ -88,19 +88,23 @@ app.locals.subirArchivos = subirArchivos;
 // ===================
 const juegosRoutes   = require('./routes/juegos.routes');
 const consolasRoutes = require('./routes/consolas.routes');
-const resumenRoutes  = require('./routes/resumen.routes'); // ✅ Asegúrate que existe
-const logrosRoutes = require('./routes/logros.routes'); // ✅ Nuevo
+const resumenRoutes  = require('./routes/resumen.routes'); 
+const logrosRoutes = require('./routes/logros.routes'); 
 const estadosRoutes = require('./routes/estados.routes');
-const moderadoresRoutes = require('./routes/moderadores.routes'); // ✅ Nueva
+const moderadoresRoutes = require('./routes/moderadores.routes'); 
+const metasTwitchRoutes = require('./routes/metastwitch.routes');
+const metastwitchRoutes = require('./routes/metastwitch.routes');
+
 
 
 app.use('/api/juegos', juegosRoutes);
 app.use('/api/consolas', consolasRoutes);
-app.use('/api/resumen', resumenRoutes); // ✅ Importante
+app.use('/api/resumen', resumenRoutes); 
 app.use('/api/logros', logrosRoutes); 
 app.use('/api/estados', estadosRoutes);
-app.use('/api/moderadores', moderadoresRoutes); // ✅ Activar
-
+app.use('/api/moderadores', moderadoresRoutes); 
+app.use('/api/metas-twitch', metasTwitchRoutes);
+app.use('/api/metas-twitch', metastwitchRoutes);
 
 // ===================
 // 🚀 Iniciar servidor
