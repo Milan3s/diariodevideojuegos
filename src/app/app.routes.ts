@@ -40,5 +40,5 @@ export const routes: Routes = [
 
 
   // Redirección por defecto
-  { path: '', redirectTo: 'metas-twitch', pathMatch: 'full' }
+  { path: '', redirectTo: 'metas-especificas', pathMatch: 'full' }
 ];
