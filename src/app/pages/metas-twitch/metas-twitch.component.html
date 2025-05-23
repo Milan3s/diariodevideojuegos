@@ -6,6 +6,7 @@
   </div>
 
   <div class="row">
+    <!-- Panel izquierdo -->
     <div class="col-md-3 mb-3">
       <div class="input-group mb-3">
         <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -58,6 +59,7 @@
       </div>
     </div>
 
+    <!-- Panel derecho -->
     <div class="col-md-9">
       <div class="mb-3 d-flex gap-2 flex-wrap">
         <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
@@ -83,58 +85,56 @@
         <p><strong>Actual:</strong> {{ metaSeleccionada?.actual ?? '-' }}</p>
         <p><strong>Fecha inicio:</strong> {{ formatearFecha(metaSeleccionada?.fecha_inicio) }}</p>
         <p><strong>Fecha fin:</strong> {{ formatearFecha(metaSeleccionada?.fecha_fin) }}</p>
+        <p><strong>Estado:</strong> {{ metaSeleccionada?.estado_nombre || '-' }}</p>
       </div>
 
       <div *ngIf="mostrarAlerta" class="alert" [ngClass]="{ 'alert-success': tipoAlerta === 'success', 'alert-danger': tipoAlerta === 'danger' }">
         <i class="fas" [ngClass]="tipoAlerta === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
         {{ mensajeAlerta }}
+        <button type="button" class="btn-close float-end" aria-label="Cerrar" (click)="mostrarAlerta = false"></button>
       </div>
 
       <div *ngIf="!metaSeleccionada" class="alert alert-info my-2">
         <i class="fas fa-info-circle me-2"></i>Selecciona una meta para ver los detalles.
       </div>
     </div>
+
+
+
   </div>
 </div>
 
 
-<!-- Modal Agregar / Editar Meta -->
 <div class="modal fade" id="modalAgregarMeta" tabindex="-1" aria-labelledby="modalLabelMeta" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form>
+      <form (ngSubmit)="guardarMeta()">
         <div class="modal-header">
           <h5 class="modal-title" id="modalLabelMeta">
-            <i class="fas fa-tasks"></i> Añadir Meta Twitch
+            <i class="fas fa-tasks"></i> {{ metaEnEdicion.id_meta ? 'Editar Meta Twitch' : 'Añadir Meta Twitch' }}
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <label class="form-label">Descripción</label>
-          <input type="text" class="form-control" placeholder="Descripción de la meta">
+          <input type="text" class="form-control" [(ngModel)]="metaEnEdicion.descripcion" name="descripcion" required>
 
           <label class="form-label mt-3">Meta</label>
-          <input type="number" class="form-control" placeholder="Ej: 100">
+          <input type="number" class="form-control" [(ngModel)]="metaEnEdicion.meta" name="meta">
 
           <label class="form-label mt-3">Actual</label>
-          <input type="number" class="form-control" placeholder="Ej: 25">
-
-          <div class="row">
-            <div class="col">
-              <label class="form-label mt-3">Mes</label>
-              <input type="number" class="form-control" placeholder="Ej: 6">
-            </div>
-            <div class="col">
-              <label class="form-label mt-3">Año</label>
-              <input type="number" class="form-control" placeholder="Ej: 2025">
-            </div>
-          </div>
+          <input type="number" class="form-control" [(ngModel)]="metaEnEdicion.actual" name="actual">
 
           <label class="form-label mt-3">Fecha inicio</label>
-          <input type="date" class="form-control">
+          <input type="date" class="form-control" [(ngModel)]="metaEnEdicion.fecha_inicio" name="fecha_inicio">
 
           <label class="form-label mt-3">Fecha fin</label>
-          <input type="date" class="form-control">
+          <input type="date" class="form-control" [(ngModel)]="metaEnEdicion.fecha_fin" name="fecha_fin">
+
+          <label class="form-label mt-3">Estado</label>
+          <select class="form-select" [(ngModel)]="metaEnEdicion.id_estado_metas" name="id_estado_metas">
+            <option *ngFor="let estado of estados" [ngValue]="estado.id">{{ estado.nombre_estado }}</option>
+          </select>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -143,12 +143,8 @@
       </form>
     </div>
   </div>
-
-  
-
 </div>
 
-<!-- Modal Confirmar Eliminación -->
 <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-danger">
@@ -159,12 +155,45 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        <p>¿Estás seguro de que deseas eliminar <strong>0</strong> metas seleccionadas?</p>
+        <p>¿Estás seguro de que deseas eliminar <strong>{{ contarSeleccionadas() }}</strong> metas seleccionadas?</p>
         <p class="text-muted">Esta acción no se puede deshacer.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-danger">Sí, eliminar</button>
+        <button type="button" class="btn btn-danger" (click)="eliminarSeleccionadas()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Confirmar Exportación -->
+<div class="modal fade" id="modalConfirmarExportacionMetas" tabindex="-1" aria-labelledby="modalExportLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalExportLabel">
+          <i class="fas fa-file-export me-2"></i>Exportar Metas
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Formato de exportación</label>
+          <select class="form-select" [(ngModel)]="formatoExportacion">
+            <option value="excel">Excel (.xlsx)</option>
+            <option value="sql">SQL (.sql)</option>
+          </select>
+        </div>
+        <p>¿Exportar <strong>{{ cantidadExportar }}</strong> metas seleccionadas?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="confirmarExportacionMetas()">
+          <i class="fas fa-file-export me-1"></i>Exportar
+        </button>
       </div>
     </div>
   </div>

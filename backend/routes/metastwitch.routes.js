@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const controlador = require('../controllers/metastwitch.controller');
+const controller = require('../controllers/metastwitch.controller');
 
-// ✅ Obtener todas las metas de Twitch
-router.get('/', controlador.obtenerMetasTwitch);
+// GET metas
+router.get('/', controller.obtenerMetasTwitch);
 
-// ✅ Obtener estados de metas para Twitch
-router.get('/estados', controlador.obtenerEstadosMetasTwitch);
-router.put('/:id_meta', controlador.actualizarMetaTwitch);
+// POST metas
+router.post('/', controller.insertarMetaTwitch); // <- ESTA ES LA CLAVE
+
+// PUT metas
+router.put('/:id_meta', controller.actualizarMetaTwitch);
+
+// DELETE múltiples metas
+router.post('/eliminar-multiples', controller.eliminarMetasSeleccionadas);
+
+// GET estados
+router.get('/estados', controller.obtenerEstadosMetasTwitch);
 
 module.exports = router;

@@ -46,10 +46,11 @@ export class MetasTwitchComponent implements OnInit {
     }
   }
 
-  cargarMetas(): void {
+  cargarMetas(callback?: () => void): void {
     this.metasService.getMetas().subscribe({
       next: (data) => {
         this.metas = data.map(m => ({ ...m, seleccionado: false }));
+        if (callback) callback();
       },
       error: (err) => {
         this.mostrarMensaje('Error al obtener metas de Twitch', 'danger');
@@ -72,7 +73,6 @@ export class MetasTwitchComponent implements OnInit {
     this.mensajeAlerta = mensaje;
     this.tipoAlerta = tipo;
     this.mostrarAlerta = true;
-    setTimeout(() => (this.mostrarAlerta = false), 4000);
   }
 
   contarSeleccionadas(): number {
@@ -100,8 +100,10 @@ export class MetasTwitchComponent implements OnInit {
       this.metasService.actualizarMeta(payload.id_meta, payload).subscribe({
         next: () => {
           this.mostrarMensaje('Meta actualizada correctamente', 'success');
-          this.cargarMetas();
-          this.metaSeleccionada = null;
+          this.cargarMetas(() => {
+            this.metaSeleccionada = this.metas.find(m => m.id_meta === payload.id_meta) || null;
+          });
+          this.cerrarModal('modalAgregarMeta');
         },
         error: (err) => {
           this.mostrarMensaje('Error al actualizar meta', 'danger');
@@ -110,10 +112,13 @@ export class MetasTwitchComponent implements OnInit {
       });
     } else {
       this.metasService.agregarMeta(payload).subscribe({
-        next: () => {
+        next: (nuevaMeta) => {
           this.mostrarMensaje('Meta agregada correctamente', 'success');
-          this.cargarMetas();
+          this.cargarMetas(() => {
+            this.metaSeleccionada = this.metas.find(m => m.id_meta === nuevaMeta.id_meta) || null;
+          });
           this.metaEnEdicion = {};
+          this.cerrarModal('modalAgregarMeta');
         },
         error: (err) => {
           this.mostrarMensaje('Error al agregar meta', 'danger');
@@ -136,6 +141,7 @@ export class MetasTwitchComponent implements OnInit {
         this.mostrarMensaje('Metas eliminadas correctamente', 'success');
         this.cargarMetas();
         this.metaSeleccionada = null;
+        this.cerrarModal('modalEliminar'); // <-- CIERRA EL MODAL AQUÍ
       },
       error: (err) => {
         this.mostrarMensaje('Error al eliminar metas', 'danger');
@@ -143,6 +149,7 @@ export class MetasTwitchComponent implements OnInit {
       }
     });
   }
+
 
   abrirModalExportarMetas(): void {
     const seleccionadas = this.obtenerMetasSeleccionadas();
