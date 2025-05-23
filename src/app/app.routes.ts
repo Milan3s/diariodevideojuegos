@@ -15,6 +15,7 @@ import { ModeradoresComponent } from './pages/moderadores/moderadores.component'
 import { DatosAuxiliaresComponent } from './pages/datos-auxiliares/datos-auxiliares.component';
 import { EventosComponent } from './pages/eventos/eventos.component';
 import { EventosExtensiblesComponent } from './pages/eventos-extensibles/eventos-extensibles.component';
+import { MetasJuegosComponent } from './pages/metas-juegos/metas-juegos.component'; 
 
 export const routes: Routes = [
   { path: 'resumen', component: ResumenComponent },
@@ -34,6 +35,9 @@ export const routes: Routes = [
 
   { path: 'eventos', component: EventosComponent },
   { path: 'eventos-extensibles', component: EventosExtensiblesComponent },
+
+  { path: 'metas-juegos', component: MetasJuegosComponent }, 
+
 
   // Redirección por defecto
   { path: '', redirectTo: 'metas-twitch', pathMatch: 'full' }

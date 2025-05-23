@@ -35,7 +35,8 @@ export class AppComponent {
         { label: 'Resumen', route: '/resumen' },
         { label: 'Metas Twitch', route: '/metas-twitch' },
         { label: 'Metas Específicas', route: '/metas-especificas' },
-        { label: 'Mejoras del Canal', route: '/mejoras-del-canal' }
+        { label: 'Mejoras del Canal', route: '/mejoras-del-canal' },
+        { label: 'Metas Juegos', route: '/metas-juegos' }
       ]
     },
     { label: 'Consolas', route: '/consolas' },
