@@ -33,6 +33,24 @@ export class MetasTwitchService {
     );
   }
 
+  actualizarMeta(id: number, datos: Partial<MetaTwitch>): Observable<MetaTwitch> {
+    return this.http.put<MetaTwitch>(`${this.baseUrl}/${id}`, datos).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  agregarMeta(datos: Partial<MetaTwitch>): Observable<MetaTwitch> {
+    return this.http.post<MetaTwitch>(this.baseUrl, datos).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  eliminarMultiples(ids: number[]): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${this.baseUrl}/eliminar-multiples`, { ids }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getEstados(): Observable<EstadoMeta[]> {
     return this.http.get<EstadoMeta[]>(`${this.baseUrl}/estados`).pipe(
       catchError(this.handleError)
@@ -40,7 +58,19 @@ export class MetasTwitchService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    console.error('❌ Error en MetasTwitchService:', error);
-    return throwError(() => new Error('Error en la solicitud HTTP de metas'));
+    let errorMessage = 'Error desconocido';
+
+    if (error.error instanceof ErrorEvent) {
+      // Error del cliente (no conexión, problema de red, etc.)
+      errorMessage = `Error del cliente: ${error.error.message}`;
+    } else {
+      // Error del servidor
+      errorMessage = `Error en la solicitud HTTP: ${error.status}, ${error.message}`;
+    }
+
+    console.error('❌ Error en MetasTwitchService:', errorMessage);
+
+    // Puedes emitir un error con un mensaje más detallado aquí si lo deseas.
+    return throwError(() => new Error(errorMessage));
   }
 }

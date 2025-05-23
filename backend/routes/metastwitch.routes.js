@@ -7,5 +7,6 @@ router.get('/', controlador.obtenerMetasTwitch);
 
 // ✅ Obtener estados de metas para Twitch
 router.get('/estados', controlador.obtenerEstadosMetasTwitch);
+router.put('/:id_meta', controlador.actualizarMetaTwitch);
 
 module.exports = router;

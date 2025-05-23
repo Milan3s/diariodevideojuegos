@@ -93,8 +93,6 @@ const logrosRoutes = require('./routes/logros.routes');
 const estadosRoutes = require('./routes/estados.routes');
 const moderadoresRoutes = require('./routes/moderadores.routes'); 
 const metasTwitchRoutes = require('./routes/metastwitch.routes');
-const metastwitchRoutes = require('./routes/metastwitch.routes');
-
 
 
 app.use('/api/juegos', juegosRoutes);
@@ -104,7 +102,7 @@ app.use('/api/logros', logrosRoutes);
 app.use('/api/estados', estadosRoutes);
 app.use('/api/moderadores', moderadoresRoutes); 
 app.use('/api/metas-twitch', metasTwitchRoutes);
-app.use('/api/metas-twitch', metastwitchRoutes);
+
 
 // ===================
 // 🚀 Iniciar servidor
